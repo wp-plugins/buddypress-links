@@ -1,0 +1,290 @@
+/**
+ * Screen Stylesheet
+ */
+
+/*** User Navigation Bar *****************************************************/
+
+li a#user-links, li a#my-links {
+	background: url(../images/icons/star.png) 88% 52% no-repeat;
+	padding: 0.55em 3em 0.55em 0 !important;
+	margin-right: 0.85em !important;
+}
+
+li a#link-home, li a#link-wire, li a#link-admin {
+	background: url(../images/icons/star.png) 88% 52% no-repeat;
+	padding: 0.55em 3.1em 0.55em 0 !important;
+	display: block;
+	margin-right: 0.85em;
+}
+	li a#link-wire {
+		background: url(../images/icons/comments.png) 88% 52% no-repeat;
+	}
+
+	li a#link-admin {
+		background: url(../images/icons/key.png) 88% 52% no-repeat;
+	}
+
+/*** Home Widgets ************************************************************/
+
+.widget #ajax-loader-links {
+	padding-right: 5px;
+	float: none !important;
+}
+
+/**** ACTIVITY STREAMS ***************************/
+
+ul#activity-filter-links li#afilter-links a {
+	background: url(../images/icons/star.png) no-repeat;
+	background-position: 7px 4px !important;
+}
+
+/**** LINKS *****************/
+
+#create-link-form, #link-settings-form {
+	width: 100%;
+	margin: 0 0 35px 0;
+}
+
+#create-link-form ul, #link-settings-form ul {
+	margin: 5px 0 0 33px;
+}
+
+#create-link-form textarea, #link-settings-form textarea {
+	height: 120px;
+}
+
+#create-link-form .checkbox, #create-link-form .radio ul, #link-settings-form .checkbox, #link-settings-form .checkbox {
+	margin-bottom: 15px;
+}
+
+#create-link-form img.avatar, #link-settings-form img.avatar {
+	border: none;
+	margin-bottom: 20px;
+}
+
+#create-link-form ul li, #link-settings-form ul li {
+	list-style-type: disc;
+	padding-left: 5px;
+}
+
+ul#link-list li {
+}
+
+ul#link-list div.link-list-left,
+	ul#link-list div.link-list-left-wide {
+	float: left;
+	margin-right: 25px;
+}
+
+ul#link-list img.avatar {
+	float: none;
+}
+
+ul#link-list div.link-list-left img.avatar {
+	margin: 5px 0 3px 12px;
+}
+
+ul#link-list div.link-list-left-wide img.avatar {
+	margin: 0 0 3px 0;
+}
+
+ul#link-list div.link-list-right {}
+
+ul#link-list div.link-list-footer {
+	clear: left;
+	padding-top: 5px;
+}
+
+ul#link-list div.link-list-footer div.link-list-footer-left {
+	float: left;
+	width: 80px;
+}
+
+ul#link-list div.link-list-footer div.link-list-footer-left-wide {
+	float: left;
+	width: 160px;
+}
+
+ul#link-list div.link-list-footer div.link-list-footer-right {
+	margin-left: 80px;
+}
+
+ul#link-list div.link-list-footer div.link-list-footer-right-wide {
+	margin-left: 160px;
+}
+
+ul#link-list li h4 {
+	margin: 0 0 4px 0px;
+}
+
+ul#link-list li span.small {}
+
+ul#link-list li p.desc {
+	color: black;
+	margin: 8px 50px 0 0px;
+}
+
+ul#link-list li p.desc span.domain {
+	color: gray;
+}
+
+ul#link-list li div.xtrabar {
+	margin-left: 15px;
+}
+
+ul#link-list li div.xtrabar a.home {
+	background: url(../images/icons/star.png) 5% no-repeat;
+	padding-left: 2em !important;
+	margin: 0.85em 0.5em;
+}
+
+ul#link-list li div.xtrabar a.comments {
+	background: url(../images/icons/comments.png) 5% no-repeat;
+	padding-left: 2em !important;
+	margin: 0.85em 0.5em;
+}
+
+ul#link-list li div.xtrabar span.owner {}
+
+ul#link-list li div.xtrabar span.owner img.owner-avatar {
+	vertical-align: -0.45em;
+	padding-left: .6em !important;
+}
+
+div.link-vote-panel {
+	width: auto;
+}
+
+div.link-vote-panel div.clickers {
+	float: left;
+	clear: right;
+	width: 80px;
+	text-align: center;
+}
+
+div.link-vote-panel div.clickers a.up,
+	div.link-vote-panel div.clickers a.down {
+	display: block;
+	float: left;
+	height: 20px;
+	width: 20px;
+}
+
+div.link-vote-panel div.clickers a.up {
+	background: url(../images/icons/thumb_up.png) 50% 100% no-repeat;
+}
+
+div.link-vote-panel div.clickers a.down {
+	background: url(../images/icons/thumb_down.png) 50% 100% no-repeat;
+}
+
+div.link-vote-panel div.clickers div.vote-total {
+	float: left;
+	width: 40px;
+}
+
+div.link-vote-panel div.vote-count {
+	float: left;
+	width: 80px;
+	line-height: 100%;
+	margin-top: 4px;
+	padding: 2px 0 2px 0;
+	text-align: center;
+	background-color: #f0f0f0;
+	border: 1px solid #d9d9d9;
+}
+
+ul#link-list div.link-list-footer div.link-list-footer-left-wide div.link-vote-panel div.vote-count {
+	width: auto;
+	margin: 0 0 0 10px;
+	padding: 0 5px 0 5px;
+	line-height: 160%;
+}
+
+div.bp-widget div.link-vote-panel {
+	padding-left: 30px;
+}
+
+div.bp-widget img.owner-avatar {
+	float: left;
+}
+
+div.bp-widget div.link-owner-text {
+	padding-left: 60px;
+}
+
+#previous-next input#link-creation-previous {
+	width: auto;
+}
+
+#previous-next input#link-creation-next, #previous-next input#link-creation-finish {
+	width: auto;
+	margin-left: 20px;
+}
+
+/*** Links Directory ***/
+
+div#links-directory-page ul#filter-nav {
+	list-style: none;
+	margin: 5px 10px 0px 0px;
+	padding: 0;
+}
+	div#links-directory-page ul#filter-nav li {
+		float: left;
+		margin-right: 20px;
+	}
+		div#links-directory-page ul#filter-nav li a {
+			display: block;
+			background: #eee;
+			padding: 4px 12px;
+			text-decoration: none;
+			font-size: 12px;
+			color: inherit;
+		}
+
+		div#links-directory-page ul#filter-nav li.current a {
+			font-weight: bold;
+		}
+		
+		div#links-directory-page ul#filter-nav li.current a,
+			div#links-directory-page ul#filter-nav li a:hover {
+			background: #fff9df;
+			color: #f7740a;
+		}
+
+div#links-directory-page div#filter-cat {
+	float: left;
+	padding: 5px 0 0 20px;
+}
+
+/**** SETTINGS SCREEN ***************************/
+
+table#links-notification-settings th.icon {
+	background-image: url(../images/icons/star.png);
+}
+
+/**** EMBED TWEAKS *****************************/
+
+.internal-page #content img.avatar-embed-picapp, ul#link-list img.avatar-embed-picapp {
+	/* picapp avatars are maxed at 140x140 so we must fatten up the border */
+	border-width: 8px;
+}
+
+/*** Profiles ****************/
+
+#link-name h1 {
+	font-size: 2em;
+	margin: 10px 0 25px 0;
+	font-family: Georgia, times, serif;
+}
+
+#link-name h1 a {
+	text-decoration: underline;
+	color: #f7740a;
+}
+
+#link-name p.status {
+	font: italic 1.2em "Georgia", Times, serif;
+ 	margin: -10px 0 15px 0;
+ 	color: #888;
+}
