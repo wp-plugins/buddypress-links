@@ -1,0 +1,31 @@
+/*
+.widget_bp_links_widget ul#link-list {
+	margin: 15px 0 0 0;
+	padding: 0;
+	list-style: none;
+}
+	.widget_bp_links_widget ul#link-list li {
+		min-height: 60px;
+	}
+	
+	.widget_bp_links_widget ul#link-list li img.avatar {
+		float: left;
+		margin: 0 10px 0 0;
+	}
+	
+	.widget_bp_links_widget ul#link-list li span.activity {
+		font-size: 11px;
+	}
+*/
+
+.widget_bp_links_widget h2.widgettitle div.name {
+	float: left;
+}
+
+.widget_bp_links_widget ul#link-list li p.desc {
+	margin-right: 40px;
+}
+	
+.widget_bp_links_widget img#ajax-loader-links {
+	float: right;
+}
