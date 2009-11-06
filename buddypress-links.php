@@ -6,7 +6,7 @@ Description: BuddyPress Links is a link sharing component for BuddyPress.
 Author: Marshall Sorenson (MrMaz)
 Author URI: http://buddypress.org/developers/mrmaz/
 License: GNU GENERAL PUBLIC LICENSE 3.0 http://www.gnu.org/licenses/gpl.txt
-Version: 0.1
+Version: 0.1.1
 Text Domain: buddypress-links
 Site Wide Only: false
 */
@@ -46,7 +46,7 @@ if ( !defined( 'BP_LINKS_EMBED_FOTOGLIF_PUBID' ) )
 // Important Internal Constants
 // *** DO NOT MODIFY THESE ***
 define ( 'BP_LINKS_IS_INSTALLED', 1 );
-define ( 'BP_LINKS_VERSION', '0.1' );
+define ( 'BP_LINKS_VERSION', '0.1.1' );
 define ( 'BP_LINKS_DB_VERSION', '2' );
 define ( 'BP_LINKS_PLUGIN_NAME', 'buddypress-links' );
 define ( 'BP_LINKS_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . BP_LINKS_PLUGIN_NAME );
