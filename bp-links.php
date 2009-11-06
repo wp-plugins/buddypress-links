@@ -137,9 +137,9 @@ add_filter( 'cron_schedules', 'bp_links_add_cron_schedules' );
 
 function bp_links_load_textdomain() {
 	$locale = apply_filters( 'bp_links_load_textdomain', get_locale() );
-	$mofile = BP_LINKS_PLUGIN_DIR . sprintf( '/languages/bp-links-%s.mo', $locale );
+	$mofile = BP_LINKS_PLUGIN_DIR . sprintf( '/languages/%s-%s.mo', BP_LINKS_PLUGIN_NAME, $locale );
 	if ( file_exists( $mofile ) )
-		load_textdomain( 'buddypress-links', $mofile );
+		load_textdomain( BP_LINKS_PLUGIN_NAME, $mofile );
 }
 add_action ( 'plugins_loaded', 'bp_links_load_textdomain', 6 );
 
