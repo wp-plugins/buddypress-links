@@ -27,7 +27,7 @@
 					<div class="bp-widget">
 						<?php if ( function_exists('bp_wire_get_post_list') ) : ?>
 							
-							<?php bp_wire_get_post_list( bp_get_link_id( false, false), __( 'Link Wire', 'buddypress-links' ), sprintf( __( 'There are no wire posts for %s', 'buddypress-links' ), bp_get_link_name() ), bp_link_is_visible(), true ) ?>
+							<?php bp_wire_get_post_list( bp_get_link_id( false, false), __( 'Link Wire', 'buddypress-links' ), sprintf( __( 'There are no wire posts for %1$s', 'buddypress-links' ), bp_get_link_name() ), bp_link_is_visible(), true ) ?>
 						
 						<?php endif; ?>
 					</div>

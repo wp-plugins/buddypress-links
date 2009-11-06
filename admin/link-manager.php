@@ -53,7 +53,7 @@ function bp_links_admin_manage_links() {
 				<br class="clear"/>
 				
 				<?php if ( isset( $_REQUEST['s'] ) && $_REQUEST['s'] != '' ) { ?>
-					<p><?php echo sprintf( __( 'Links matching: "%s"', 'buddypress-links' ), $_REQUEST['s'] ) ?></p>
+					<p><?php echo sprintf( '%1$s &quot;%2$s&quot;', __( 'Links matching:', 'buddypress-links' ), $_REQUEST['s'] ) ?></p>
 				<?php } ?>
 
 

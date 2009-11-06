@@ -104,7 +104,7 @@ function bp_links_embed_download_avatar( $url ) {
 
 	// Move the file to the correct upload location.
 	if ( !empty( $bp->avatar_admin->original['error'] ) ) {
-		bp_core_add_message( sprintf( __( 'Upload Failed! Error was: %s', 'buddypress-links' ), $bp->avatar_admin->original['error'] ), 'error' );
+		bp_core_add_message( sprintf( '%1$s %2$s', __( 'Upload Failed! Error was:', 'buddypress-links' ), $bp->avatar_admin->original['error'] ), 'error' );
 		return false;
 	}
 

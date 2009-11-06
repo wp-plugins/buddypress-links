@@ -8,7 +8,7 @@
 
 	<div id="content">
 		
-		<h2><?php bp_word_or_name( __( "My Links", 'buddypress-links' ), __( "%s's Links", 'buddypress-links' ) ) ?> &raquo; <?php bp_links_filter_title() ?></h2>
+		<h2><?php bp_word_or_name( __( 'My Links', 'buddypress-links' ), __( '%1$s\'s Links', 'buddypress-links' ) ) ?> &raquo; <?php bp_links_filter_title() ?></h2>
 
 		<?php do_action( 'bp_before_my_links_content' ) ?>
 	

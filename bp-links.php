@@ -126,11 +126,11 @@ function bp_links_wire_install() {
 
 function bp_links_add_cron_schedules() {
 	return array(
-		'5_min' => array( 'interval' => 5*60, 'display' => __('Every 5 minutes') ),
-		'10_min' => array( 'interval' => 10*60, 'display' => __('Every 10 minutes') ),
-		'15_min' => array( 'interval' => 15*60, 'display' => __('Every 15 minutes') ),
-		'20_min' => array( 'interval' => 20*60, 'display' => __('Every 20 minutes') ),
-		'30_min' => array( 'interval' => 30*60, 'display' => __('Every 30 minutes') )
+		'5_min' => array( 'interval' => 5*60, 'display' => sprintf( __( 'Every %1$d minutes', 'buddypress-links' ), 5 ) ),
+		'10_min' => array( 'interval' => 10*60, 'display' => sprintf( __( 'Every %1$d minutes', 'buddypress-links' ), 10 ) ),
+		'15_min' => array( 'interval' => 15*60, 'display' => sprintf( __( 'Every %1$d minutes', 'buddypress-links' ), 15 ) ),
+		'20_min' => array( 'interval' => 20*60, 'display' => sprintf( __( 'Every %1$d minutes', 'buddypress-links' ), 20 ) ),
+		'30_min' => array( 'interval' => 30*60, 'display' => sprintf( __( 'Every %1$d minutes', 'buddypress-links' ), 30 ) )
 	);
 }
 add_filter( 'cron_schedules', 'bp_links_add_cron_schedules' );
@@ -514,7 +514,7 @@ function bp_links_screen_create_link() {
 
 			/* Once we compelete all steps, record the link creation in the activity stream. */
 			bp_links_record_activity( array(
-				'content' => apply_filters( 'bp_links_activity_created_link', sprintf( __( '%s created the link %s', 'buddypress-links'), bp_core_get_userlink( $bp->loggedin_user->id ), '<a href="' . bp_get_link_permalink( $bp->links->current_link ) . '">' . attribute_escape( $bp->links->current_link->name ) . '</a>' ) ),
+				'content' => apply_filters( 'bp_links_activity_created_link', sprintf( __( '%1$s created the link %2$s', 'buddypress-links'), bp_core_get_userlink( $bp->loggedin_user->id ), '<a href="' . bp_get_link_permalink( $bp->links->current_link ) . '">' . attribute_escape( $bp->links->current_link->name ) . '</a>' ) ),
 				'primary_link' => apply_filters( 'bp_links_activity_created_link_primary_link', bp_get_link_permalink( $bp->links->current_link ) ),
 				'component_action' => 'created_link',
 				'item_id' => $bp->links->new_link_id
@@ -961,16 +961,16 @@ function bp_links_validate_details( $data, $cookie_prefix, $redirect_to ) {
 		bp_core_add_message( __( 'Please fill in all of the required fields', 'buddypress-links' ), 'error' );
 		bp_core_redirect( $redirect_to );
 	} elseif ( true === $bp_new_link_url_truncated ) {
-		bp_core_add_message( sprintf( __( 'Link URL must be %d characters or less, please make corrections and re-submit.', 'buddypress-links' ), BP_LINKS_MAX_CHARACTERS_URL ), 'error' );
+		bp_core_add_message( sprintf( __( 'Link URL must be %1$d characters or less, please make corrections and re-submit.', 'buddypress-links' ), BP_LINKS_MAX_CHARACTERS_URL ), 'error' );
 		bp_core_redirect( $redirect_to );
 	} elseif ( bp_links_is_url_valid( $bp_new_link_url ) !== true ) {
 		bp_core_add_message( __( 'The URL you entered is not valid.', 'buddypress-links' ), 'error' );
 		bp_core_redirect( $redirect_to );
 	} elseif ( true === $bp_new_link_name_truncated ) {
-		bp_core_add_message( sprintf( __( 'Link Name must be %d characters or less, please make corrections and re-submit.', 'buddypress-links' ), BP_LINKS_MAX_CHARACTERS_NAME ), 'error' );
+		bp_core_add_message( sprintf( __( 'Link Name must be %1$d characters or less, please make corrections and re-submit.', 'buddypress-links' ), BP_LINKS_MAX_CHARACTERS_NAME ), 'error' );
 		bp_core_redirect( $redirect_to );
 	} elseif ( true === $bp_new_link_description_truncated ) {
-		bp_core_add_message( sprintf( __( 'Link Description must be %d characters or less, please make corrections and re-submit.', 'buddypress-links' ), BP_LINKS_MAX_CHARACTERS_DESCRIPTION ), 'error' );
+		bp_core_add_message( sprintf( __( 'Link Description must be %1$d characters or less, please make corrections and re-submit.', 'buddypress-links' ), BP_LINKS_MAX_CHARACTERS_DESCRIPTION ), 'error' );
 		bp_core_redirect( $redirect_to );
 	}
 
@@ -1110,7 +1110,7 @@ function bp_links_format_notifications( $action, $item_id, $secondary_item_id, $
 				return apply_filters( 'bp_links_multiple_example_notification', '<a href="' . $link_link . '/admin/example-slug/" title="' . __( 'Link Example Event', 'buddypress-links' ) . '">' . sprintf( __('%d number of example events happened for the link "%s"', 'buddypress-links' ), (int)$total_items, $link->name ) . '</a>', $link_link, $total_items, $link->name );
 			} else {
 				$user_fullname = bp_core_get_user_displayname( $requesting_user_id );
-				return apply_filters( 'bp_links_single_example_notification', '<a href="' . $link_link . '/admin/example-slug/" title="' . $user_fullname .' did something">' . sprintf( __('%s triggered a notification for the link "%s"', 'buddypress-links' ), $user_fullname, $link->name ) . '</a>', $link_link, $user_fullname, $link->name );
+				return apply_filters( 'bp_links_single_example_notification', '<a href="' . $link_link . '/admin/example-slug/" title="' . $user_fullname .' did something">' . sprintf( __('%1$s triggered a notification for the link "%2$s"', 'buddypress-links' ), $user_fullname, $link->name ) . '</a>', $link_link, $user_fullname, $link->name );
 			}	
 		break;
 	}
@@ -1547,7 +1547,7 @@ function bp_links_new_wire_post( $link_id, $content ) {
 		bp_links_notification_new_wire_post( $link_id, $wire_post->id );
 
 		/* Record this in activity streams */
-		$activity_content = sprintf( __( '%s wrote on the wire of the link %s:', 'buddypress-links'), bp_core_get_userlink( $bp->loggedin_user->id ), '<a href="' . bp_get_link_permalink( $bp->links->current_link ) . '">' . attribute_escape( $bp->links->current_link->name ) . '</a>' );
+		$activity_content = sprintf( __( '%1$s wrote on the wire of the link %2$s:', 'buddypress-links'), bp_core_get_userlink( $bp->loggedin_user->id ), '<a href="' . bp_get_link_permalink( $bp->links->current_link ) . '">' . attribute_escape( $bp->links->current_link->name ) . '</a>' );
 		$activity_content .= '<blockquote>' . bp_create_excerpt( attribute_escape( $content ) ) . '</blockquote>';
 		
 		bp_links_record_activity( array(
@@ -1662,7 +1662,7 @@ function bp_links_cast_vote( $link_id, $up_or_down ) {
 		if ( $record_activity ) {
 			
 			// record the activity
-			$activity_content = sprintf( __( '%s voted %s the link %s:', 'buddypress-links'), bp_core_get_userlink( $bp->loggedin_user->id ), $up_or_down, '<a href="' . bp_get_link_permalink( $bp->links->current_link ) . '">' . attribute_escape( $bp->links->current_link->name ) . '</a>' );
+			$activity_content = sprintf( __( '%1$s voted %s the link %2$s:', 'buddypress-links'), bp_core_get_userlink( $bp->loggedin_user->id ), $up_or_down, '<a href="' . bp_get_link_permalink( $bp->links->current_link ) . '">' . attribute_escape( $bp->links->current_link->name ) . '</a>' );
 
 			bp_links_record_activity( array(
 				'content' => apply_filters( 'bp_links_activity_voted', $activity_content ),

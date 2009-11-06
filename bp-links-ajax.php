@@ -35,7 +35,7 @@ function bp_links_ajax_link_vote() {
 		$link = bp_links_cast_vote( $_REQUEST['link_id'], substr( $_REQUEST['up_or_down'], 0, 4 ) );
 
 		if ( $link instanceof BP_Links_Link ) {
-			echo bp_links_ajax_response_string( 1, __( 'Vote recorded.', 'buddypress-links' ), sprintf( '%+d', $link->vote_total), $link->vote_count );
+			echo bp_links_ajax_response_string( 1, __( 'Vote recorded.', 'buddypress-links' ), sprintf( '%1$+d', $link->vote_total), $link->vote_count );
 		} else {
 			echo bp_links_ajax_response_string( -1, __( 'There was a problem recording your vote. Please try again.', 'buddypress-links' ) );
 		}

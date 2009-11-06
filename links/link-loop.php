@@ -23,7 +23,7 @@
 		<?php if ( bp_link_show_no_links_message() ) : ?>
 
 			<div id="message" class="info">
-				<p><?php bp_word_or_name( __( "You haven't added any links yet.", 'buddypress-links' ), __( "%s hasn't added any links yet.", 'buddypress-links' ) ) ?></p>
+				<p><?php bp_word_or_name( __( "You haven't added any links yet.", 'buddypress-links' ), __( '%1$s hasn\'t added any links yet.', 'buddypress-links' ) ) ?></p>
 			</div>
 
 		<?php else: ?>

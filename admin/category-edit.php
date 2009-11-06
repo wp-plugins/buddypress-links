@@ -46,7 +46,7 @@ if ( isset($_POST['category_id']) ) {
 			}
 		} else {
 			$error = true;
-			$message = __( 'Link category name must be 2 to 50 characters in length.', 'buddypress-links' ) . ' ' . __( 'Please Try Again.', 'buddypress-links' );
+			$message = sprintf( __( 'Link category name must be %1$d to %2$d characters in length.', 'buddypress-links' ), 3, 50 ) . ' ' . __( 'Please Try Again.', 'buddypress-links' );
 			$message_type = 'error';
 		}
 	} else {
@@ -65,7 +65,7 @@ if ( isset($_POST['category_id']) ) {
 				$category->description = $category_description;
 			} else {
 				$error = true;
-				$message = __( 'Link category description must be 5 to 250 characters in length.', 'buddypress-links' ) . ' ' . __( 'Please Try Again.', 'buddypress-links' );
+				$message = sprintf( __( 'Link category description must be %1$d to %2$d characters in length.', 'buddypress-links' ), 5, 250 ) . ' ' . __( 'Please Try Again.', 'buddypress-links' );
 				$message_type = 'error';
 			}
 		}
@@ -78,7 +78,7 @@ if ( isset($_POST['category_id']) ) {
 			$category->priority = $category_priority;
 		} else {
 			$error = true;
-			$message = __( 'Link category priority must be a number from 1 to 100.', 'buddypress-links' ) . ' ' . __( 'Please Try Again.', 'buddypress-links' );
+			$message = sprintf( __( 'Link category priority must be a number from %1$d to %2$d.', 'buddypress-links' ), 1, 100 ) . ' ' . __( 'Please Try Again.', 'buddypress-links' );
 			$message_type = 'error';
 		}
 	} else {

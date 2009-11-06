@@ -829,7 +829,7 @@ function bp_link_pagination_count() {
 	$from_num = intval( ( $links_template->pag_page - 1 ) * $links_template->pag_num ) + 1;
 	$to_num = ( $from_num + ( $links_template->pag_num - 1 ) > $links_template->total_link_count ) ? $links_template->total_link_count : $from_num + ( $links_template->pag_num - 1) ;
 
-	echo sprintf( __( 'Viewing link %d to %d (of %d links)', 'buddypress-links' ), $from_num, $to_num, $links_template->total_link_count ); ?> &nbsp;
+	echo sprintf( __( 'Viewing link %1$d to %2$d (of %3$d links)', 'buddypress-links' ), $from_num, $to_num, $links_template->total_link_count ); ?> &nbsp;
 	<span class="ajax-loader"></span><?php 
 }
 
@@ -1392,7 +1392,7 @@ function bp_site_links_pagination_count() {
 	$from_num = intval( ( $site_links_template->pag_page - 1 ) * $site_links_template->pag_num ) + 1;
 	$to_num = ( $from_num + ( $site_links_template->pag_num - 1 ) > $site_links_template->total_link_count ) ? $site_links_template->total_link_count : $from_num + ( $site_links_template->pag_num - 1) ;
 
-	echo sprintf( __( 'Viewing link %d to %d (of %d links)', 'buddypress-links' ), $from_num, $to_num, $site_links_template->total_link_count ); ?> &nbsp;
+	echo sprintf( __( 'Viewing link %1$d to %2$d (of %3$d links)', 'buddypress-links' ), $from_num, $to_num, $site_links_template->total_link_count ); ?> &nbsp;
 	<span class="ajax-loader"></span><?php 
 }
 
@@ -1562,7 +1562,7 @@ function bp_the_site_link_last_active() {
 	function bp_get_the_site_link_last_active() {
 		global $site_links_template;
 
-		return apply_filters( 'bp_get_the_site_link_last_active', sprintf( __( 'active %s ago', 'buddypress-links' ), bp_get_link_last_active( $site_links_template->link ) ) );
+		return apply_filters( 'bp_get_the_site_link_last_active', sprintf( __( 'active %1$s ago', 'buddypress-links' ), bp_get_link_last_active( $site_links_template->link ) ) );
 	}
 
 /* TODO useful on directory page?
@@ -1863,7 +1863,7 @@ function bp_site_link_categories_pagination_count() {
 	$from_num = intval( ( $site_link_categories_template->pag_page - 1 ) * $site_link_categories_template->pag_num ) + 1;
 	$to_num = ( $from_num + ( $site_link_categories_template->pag_num - 1 ) > $site_link_categories_template->total_link_count ) ? $site_link_categories_template->total_link_count : $from_num + ( $site_link_categories_template->pag_num - 1) ;
 
-	echo sprintf( __( 'Viewing category %d to %d (of %d categories)', 'buddypress-links' ), $from_num, $to_num, $site_link_categories_template->total_category_count ); ?> &nbsp;
+	echo sprintf( __( 'Viewing category %1$d to %2$d (of %3$d categories)', 'buddypress-links' ), $from_num, $to_num, $site_link_categories_template->total_category_count ); ?> &nbsp;
 	<span class="ajax-loader"></span><?php
 }
 

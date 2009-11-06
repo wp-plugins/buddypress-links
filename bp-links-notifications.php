@@ -12,7 +12,7 @@ function bp_links_notification_new_wire_post( $link_id, $wire_post_id ) {
 	$poster_name = bp_core_get_user_displayname( $wire_post->user_id );
 	$poster_profile_link = bp_core_get_user_domain( $wire_post->user_id ); 
 
-	$subject = '[' . get_blog_option( BP_ROOT_BLOG, 'blogname' ) . '] ' . sprintf( __( 'New wire post on link: %s', 'buddypress-links' ), stripslashes( attribute_escape( $link->name ) ) );
+	$subject = '[' . get_blog_option( BP_ROOT_BLOG, 'blogname' ) . '] ' . sprintf( __( 'New wire post on link: %1$s', 'buddypress-links' ), stripslashes( attribute_escape( $link->name ) ) );
 
 	$ud = get_userdata( $link->user_id );
 
@@ -35,7 +35,7 @@ To view %s\'s profile page: %s
 ---------------------
 ', 'buddypress-links' ), $poster_name, stripslashes( attribute_escape( $link->name ) ), stripslashes($wire_post->content), $wire_link, $link_link, $poster_name, $poster_profile_link );
 
-	$message .= sprintf( __( 'To disable these notifications please log in and go to: %s', 'buddypress-links' ), $settings_link );
+	$message .= sprintf( __( 'To disable these notifications please log in and go to: %1$s', 'buddypress-links' ), $settings_link );
 
 	// Send it
 	wp_mail( $ud->user_email, $subject, $message );
