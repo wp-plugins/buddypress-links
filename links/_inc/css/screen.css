@@ -231,7 +231,7 @@ div#links-directory-page ul#filter-nav {
 }
 	div#links-directory-page ul#filter-nav li {
 		float: left;
-		margin-right: 20px;
+		margin: 0px 5px 10px 0px;
 	}
 		div#links-directory-page ul#filter-nav li a {
 			display: block;
@@ -240,6 +240,7 @@ div#links-directory-page ul#filter-nav {
 			text-decoration: none;
 			font-size: 12px;
 			color: inherit;
+			min-height: 22px;
 		}
 
 		div#links-directory-page ul#filter-nav li.current a {
@@ -252,10 +253,14 @@ div#links-directory-page ul#filter-nav {
 			color: #f7740a;
 		}
 
-div#links-directory-page div#filter-cat {
-	float: left;
-	padding: 5px 0 0 20px;
+div#links-directory-page ul#filter-nav li div#filter-cat {
+	padding: 4px 12px;
+	background: #eee;
+	min-height: 22px;
 }
+	div#links-directory-page ul#filter-nav li div#filter-cat select {
+		font-size: 11px;
+	}
 
 /**** SETTINGS SCREEN ***************************/
 

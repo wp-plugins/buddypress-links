@@ -9,15 +9,9 @@
 			<form action="<?php echo site_url() . '/' ?>" method="post" id="links-directory-form">
 				<h3><?php _e( 'Links Directory', 'buddypress-links' ) ?></h3>
 
-				<div style="height: 45px;">
-					<ul id="filter-nav">
-						<?php bp_directory_links_filter_tabs() ?>
-					</ul>
-					<div id="filter-cat">
-						<span><?php _e( 'Category', 'buddypress-links' ) ?>:</span>
-						<?php bp_directory_links_filter_category($_COOKIE['bp_directory_links_category_id'], 'category_id') ?>
-					</div>
-				</div>
+				<ul id="filter-nav">
+					<?php bp_directory_links_filter_tabs() ?>
+				</ul>
 				
 				<ul id="letter-list">
 					<li><a href="#a" id="letter-a">A</a></li>

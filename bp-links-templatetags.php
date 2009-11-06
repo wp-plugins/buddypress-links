@@ -1967,6 +1967,7 @@ function bp_directory_links_filter_tabs() {
 	<li<?php if ( 'recently-active' == $bp->current_action ) : ?> class="current"<?php endif; ?>><a href="<?php echo site_url('/') . $bp->links->slug ?>/recently-active"><?php _e( 'Recently Active', 'buddypress-links' ) ?></a></li>
 	<li<?php if ( 'newest' == $bp->current_action ) : ?> class="current"<?php endif; ?>><a href="<?php echo site_url('/') . $bp->links->slug ?>/newest"><?php _e( 'Newest', 'buddypress-links' ) ?></a></li>
 	<li<?php if ( 'all' == $bp->current_action ) : ?> class="current"<?php endif; ?>><a href="<?php echo site_url('/') . $bp->links->slug ?>/all"><?php _e( 'All', 'buddypress-links' ) ?></a></li>
+	<li><div id="filter-cat"><?php _e( 'Category', 'buddypress-links' ) ?>: <?php bp_directory_links_filter_category($_COOKIE['bp_directory_links_category_id'], 'category_id') ?></div></li>
 <?php
 	do_action( 'bp_directory_links_filter_tabs' );
 }
