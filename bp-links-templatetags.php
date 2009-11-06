@@ -2307,7 +2307,7 @@ function bp_get_link_list_item_xtrabar( $args = array() ) {
 	return sprintf('
 		%1$s<div class="xtrabar">%2$s
 			%3$s<a href="%4$s" class="home">Home</a>%5$s%6$s
-			%7$s<span class="owner">%8$s&nbsp;%9$s&nbsp;%10$s %11$s</span>%12$s
+			%7$s<span class="owner">%8$s&nbsp;%9$s %10$s %11$s</span>%12$s
 		%13$s</div>%14$s',
 		apply_filters( 'bp_before_my_links_list_item_xtrabar_content', '', $args ), // arg 1
 		apply_filters( 'bp_before_my_links_list_item_xtrabar', '', $args ), // arg 2
