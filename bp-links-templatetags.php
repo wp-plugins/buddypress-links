@@ -468,11 +468,11 @@ function bp_link_type() {
 			$link =& $links_template->link;
 
 		if ( BP_Links_Link::STATUS_PUBLIC == $link->status ) {
-			$type = __( "Public Link", "buddypress" );
+			$type = __( 'Public Link', 'buddypress-links' );
 		} else if ( BP_Links_Link::STATUS_FRIENDS == $link->status ) {
-			$type = __( "Friends Only Link", "buddypress" );
+			$type = __( 'Friends Only Link', 'buddypress-links' );
 		} else if ( BP_Links_Link::STATUS_HIDDEN == $link->status ) {
-			$type = __( "Hidden Link", "buddypress" );
+			$type = __( 'Hidden Link', 'buddypress-links' );
 		} else {
 			$type = ucwords( $link->status ) . ' ' . __( 'Link', 'buddypress-links' );
 		}

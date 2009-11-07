@@ -106,12 +106,12 @@
 					</p>
 
 					<p>
-						-- OR --
+						<?php printf( '-- %1$s --', __( 'OR', 'buddypress-links' ) ) ?>
 					</p>
 
 					<div>
 						<div>
-							Paste Image Embed Code (<a href="http://www.picapp.com/Search.aspx?term=hockey" target="_blank">PicApp</a> and <a href="http://www.fotoglif.com/search/?search=hockey" target="_blank">Fotoglif</a> are supported)
+							<?php printf( __( 'Paste Image Embed Code (%1$s and %2$s are supported)', 'buddypress-links' ), '<a href="http://www.picapp.com/" target="_blank">PicApp</a>', '<a href="http://www.fotoglif.com/" target="_blank">Fotoglif</a>' ) ?>
 						</div>
 						<textarea name="embed-html" id="embed-html" cols="50" rows="4"><?php echo ( isset( $_POST['embed-html'] ) ) ? esc_html( $_POST['embed-html'] ) : null; ?></textarea>
 						<div>

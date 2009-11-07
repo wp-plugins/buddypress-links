@@ -84,7 +84,7 @@
 		<?php endwhile; else: ?>
 			
 			<div id="message" class="error">
-				<p><?php _e("Sorry, the link does not exist.", "buddypress"); ?></p>
+				<p><?php _e('Sorry, the link does not exist.', 'buddypress-links' ); ?></p>
 			</div>
 			
 		<?php endif;?>
