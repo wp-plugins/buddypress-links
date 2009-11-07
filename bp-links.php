@@ -1543,7 +1543,7 @@ function bp_links_new_wire_post( $link_id, $content ) {
 	if ( $wire_post = bp_wire_new_post( $link_id, $content, 'links' ) ) {
 
 		/* Post an email notification if settings allow */
-		require_once ( BP_LINKS_PLUGIN_NAME . '/bp-links-notifications.php' );
+		require_once ( BP_LINKS_PLUGIN_DIR . '/bp-links-notifications.php' );
 		bp_links_notification_new_wire_post( $link_id, $wire_post->id );
 
 		/* Record this in activity streams */
