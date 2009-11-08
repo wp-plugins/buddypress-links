@@ -90,7 +90,14 @@ if ( isset($_POST['category_id']) ) {
 	// try to save
 	if ( false === $error ) {
 		if ( $category->save() ) {
-//			wp_redirect( wp_get_original_referer() );
+			$message = sprintf(
+				'%1$s <a href="?page=buddypress-links/admin/category-manager.php">%2$s</a> %3$s <a href="?page=buddypress-links/admin/category-manager.php&amp;category_id=">%4$s</a>',
+				__( 'Link category saved!', 'buddypress-links' ), // arg 1
+				__( 'Return to list', 'buddypress-links' ), // arg 2
+				__( 'or', 'buddypress-links' ), // arg 3
+				__( 'Create new category', 'buddypress-links' ) // arg 4
+			);
+			$message_type = 'updated';
 		} else {
 			$message = __( 'There were errors when saving the link category.', 'buddypress-links' ) . ' ' . __( 'Please try again.', 'buddypress-links' );
 			$message_type = 'error';
