@@ -39,19 +39,19 @@ if ( isset($_POST['category_id']) ) {
 		if ( strlen( $category_name ) >= 3 && strlen( $category_name ) <= 50) {
 			if ( empty($category->slug) && $category->check_slug_raw( $category_name ) ) {
 				$error = true;
-				$message = __( 'Link category slug from this name already exists.', 'buddypress-links' ) . ' ' . __( 'Please Try Again.', 'buddypress-links' );
+				$message = __( 'Link category slug from this name already exists.', 'buddypress-links' ) . ' ' . __( 'Please try again.', 'buddypress-links' );
 				$message_type = 'error';
 			} else {
 				$category->name = $category_name;
 			}
 		} else {
 			$error = true;
-			$message = sprintf( __( 'Link category name must be %1$d to %2$d characters in length.', 'buddypress-links' ), 3, 50 ) . ' ' . __( 'Please Try Again.', 'buddypress-links' );
+			$message = sprintf( __( 'Link category name must be %1$d to %2$d characters in length.', 'buddypress-links' ), 3, 50 ) . ' ' . __( 'Please try again.', 'buddypress-links' );
 			$message_type = 'error';
 		}
 	} else {
 		$error = true;
-		$message = __( 'Link category name is required.', 'buddypress-links' ) . ' ' . __( 'Please Try Again.', 'buddypress-links' );
+		$message = __( 'Link category name is required.', 'buddypress-links' ) . ' ' . __( 'Please try again.', 'buddypress-links' );
 		$message_type = 'error';
 	}
 
@@ -65,7 +65,7 @@ if ( isset($_POST['category_id']) ) {
 				$category->description = $category_description;
 			} else {
 				$error = true;
-				$message = sprintf( __( 'Link category description must be %1$d to %2$d characters in length.', 'buddypress-links' ), 5, 250 ) . ' ' . __( 'Please Try Again.', 'buddypress-links' );
+				$message = sprintf( __( 'Link category description must be %1$d to %2$d characters in length.', 'buddypress-links' ), 5, 250 ) . ' ' . __( 'Please try again.', 'buddypress-links' );
 				$message_type = 'error';
 			}
 		}
@@ -78,12 +78,12 @@ if ( isset($_POST['category_id']) ) {
 			$category->priority = $category_priority;
 		} else {
 			$error = true;
-			$message = sprintf( __( 'Link category priority must be a number from %1$d to %2$d.', 'buddypress-links' ), 1, 100 ) . ' ' . __( 'Please Try Again.', 'buddypress-links' );
+			$message = sprintf( __( 'Link category priority must be a number from %1$d to %2$d.', 'buddypress-links' ), 1, 100 ) . ' ' . __( 'Please try again.', 'buddypress-links' );
 			$message_type = 'error';
 		}
 	} else {
 		$error = true;
-		$message = __( 'Link category priority is required.', 'buddypress-links' ) . ' ' . __( 'Please Try Again.', 'buddypress-links' );
+		$message = __( 'Link category priority is required.', 'buddypress-links' ) . ' ' . __( 'Please try again.', 'buddypress-links' );
 		$message_type = 'error';
 	}
 
@@ -92,7 +92,7 @@ if ( isset($_POST['category_id']) ) {
 		if ( $category->save() ) {
 //			wp_redirect( wp_get_original_referer() );
 		} else {
-			$message = __( 'There were errors when saving the link category.', 'buddypress-links' ) . ' ' . __( 'Please Try Again.', 'buddypress-links' );
+			$message = __( 'There were errors when saving the link category.', 'buddypress-links' ) . ' ' . __( 'Please try again.', 'buddypress-links' );
 			$message_type = 'error';
 		}
 	}

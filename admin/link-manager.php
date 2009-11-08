@@ -15,7 +15,7 @@ function bp_links_admin_manage_links() {
 		}
 		
 		if ( $errors ) {
-			$message = __( 'There were errors when deleting links.', 'buddypress-links' ) . ' ' . __( 'Please Try Again.', 'buddypress-links' );
+			$message = __( 'There were errors when deleting links.', 'buddypress-links' ) . ' ' . __( 'Please try again.', 'buddypress-links' );
 			$type = 'error';
 		} else {
 			$message = __( 'Links deleted successfully', 'buddypress-links' );

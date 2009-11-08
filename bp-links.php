@@ -444,7 +444,7 @@ function bp_links_screen_create_link() {
 	
 	/* If this is a creation step that is not recognized, just redirect them back to the first screen */
 	if ( $bp->action_variables[1] && !$bp->links->link_creation_steps[$bp->action_variables[1]] ) {
-		bp_core_add_message( sprintf( '%s %s', __( 'There was an error saving link details.', 'buddypress-links' ), __( 'Please Try Again.', 'buddypress-links' ) ), 'error' );
+		bp_core_add_message( sprintf( '%s %s', __( 'There was an error saving link details.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
 		bp_core_redirect( $bp->loggedin_user->domain . $bp->links->slug . '/create' );
 	}
 
@@ -475,7 +475,7 @@ function bp_links_screen_create_link() {
 
 			// try to create the link
 			if ( !$bp->links->new_link_id = bp_links_create_link( array( 'link_id' => $bp->links->new_link_id, 'category_id' => $data_valid['link-category'], 'url' => $data_valid['link-url'], 'name' => $data_valid['link-name'], 'description' => $data_valid['link-desc'], 'slug' => bp_links_check_slug( sanitize_title_with_dashes( $data_valid['link-name'] ) ) ) ) ) {
-				bp_core_add_message( sprintf( '%s %s', __( 'There was an error saving link details.', 'buddypress-links' ), __( 'Please Try Again.', 'buddypress-links' ) ), 'error' );
+				bp_core_add_message( sprintf( '%s %s', __( 'There was an error saving link details.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
 				bp_core_redirect( $bp->loggedin_user->domain . $bp->links->slug . '/create/step/' . $bp->links->current_create_step );
 			}
 
@@ -496,7 +496,7 @@ function bp_links_screen_create_link() {
 				$link_status = $_POST['link-status'];
 		
 			if ( !$bp->links->new_link_id = bp_links_create_link( array( 'link_id' => $bp->links->new_link_id, 'status' => $link_status, 'enable_wire' => $link_enable_wire ) ) ) {
-				bp_core_add_message( sprintf( '%s %s', __( 'There was an error saving link settings.', 'buddypress-links' ), __( 'Please Try Again.', 'buddypress-links' ) ), 'error' );
+				bp_core_add_message( sprintf( '%s %s', __( 'There was an error saving link settings.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
 				bp_core_redirect( $bp->loggedin_user->domain . $bp->links->slug . '/create/step/' . $bp->links->current_create_step );
 			}
 		}
@@ -581,7 +581,7 @@ function bp_links_screen_create_link() {
 				bp_links_embed_handle_crop( $bp->links->current_link );
 				bp_core_add_message( __( 'The link avatar was uploaded successfully!', 'buddypress-links' ) );
 			} else {
-				bp_core_add_message( sprintf( '%s %s', __( 'There was an error saving link avatar.', 'buddypress-links' ), __( 'Please Try Again.', 'buddypress-links' ) ), 'error' );
+				bp_core_add_message( sprintf( '%s %s', __( 'There was an error saving link avatar.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
 			}
 				
 		}
@@ -701,7 +701,7 @@ function bp_links_screen_link_admin_edit_details() {
 
 				if ( !bp_links_edit_base_link_details( $_POST['link-id'], $data_valid['link-category'], $data_valid['link-url'], $data_valid['link-name'], $data_valid['link-desc'] ) ) {
 //				if ( !bp_links_edit_base_link_details( $_POST['link-id'], $_POST['link-category'], $_POST['link-url'], $_POST['link-name'], $_POST['link-desc'] ) ) {
-					bp_core_add_message( sprintf( '%s %s', __( 'There was an error updating link details.', 'buddypress-links' ), __( 'Please Try Again.', 'buddypress-links' ) ), 'error' );
+					bp_core_add_message( sprintf( '%s %s', __( 'There was an error updating link details.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
 				} else {
 					bp_core_add_message( __( 'Link details were successfully updated.', 'buddypress-links' ) );
 				}
@@ -745,7 +745,7 @@ function bp_links_screen_link_admin_settings() {
 				return false;
 			
 			if ( !bp_links_edit_link_settings( $_POST['link-id'], $enable_wire, $status ) ) {
-				bp_core_add_message( sprintf( '%s %s', __( 'There was an error updating link settings.', 'buddypress-links' ), __( 'Please Try Again.', 'buddypress-links' ) ), 'error' );
+				bp_core_add_message( sprintf( '%s %s', __( 'There was an error updating link settings.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
 			} else {
 				bp_core_add_message( __( 'Link settings were successfully updated.', 'buddypress-links' ) );
 			}
@@ -782,7 +782,7 @@ function bp_links_screen_link_admin_avatar() {
 			if ( bp_core_delete_existing_avatar( array( 'item_id' => $bp->links->current_link->id, 'object' => 'link', 'avatar_dir' => 'link-avatars' ) ) )
 				bp_core_add_message( __( 'Your avatar was deleted successfully!', 'buddypress-links' ) );
 			else
-				bp_core_add_message( sprintf( '%s %s', __( 'There was a problem deleting that avatar', 'buddypress-links' ), __( 'Please Try Again.', 'buddypress-links' ) ), 'error' );
+				bp_core_add_message( sprintf( '%s %s', __( 'There was a problem deleting that avatar', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
 
 		}
 
@@ -824,7 +824,7 @@ function bp_links_screen_link_admin_avatar() {
 				bp_links_embed_handle_crop( $bp->links->current_link );
 				bp_core_add_message( __( 'The new link avatar was uploaded successfully!', 'buddypress-links' ) );
 			} else {
-				bp_core_add_message( sprintf( '%s %s', __( 'There was an error saving link avatar.', 'buddypress-links' ), __( 'Please Try Again.', 'buddypress-links' ) ), 'error' );
+				bp_core_add_message( sprintf( '%s %s', __( 'There was an error saving link avatar.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
 			}
 
 

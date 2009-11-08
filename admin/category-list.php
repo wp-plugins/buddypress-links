@@ -23,7 +23,7 @@ if ( isset( $_POST['categories_admin_delete']) && isset( $_POST['allcategories']
 				$message = __( 'Categories deleted successfully', 'buddypress-links' );
 				$message_type = 'updated';
 			} else {
-				$message = sprintf( '%s %s', __( 'There were errors when deleting categories.', 'buddypress-links' ), __( 'Please Try Again.', 'buddypress-links' ) );
+				$message = sprintf( '%s %s', __( 'There were errors when deleting categories.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) );
 				$message_type = 'error';
 			}
 		} else {
