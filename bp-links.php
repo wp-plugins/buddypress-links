@@ -136,17 +136,26 @@ function bp_links_add_cron_schedules() {
 add_filter( 'cron_schedules', 'bp_links_add_cron_schedules' );
 
 function bp_links_load_textdomain() {
-	$locale = apply_filters( 'bp_links_load_textdomain', get_locale() );
-	$mofile = BP_LINKS_PLUGIN_DIR . sprintf( '/languages/%s-%s.mo', BP_LINKS_PLUGIN_NAME, $locale );
-	if ( file_exists( $mofile ) )
-		load_textdomain( BP_LINKS_PLUGIN_NAME, $mofile );
+
+	// try to get locale
+	$locale = apply_filters( 'bp_links_load_textdomain_get_locale', get_locale() );
+
+	// if we found a locale, try to load .mo file
+	if ( !empty( $locale ) ) {
+		// default .mo file path
+		$mofile_default = sprintf( '%s/languages/%s-%s.mo', BP_LINKS_PLUGIN_DIR, BP_LINKS_PLUGIN_NAME, $locale );
+		// final filtered file path
+		$mofile = apply_filters( 'bp_links_load_textdomain_mofile', $mofile_default );
+		// make sure file exists, and load it
+		if ( file_exists( $mofile ) ) {
+			load_textdomain( BP_LINKS_PLUGIN_NAME, $mofile );
+		}
+	}
 }
 add_action ( 'plugins_loaded', 'bp_links_load_textdomain', 6 );
 
 function bp_links_setup_globals() {
 	global $bp, $wpdb;
-
-	/* Load Language file */
 
 	/* For internal identification */
 	$bp->links->id = 'links';
