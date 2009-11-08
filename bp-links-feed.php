@@ -21,7 +21,7 @@ header('Status: 200 OK');
 <channel>
 	<title><?php echo get_site_option( 'site_name' ); ?> - <?php _e( 'Most Recent Links', 'buddypress-links' ) ?></title>
 	<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
-	<link><?php echo site_url() . '/' . $bp->link->slug . '/feed' ?></link>
+	<link><?php echo site_url() . '/' . $bp->links->slug ?></link>
 	<description><?php _e( 'Most Recent Links Feed', 'buddypress-links' ) ?></description>
 	<pubDate><?php echo mysql2date('D, d M Y H:i:s O', bp_links_get_last_updated(), false); ?></pubDate>
 	<generator>http://buddypress.org/?v=<?php echo BP_VERSION ?></generator>
