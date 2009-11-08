@@ -21,6 +21,7 @@ header('Status: 200 OK');
 <channel>
 	<title><?php echo get_site_option( 'site_name' ); ?> - <?php _e( 'Most Recent Links', 'buddypress-links' ) ?></title>
 	<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
+	<atom:link href="<?php echo site_url() . '/' . $bp->links->slug ?>" rel="alternate" type="text/html" />
 	<link><?php echo site_url() . '/' . $bp->links->slug ?></link>
 	<description><?php _e( 'Most Recent Links Feed', 'buddypress-links' ) ?></description>
 	<pubDate><?php echo mysql2date('D, d M Y H:i:s O', bp_links_get_last_updated(), false); ?></pubDate>
@@ -31,10 +32,10 @@ header('Status: 200 OK');
 	<?php if ( bp_has_site_links( 'type=most-recent&max=50' ) ) : ?>
 		<?php while ( bp_site_links() ) : bp_the_site_link(); ?>
 			<item>
-				<guid><?php //bp_the_site_link_feed_item_guid() ?></guid>
+				<guid><?php bp_the_site_link_feed_item_guid() ?></guid>
 				<title><?php bp_the_site_link_feed_item_title() ?></title>
 				<link><?php bp_the_site_link_feed_item_link() ?></link>
-				<pubDate><?php echo mysql2date('D, d M Y H:i:s O', bp_the_site_link_feed_item_date(), false); ?></pubDate>
+				<pubDate><?php echo date('D, d M Y H:i:s O', bp_get_the_site_link_feed_item_date() ); ?></pubDate>
 
 				<description><?php bp_the_site_link_feed_item_description() ?></description>
 			<?php do_action('bp_directory_links_feed_item'); ?>

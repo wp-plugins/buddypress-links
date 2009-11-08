@@ -1665,7 +1665,7 @@ function bp_the_site_link_feed_item_guid() {
 	function bp_get_the_site_link_feed_item_guid() {
 		global $site_links_template;
 
-		return apply_filters( 'bp_get_the_site_link_feed_item_guid', md5( $site_links_template->link->id . '-' . $site_links_template->link->slug ) );
+		return apply_filters( 'bp_get_the_site_link_feed_item_guid', bp_get_the_site_link_permalink() );
 	}
 
 function bp_the_site_link_feed_item_title() {
