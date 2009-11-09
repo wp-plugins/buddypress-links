@@ -90,7 +90,7 @@
 						<strong><?php _e( 'This is a hidden link', 'buddypress-links' ) ?></strong>
 						<ul>
 							<li><?php _e( 'Only you can see the link.', 'buddypress-links' ) ?></li>
-							<li><?php _e( 'This link will NOT be listed in the links directory or search results.', 'buddypress-links' ) ?></li>
+							<li><?php _e( 'This link will NOT be listed in the links directory or in search results.', 'buddypress-links' ) ?></li>
 							<li><?php _e( 'Link content and activity will only be visible to you.', 'buddypress-links' ) ?></li>
 						</ul>
 					</label>

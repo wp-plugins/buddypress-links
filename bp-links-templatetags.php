@@ -70,7 +70,7 @@ function bp_links_category_radio_options_with_all( $selected_category_id = 1, $e
 	// has class string?
 	$class_string = ( empty( $element_class ) ) ? null : sprintf( ' class="%s"', $element_class );
 	// output it
-	echo sprintf( '<input type="radio" name="%s" value=""%s%s />%s ', $element_name, $class_string, $selected, __('All') );
+	echo sprintf( '<input type="radio" name="%s" value=""%s%s />%s ', $element_name, $class_string, $selected, __( 'All', 'buddypress-links' ) );
 
 	do_action( 'bp_after_links_category_radio_options_with_all' );
 
@@ -741,26 +741,22 @@ function bp_link_time_elapsed_text() {
 		if( $time_elapsed > 86400 ) {
 			// at least one day old
 			$ret_number = floor( $time_elapsed / 86400 );
-			$ret_text = 'day';
+			$ret_text = ( $ret_number > 1 ) ? __( '%1$d days ago', 'buddypress-links' ) : __( '%1$d day ago', 'buddypress-links' );
 		} elseif( $time_elapsed > 3600 ) {
 			// at least one hour old
 			$ret_number = floor( $time_elapsed / 60 / 60 );
-			$ret_text = 'hour';
+			$ret_text = ( $ret_number > 1 ) ? __( '%1$d hours ago', 'buddypress-links' ) : __( '%1$d hour ago', 'buddypress-links' );
 		} elseif( $time_elapsed > 60 ) {
 			// at least one minute hold
 			$ret_number = floor( $time_elapsed / 60 );
-			$ret_text = 'minute';
+			$ret_text = ( $ret_number > 1 ) ? __( '%1$d minutes ago', 'buddypress-links' ) : __( '%1$d minute ago', 'buddypress-links' );
 		} else {
 			// only seconds old
 			$ret_number = $time_elapsed;
-			$ret_text = 'second';
+			$ret_text = ( $ret_number > 1 ) ? __( '%1$d seconds ago', 'buddypress-links' ) : __( '%1$d second ago', 'buddypress-links' );
 		}
 
-		if ( $ret_number > 1 ) {
-			$ret_text .= 's';
-		}
-
-		return apply_filters( 'bp_get_link_time_elapsed_text', sprintf( '%d %s %s', $ret_number, __( $ret_text ), 'ago' ) );
+		return apply_filters( 'bp_get_link_time_elapsed_text', sprintf( $ret_text, $ret_number ) );
 	}
 
 function bp_link_wire_count() {
@@ -1981,8 +1977,8 @@ function bp_directory_links_filter_category( $selected_category_id = 1, $element
 
 	$class_string = ( empty( $element_class ) ) ? null : sprintf( ' class="%s"', $element_class );
 
-	echo sprintf( '<select id="%s"%s>', $element_id, $class_string );
-	echo '<option value="">All</option>';
+	echo sprintf( '<select id="%1$s"%2$s>', $element_id, $class_string );
+	echo sprintf( '<option value="">%1$s</option>', __( 'All', 'buddypress-links' ) );
 
 	foreach ( $categories as $category ) {
 		// populate
@@ -2297,33 +2293,35 @@ function bp_get_link_list_item_xtrabar( $args = array() ) {
 	// build comment link
 	if ( $wire_enabled ) {
 		$wire_link = sprintf('
-			%1$s<a href="%2$s" class="comments">%3$d&nbsp;Comments</a>%4$s',
+			%1$s<a href="%2$s" class="comments">%3$d&nbsp;%4$s</a>%5$s',
 			apply_filters( 'bp_before_my_links_list_item_xtrabar_comments', '', $args ), // arg 1
 			( $the_site ) ? bp_get_the_site_link_wire_permalink() : bp_get_link_wire_permalink(), // arg 2
 			( $the_site ) ? bp_get_the_site_link_wire_count() : bp_get_link_wire_count(), // arg 3
-			apply_filters( 'bp_after_my_links_list_item_xtrabar_comments', '', $args ) // arg 4
+			__( 'Comments', 'buddypress-links' ), // arg 4
+			apply_filters( 'bp_after_my_links_list_item_xtrabar_comments', '', $args ) // arg 5
 		);
 	}
 
 	return sprintf('
 		%1$s<div class="xtrabar">%2$s
-			%3$s<a href="%4$s" class="home">Home</a>%5$s%6$s
-			%7$s<span class="owner">%8$s&nbsp;%9$s %10$s %11$s</span>%12$s
-		%13$s</div>%14$s',
+			%3$s<a href="%4$s" class="home">%5$s</a>%6$s%6$s
+			%8$s<span class="owner">%9$s&nbsp;%10$s %11$s %12$s</span>%13$s
+		%14$s</div>%15$s',
 		apply_filters( 'bp_before_my_links_list_item_xtrabar_content', '', $args ), // arg 1
 		apply_filters( 'bp_before_my_links_list_item_xtrabar', '', $args ), // arg 2
 		apply_filters( 'bp_before_my_links_list_item_xtrabar_home', '', $args ), // arg 3
 		( $the_site ) ? bp_get_the_site_link_permalink() : bp_get_link_permalink(), // arg 4
-		apply_filters( 'bp_after_my_links_list_item_xtrabar_home', '', $args ), // arg 5
-		( $wire_enabled ) ? $wire_link : null, // arg 6
-		apply_filters( 'bp_before_my_links_list_item_xtrabar_userlink', '', $args ), // arg 7
-		( $the_site ) ? bp_get_the_site_link_user_avatar_mini() : bp_get_link_user_avatar_mini(), // arg 8
-		( $the_site ) ? bp_get_the_site_link_userlink() : bp_get_link_userlink(), // arg 9
-		__( 'created', 'buddypress-links' ), // arg 10
-		( $the_site ) ? bp_get_the_site_link_time_elapsed_text() : bp_get_link_time_elapsed_text(), // arg 11
-		apply_filters( 'bp_after_my_links_list_item_xtrabar_userlink', '', $args ), // arg 12
-		apply_filters( 'bp_after_my_links_list_item_xtrabar', '', $args ), // arg 13
-		apply_filters( 'bp_after_my_links_list_item_xtrabar_content', '', $args ) // arg 14
+		__( 'Home', 'buddypress-links' ), // arg 5
+		apply_filters( 'bp_after_my_links_list_item_xtrabar_home', '', $args ), // arg 6
+		( $wire_enabled ) ? $wire_link : null, // arg 7
+		apply_filters( 'bp_before_my_links_list_item_xtrabar_userlink', '', $args ), // arg 8
+		( $the_site ) ? bp_get_the_site_link_user_avatar_mini() : bp_get_link_user_avatar_mini(), // arg 9
+		( $the_site ) ? bp_get_the_site_link_userlink() : bp_get_link_userlink(), // arg 10
+		__( 'created', 'buddypress-links' ), // arg 11
+		( $the_site ) ? bp_get_the_site_link_time_elapsed_text() : bp_get_link_time_elapsed_text(), // arg 12
+		apply_filters( 'bp_after_my_links_list_item_xtrabar_userlink', '', $args ), // arg 13
+		apply_filters( 'bp_after_my_links_list_item_xtrabar', '', $args ), // arg 14
+		apply_filters( 'bp_after_my_links_list_item_xtrabar_content', '', $args ) // arg 15
 	);
 }
 ?>

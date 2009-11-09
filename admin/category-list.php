@@ -146,7 +146,7 @@ if ( isset( $_POST['categories_admin_delete']) && isset( $_POST['allcategories']
 		<p class="submit">
 			<input type="hidden" name="page" value="<?php echo BP_LINKS_PLUGIN_NAME ?>/admin/category-manager.php" />
 			<input type="hidden" name="category_id" value="" />
-			<input type="submit" class="button" value="New Category" />
+			<input type="submit" class="button" value="<?php _e( 'New Category','buddypress-links' ) ?>" />
 		</p>
 	</form>
 </div>

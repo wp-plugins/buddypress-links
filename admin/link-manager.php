@@ -109,7 +109,7 @@ function bp_links_admin_manage_links() {
 							<td><?php bp_the_site_link_category_name() ?></td>
 							<td><?php bp_the_site_link_type() ?></td>
 							<td><a href="<?php bp_the_site_link_permalink() ?>/wire"><?php bp_the_site_link_wire_count() ?></a></td>
-							<td align="center"><?php bp_the_site_link_user_avatar_mini() ?><?php bp_the_site_link_userlink() ?></td>
+							<td align="center"><?php bp_the_site_link_user_avatar_mini() ?>&nbsp;<?php bp_the_site_link_userlink() ?></td>
 							<td><?php bp_the_site_link_date_created() ?></td>
 							<td><?php bp_the_site_link_last_active() ?></td>
 							<td><a href="<?php bp_the_site_link_permalink() ?>/admin"><?php _e( 'Edit', 'buddypress-links') ?></a></td>

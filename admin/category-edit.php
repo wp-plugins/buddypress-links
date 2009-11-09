@@ -128,13 +128,13 @@ if ( isset($_POST['category_id']) ) {
 //
 
 if ( $category_id ) {
-	$heading_text = __('Edit BP Link Category');
-	$submit_text = __('Update Category');
+	$heading_text = __( 'Edit BP Link Category', 'buddypress-links' );
+	$submit_text = __( 'Update Category', 'buddypress-links' );
 	$action = 'update';
 	$nonce_action = 'update-link-category_' . $category_id;
 } else {
-	$heading_text = __('New BP Link Category');
-	$submit_text = __('Add Category');
+	$heading_text = __( 'New BP Link Category', 'buddypress-links' );
+	$submit_text = __( 'Add Category', 'buddypress-links' );
 	$action = 'create';
 	$nonce_action = 'add-link-category';
 }
@@ -162,16 +162,16 @@ if ( $category_id ) {
 	<input type="hidden" name="category_id" value="<?php echo esc_attr($category_id) ?>" />
 	<table class="form-table">
 		<tr class="form-field form-required">
-			<th scope="row" valign="top"><label for="name"><?php _e('Link Category name') ?></label></th>
+			<th scope="row" valign="top"><label for="name"><?php _e( 'Link Category Name' ) ?></label></th>
 			<td><input name="name" id="name" type="text" value="<?php echo esc_attr($category_name); ?>" size="40" aria-required="true" /></td>
 		</tr>
 		<tr class="form-field">
-			<th scope="row" valign="top"><label for="description"><?php _e('Description (optional)') ?></label></th>
+			<th scope="row" valign="top"><label for="description"><?php _e( 'Description (optional)' ) ?></label></th>
 			<td><textarea name="description" id="description" rows="5" cols="50" style="width: 97%;"><?php echo $category_description; ?></textarea></td>
 		</tr>
 		<tr class="form-field">
-			<th scope="row" valign="top"><label for="priority"><?php _e('Priority (optional)') ?></label></th>
-			<td><input name="priority" id="priority" type="text" value="<?php echo esc_attr($category_priority); ?>" size="5" aria-required="true" style="width: 50px;" /> (1 to 100)</td>
+			<th scope="row" valign="top"><label for="priority"><?php _e( 'Priority (optional)' ) ?></label></th>
+			<td><input name="priority" id="priority" type="text" value="<?php echo esc_attr($category_priority); ?>" size="5" aria-required="true" style="width: 50px;" /> (1 <?php _e( 'to','buddypress-links' ) ?> 100)</td>
 		</tr>
 		<?php do_action('bp_links_admin_edit_category_form_fields', $category); ?>
 	</table>

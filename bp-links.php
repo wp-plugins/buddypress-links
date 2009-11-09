@@ -394,8 +394,8 @@ function bp_links_add_js() {
 		wp_enqueue_script( 'bp-links-ajax', get_stylesheet_directory_uri() . '/links/_inc/js/ajax.js' );
 	}
 }
-//add_action( 'template_redirect', 'bp_links_add_js', 1 );
-add_action( 'wp_head', 'bp_links_add_js' );
+add_action( 'template_redirect', 'bp_links_add_js', 1 );
+//add_action( 'wp_head', 'bp_links_add_js' );
 
 function bp_links_add_css() {
 	if ( $bp->current_component == $bp->links->slug ) {
@@ -1670,8 +1670,11 @@ function bp_links_cast_vote( $link_id, $up_or_down ) {
 
 		if ( $record_activity ) {
 			
+			// translate up or down string
+			$up_or_down_translated = ( 'up' == $up_or_down ) ? __( 'up', 'buddypress-links') : __( 'down', 'buddypress-links');
+
 			// record the activity
-			$activity_content = sprintf( __( '%1$s voted %s the link %2$s:', 'buddypress-links'), bp_core_get_userlink( $bp->loggedin_user->id ), $up_or_down, '<a href="' . bp_get_link_permalink( $bp->links->current_link ) . '">' . attribute_escape( $bp->links->current_link->name ) . '</a>' );
+			$activity_content = sprintf( __( '%1$s voted %2$s the link %3$s', 'buddypress-links'), bp_core_get_userlink( $bp->loggedin_user->id ), $up_or_down_translated, '<a href="' . bp_get_link_permalink( $bp->links->current_link ) . '">' . attribute_escape( $bp->links->current_link->name ) . '</a>' );
 
 			bp_links_record_activity( array(
 				'content' => apply_filters( 'bp_links_activity_voted', $activity_content ),
