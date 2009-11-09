@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: wpmu, buddypress, social, networking, links
 Requires at least: WordPress MU 2.8.4, BuddyPress 1.1
 Tested up to: WordPress MU 2.8.4, BuddyPress 1.1.2
-Stable tag: 0.1.1
+Stable tag: 0.1.2
 
 BuddyPress Links is a full featured link sharing component for BuddyPress 1.1
 
