@@ -395,7 +395,6 @@ function bp_links_add_js() {
 	}
 }
 add_action( 'template_redirect', 'bp_links_add_js', 1 );
-//add_action( 'wp_head', 'bp_links_add_js' );
 
 function bp_links_add_css() {
 	if ( $bp->current_component == $bp->links->slug ) {
