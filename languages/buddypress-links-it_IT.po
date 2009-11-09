@@ -1,0 +1,979 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: buddypress link\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/buddypress-links\n"
+"POT-Creation-Date: 2009-11-06 17:09+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: arjdan <arjdan@gmail.com>\n"
+"Language-Team: madeintorino.com <admin@madeintorino.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Italian\n"
+"X-Poedit-Country: ITALY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: admin/category-edit.php:42
+msgid "Link category slug from this name already exists."
+msgstr "L'abbreviazione del nome della categoria è già esistente."
+
+#: admin/category-edit.php:42
+#: admin/category-edit.php:49
+#: admin/category-edit.php:54
+#: admin/category-edit.php:68
+#: admin/category-edit.php:81
+#: admin/category-edit.php:86
+#: admin/category-edit.php:95
+#: admin/category-list.php:26
+#: admin/link-manager.php:18
+#: bp-links.php:438
+#: bp-links.php:469
+#: bp-links.php:490
+#: bp-links.php:575
+#: bp-links.php:695
+#: bp-links.php:739
+#: bp-links.php:776
+#: bp-links.php:818
+msgid "Please Try Again."
+msgstr "Per favore riprova."
+
+#: admin/category-edit.php:49
+#, php-format
+msgid "Link category name must be %1$d to %2$d characters in length."
+msgstr "Il nome della categoria deve essere compreso tra %1$d e %2$d caratteri."
+
+#: admin/category-edit.php:54
+msgid "Link category name is required."
+msgstr "Il nome della categoria è richiesto."
+
+#: admin/category-edit.php:68
+#, php-format
+msgid "Link category description must be %1$d to %2$d characters in length."
+msgstr "La descrizione della categoria deve essere compresa fra %1$d e %2$d caratteri."
+
+#: admin/category-edit.php:81
+#, php-format
+msgid "Link category priority must be a number from %1$d to %2$d."
+msgstr "La priorità della categoria deve essere un valore compreso tra %1$d e %2$d."
+
+#: admin/category-edit.php:86
+msgid "Link category priority is required."
+msgstr "La priorità della categoria è richiesta."
+
+#: admin/category-edit.php:95
+msgid "There were errors when saving the link category."
+msgstr "Ci sono stati degli errori nel salvataggio della categoria."
+
+#: admin/category-edit.php:124
+msgid "Edit BP Link Category"
+msgstr "Modifica Categoria Link"
+
+#: admin/category-edit.php:125
+msgid "Update Category"
+msgstr "Aggiorna Categoria"
+
+#: admin/category-edit.php:129
+msgid "New BP Link Category"
+msgstr "Nuova Categoria Link"
+
+#: admin/category-edit.php:130
+msgid "Add Category"
+msgstr "Aggiungi Categoria"
+
+#: admin/category-edit.php:158
+msgid "Link Category name"
+msgstr "Nome Categoria di link"
+
+#: admin/category-edit.php:162
+msgid "Description (optional)"
+msgstr "Descrizione (opzionale)"
+
+#: admin/category-edit.php:166
+msgid "Priority (optional)"
+msgstr "Priorità (opzionale)"
+
+#: admin/category-list.php:23
+msgid "Categories deleted successfully"
+msgstr "Categoria cancellata"
+
+#: admin/category-list.php:26
+msgid "There were errors when deleting categories."
+msgstr "Ci sono stati degli errori cancellando le categorie."
+
+#: admin/category-list.php:31
+msgid "Unable to delete a category because it is assigned to one or more links"
+msgstr "Non posso cancellare la categoria perché è assegnata a uno o più link."
+
+#: admin/category-list.php:48
+msgid "Manage BP Link Categories"
+msgstr "Gestisci Categorie Link"
+
+#: admin/category-list.php:54
+msgid "Search Categories"
+msgstr "Cerca Categorie"
+
+#: admin/category-list.php:65
+#: admin/link-manager.php:47
+msgid "Delete"
+msgstr "Cancella"
+
+#: admin/category-list.php:65
+#: admin/link-manager.php:47
+msgid "Are you sure?"
+msgstr "Sei sicuro?"
+
+#: admin/category-list.php:74
+msgid "Categories matching:"
+msgstr "Categorie trovate:  \"%s\""
+
+#: admin/category-list.php:88
+msgid "Name"
+msgstr "Nome"
+
+#: admin/category-list.php:91
+#: links/single/home.php:47
+msgid "Description"
+msgstr "Descrizione"
+
+#: admin/category-list.php:94
+msgid "Slug"
+msgstr "Diminutivo"
+
+#: admin/category-list.php:97
+msgid "Priority"
+msgstr "Priorità"
+
+#: admin/category-list.php:100
+#: admin/link-manager.php:33
+#: bp-links-widgets.php:13
+#: bp-links.php:246
+#: bp-links.php:357
+#: bp-links.php:876
+msgid "Links"
+msgstr "Link"
+
+#: admin/category-list.php:103
+#: admin/link-manager.php:87
+msgid "Created"
+msgstr "Creata"
+
+#: admin/category-list.php:106
+msgid "Updated"
+msgstr "Aggiornata"
+
+#: admin/category-list.php:127
+#: admin/link-manager.php:115
+msgid "Edit"
+msgstr "Modifica"
+
+#: admin/category-list.php:137
+msgid "No categories found."
+msgstr "Nessuna categoria trovata."
+
+#: admin/category-manager.php:6
+msgid "You do not have sufficient permissions to edit link categories for this blog."
+msgstr "Non hai permessi a sufficienza per modificare le categorie di link per questo sito."
+
+#: admin/link-manager.php:18
+msgid "There were errors when deleting links."
+msgstr "Ci sono stati degli errori eliminando i link."
+
+#: admin/link-manager.php:21
+msgid "Links deleted successfully"
+msgstr "Link eliminati."
+
+#: admin/link-manager.php:37
+msgid "Search Links"
+msgstr "Cerca Link"
+
+#: admin/link-manager.php:56
+msgid "Links matching:"
+msgstr "Link trovati: \"%s\""
+
+#: admin/link-manager.php:72
+msgid "Details"
+msgstr "Dettagli"
+
+#: admin/link-manager.php:75
+#: bp-links-templatetags.php:1970
+msgid "Category"
+msgstr "Categoria"
+
+#: admin/link-manager.php:78
+msgid "Type"
+msgstr "Tipo"
+
+#: admin/link-manager.php:81
+msgid "Wire Posts"
+msgstr "Messaggi sul Wire"
+
+#: admin/link-manager.php:84
+msgid "Owner"
+msgstr "Proprietario"
+
+#: admin/link-manager.php:90
+msgid "Last Active"
+msgstr "Ultima Attività"
+
+#: admin/link-manager.php:125
+msgid "No links found."
+msgstr "Nessun link trovato."
+
+#: bp-links-ajax.php:38
+msgid "Vote recorded."
+msgstr "Voto registrato."
+
+#: bp-links-ajax.php:40
+msgid "There was a problem recording your vote. Please try again."
+msgstr "C'è stato un problema registrando il tuo voto. Per favore riprova."
+
+#: bp-links-ajax.php:45
+msgid "You must be logged in to vote!"
+msgstr "Devi essere loggato per votare!"
+
+#: bp-links-embed.php:107
+msgid "Upload Failed! Error was:"
+msgstr "Caricamento fallito! L'errore è stato: %s"
+
+#: bp-links-embed.php:146
+msgid "The code you entered is not valid PicApp embedding code."
+msgstr "Il codice che hai immesso non è un codice PicApp valido."
+
+#: bp-links-embed.php:158
+msgid "The code you entered is not valid Fotoglif embedding code."
+msgstr "Il codice che hai immesso non è un codice Fotoglif valido."
+
+#: bp-links-embed.php:165
+msgid "The embedding code you entered was not recognized."
+msgstr "Il codice che hai immesso non è un codice riconosciuto."
+
+#: bp-links-embed.php:179
+msgid "A fatal error has occurred. Please try again in a moment."
+msgstr "Errore fatale."
+
+#: bp-links-feed.php:22
+msgid "Most Recent Links"
+msgstr "Link più recenti"
+
+#: bp-links-feed.php:25
+msgid "Most Recent Links Feed"
+msgstr "Feed ai link più recenti"
+
+#: bp-links-notifications.php:15
+#, php-format
+msgid "New wire post on link: %1$s"
+msgstr "Nuovo post nel wire del link: %s"
+
+#: bp-links-notifications.php:25
+#, php-format
+msgid ""
+"%s posted on the wire of the link \"%s\":\n"
+"\n"
+"\"%s\"\n"
+"\n"
+"To view the link wire: %s\n"
+"\n"
+"To view the link home: %s\n"
+"\n"
+"To view %s's profile page: %s\n"
+"\n"
+"---------------------\n"
+msgstr ""
+"%s ha scritto nel Wire del link \"%s\":\n"
+"\n"
+"\"%s\"\n"
+"\n"
+"Per vedere il Wire del link: %s\n"
+"\n"
+"Per vedere la home del link: %s\n"
+"\n"
+"Per vedere il profilo di %s: %s\n"
+"\n"
+"---------------------\n"
+
+#: bp-links-notifications.php:38
+#, php-format
+msgid "To disable these notifications please log in and go to: %1$s"
+msgstr "Per disabilitare le notifiche fai il login e vai qui: %s"
+
+#: bp-links-templatetags.php:6
+#: bp-links-templatetags.php:22
+#: bp-links-templatetags.php:1967
+msgid "Recently Active"
+msgstr "Attivo Recentemente"
+
+#: bp-links-templatetags.php:7
+#: bp-links-templatetags.php:25
+#: bp-links-templatetags.php:1968
+#: bp-links-widgets.php:36
+msgid "Newest"
+msgstr "Più Nuovi"
+
+#: bp-links-templatetags.php:8
+#: bp-links-templatetags.php:28
+#: bp-links-templatetags.php:1964
+msgid "Most Popular"
+msgstr "Popolari"
+
+#: bp-links-templatetags.php:9
+#: bp-links-templatetags.php:31
+#: bp-links-templatetags.php:1965
+msgid "Most Votes"
+msgstr "Più votati"
+
+#: bp-links-templatetags.php:10
+#: bp-links-templatetags.php:1966
+msgid "Vote Rating"
+msgstr "Voti"
+
+#: bp-links-templatetags.php:34
+msgid "Highest Votes"
+msgstr "Più votati"
+
+#: bp-links-templatetags.php:73
+#: bp-links-templatetags.php:1969
+msgid "All"
+msgstr "Tutti"
+
+#: bp-links-templatetags.php:471
+msgid "Public Link"
+msgstr "Link Publico"
+
+#: bp-links-templatetags.php:473
+msgid "Friends Only Link"
+msgstr "Link visibile solo da amici"
+
+#: bp-links-templatetags.php:475
+msgid "Hidden Link"
+msgstr "Link nascosto"
+
+#: bp-links-templatetags.php:477
+msgid "Link"
+msgstr "Link"
+
+#: bp-links-templatetags.php:495
+#: bp-links-templatetags.php:1132
+msgid "Link avatar"
+msgstr "Avatar del link"
+
+#: bp-links-templatetags.php:585
+msgid "not yet active"
+msgstr "Non ancora attivo"
+
+#: bp-links-templatetags.php:795
+msgid "Filter links"
+msgstr "Filtra link"
+
+#: bp-links-templatetags.php:832
+#: bp-links-templatetags.php:1395
+#, php-format
+msgid "Viewing link %1$d to %2$d (of %3$d links)"
+msgstr "Stai vedendo %d link su %d (di %d link)"
+
+#: bp-links-templatetags.php:882
+#: links/single/admin.php:22
+msgid "Edit Details"
+msgstr "Modifica Dettagli"
+
+#: bp-links-templatetags.php:889
+#: bp-links.php:171
+#: links/single/admin.php:53
+msgid "Link Settings"
+msgstr "Impostazioni Link"
+
+#: bp-links-templatetags.php:890
+#: bp-links-templatetags.php:1475
+#: bp-links-templatetags.php:1484
+#: bp-links-templatetags.php:1493
+#: bp-links.php:172
+#: bp-links.php:277
+#: links/single/admin.php:109
+msgid "Link Avatar"
+msgstr "Avatar Link"
+
+#: bp-links-templatetags.php:894
+#: bp-links.php:344
+#: links/single/admin.php:182
+#: links/single/admin.php:194
+msgid "Delete Link"
+msgstr "Cancella Link"
+
+#: bp-links-templatetags.php:920
+msgid "This is a hidden link. Only the user who owns it can view it."
+msgstr "Questo è un link nascosto. Solo il proprietario può visualizzarlo."
+
+#: bp-links-templatetags.php:922
+msgid "This is a friends only link. Only the owner's friends can view it."
+msgstr "Questo è un link per soli amici. Solo gli amici del proprietario possono visualizzarlo."
+
+#: bp-links-templatetags.php:924
+msgid "You do not have permission to access this link."
+msgstr "Non hai i permessi per accedere a questo link."
+
+#: bp-links-templatetags.php:1565
+#, php-format
+msgid "active %1$s ago"
+msgstr "attivo %s fa"
+
+#: bp-links-templatetags.php:1866
+#, php-format
+msgid "Viewing category %1$d to %2$d (of %3$d categories)"
+msgstr "Stai vedendo %d categorie su %d (di %d categorie)"
+
+#: bp-links-templatetags.php:2009
+msgid "Search anything..."
+msgstr "Cerca..."
+
+#: bp-links-templatetags.php:2010
+msgid "Search"
+msgstr "Cerca"
+
+#: bp-links-templatetags.php:2239
+#: bp-links-widgets.php:38
+msgid "Votes"
+msgstr "Voti"
+
+#: bp-links-templatetags.php:2322
+#: links/single/menu.php:20
+msgid "created"
+msgstr "creato"
+
+#: bp-links-widgets.php:13
+msgid "Your BuddyPress Links"
+msgstr "I tuoi Link"
+
+#: bp-links-widgets.php:30
+msgid "Most Recent Links RSS Feed"
+msgstr "Feed Link più recenti"
+
+#: bp-links-widgets.php:30
+msgid "[RSS]"
+msgstr "[RSS]"
+
+#: bp-links-widgets.php:37
+msgid "Active"
+msgstr "Attivo"
+
+#: bp-links-widgets.php:39
+msgid "Rating"
+msgstr "Valutazione"
+
+#: bp-links-widgets.php:40
+msgid "Popular"
+msgstr "Popolari"
+
+#: bp-links-widgets.php:51
+msgid "There are no links to display."
+msgstr "Non ci sono link da visualizzare."
+
+#: bp-links-widgets.php:76
+msgid "Max links to show:"
+msgstr "Numero max di link da visualizzare:"
+
+#: bp-links-widgets.php:82
+msgid "Avatar Size:"
+msgstr "Dimensione Avatar:"
+
+#: bp-links-widgets.php:123
+msgid "No links matched the current filter."
+msgstr "Nessun link trovato con il filtro corrente."
+
+#: bp-links.php:129
+#: bp-links.php:130
+#: bp-links.php:131
+#: bp-links.php:132
+#: bp-links.php:133
+#, php-format
+msgid "Every %1$d minutes"
+msgstr "Ogni %1$d minuti"
+
+#: bp-links.php:170
+msgid "Link Details"
+msgstr "Dettagli Link"
+
+#: bp-links.php:210
+#: bp-links.php:211
+msgid "BP Links"
+msgstr "BP Links"
+
+#: bp-links.php:217
+msgid "Manage Links"
+msgstr "Gestisci Link"
+
+#: bp-links.php:218
+msgid "Manage Categories"
+msgstr "Gestisci Categorie"
+
+#: bp-links.php:251
+#: bp-links.php:258
+#: links/index.php:11
+msgid "My Links"
+msgstr "I miei Link"
+
+#: bp-links.php:252
+#: links/create.php:10
+msgid "Create a Link"
+msgstr "Crea un Link"
+
+#: bp-links.php:295
+msgid "Home"
+msgstr "Home"
+
+#: bp-links.php:299
+msgid "Wire"
+msgstr "Wire"
+
+#: bp-links.php:304
+msgid "Admin"
+msgstr "Admin"
+
+#: bp-links.php:341
+msgid "Admin Options"
+msgstr "Opzioni Admin"
+
+#: bp-links.php:365
+msgid "Random Link"
+msgstr "Link Casuale"
+
+#: bp-links.php:438
+#: bp-links.php:469
+msgid "There was an error saving link details."
+msgstr "C'è stato un errore nel salvataggio dei dettagli del link."
+
+#: bp-links.php:490
+msgid "There was an error saving link settings."
+msgstr "C'è stato un errore nel salvataggio delle impostazioni."
+
+#: bp-links.php:517
+#, php-format
+msgid "%1$s created the link %2$s"
+msgstr "%s ha creato il link %s"
+
+#: bp-links.php:573
+msgid "The link avatar was uploaded successfully!"
+msgstr "Avatar caricato!"
+
+#: bp-links.php:575
+#: bp-links.php:818
+msgid "There was an error saving link avatar."
+msgstr "C'è stato un errore salvando l'avatar."
+
+#: bp-links.php:616
+msgid "Wire message could not be posted."
+msgstr "Il messaggio sul Wire non può essere inserito."
+
+#: bp-links.php:618
+msgid "Wire message successfully posted."
+msgstr "Messaggio sul Wire inserito."
+
+#: bp-links.php:633
+msgid "There was an error deleting the wire message."
+msgstr "C'è stato un errore cancellando il messaggio sul Wire."
+
+#: bp-links.php:635
+msgid "Wire message successfully deleted."
+msgstr "Messaggio sul Wire eliminato."
+
+#: bp-links.php:695
+msgid "There was an error updating link details."
+msgstr "C'è stato un errore aggiornando i dettagli del link."
+
+#: bp-links.php:697
+msgid "Link details were successfully updated."
+msgstr "Dettagli Link aggiornati."
+
+#: bp-links.php:739
+msgid "There was an error updating link settings."
+msgstr "C'è stato un errore aggiornando le impostazioni del link."
+
+#: bp-links.php:741
+msgid "Link settings were successfully updated."
+msgstr "Impostazioni link aggiornate."
+
+#: bp-links.php:774
+msgid "Your avatar was deleted successfully!"
+msgstr "Avatar eliminato!"
+
+#: bp-links.php:776
+msgid "There was a problem deleting that avatar"
+msgstr "C'è stato un problema eliminando l'avatar"
+
+#: bp-links.php:816
+msgid "The new link avatar was uploaded successfully!"
+msgstr "Il nuovo avatar è stato caricato con successo!"
+
+#: bp-links.php:849
+msgid "There was an error deleting the link, please try again."
+msgstr "C'è stato un errore eliminando il link, per favore riprova."
+
+#: bp-links.php:851
+msgid "The link was deleted successfully"
+msgstr "Link eliminato"
+
+#: bp-links.php:877
+msgid "Yes"
+msgstr "Si"
+
+#: bp-links.php:878
+msgid "No"
+msgstr "No"
+
+#: bp-links.php:883
+msgid "A member posts on the wire of a link you created"
+msgstr "Un utente ha scritto sul Wire del link che hai creato"
+
+#: bp-links.php:961
+msgid "Please fill in all of the required fields"
+msgstr "Per favore riempi tutti i campi richiesti"
+
+#: bp-links.php:964
+#, php-format
+msgid "Link URL must be %1$d characters or less, please make corrections and re-submit."
+msgstr "L'URL del link deve essere di %d caratteri o meno, per favore fai le dovute correzioni."
+
+#: bp-links.php:967
+msgid "The URL you entered is not valid."
+msgstr "Il nome del Link deve essere di %d caratteri o meno. Per favore fai le opportune correzioni."
+
+#: bp-links.php:970
+#, php-format
+msgid "Link Name must be %1$d characters or less, please make corrections and re-submit."
+msgstr "Il nome del link deve essere di %d caratteri o meno, fai le opportune correzioni."
+
+#: bp-links.php:973
+#, php-format
+msgid "Link Description must be %1$d characters or less, please make corrections and re-submit."
+msgstr "La descrizione del link deve essere di %d caratteri o meno, fai le opportune correzioni."
+
+#: bp-links.php:1055
+msgid "Created a link"
+msgstr "Crea un Link"
+
+#: bp-links.php:1056
+msgid "New link wire post"
+msgstr "Nuovo post sul Wire del link"
+
+#: bp-links.php:1110
+msgid "Link Example Event"
+msgstr "Esempio Evento Link"
+
+#: bp-links.php:1110
+#, php-format
+msgid "%d number of example events happened for the link \"%s\""
+msgstr "%d numero di esempi di eventi accaduti per il link \"%s\""
+
+#: bp-links.php:1113
+#, php-format
+msgid "%1$s triggered a notification for the link \"%2$s\""
+msgstr "%s notifica per il link \"%s\""
+
+#: bp-links.php:1488
+msgid "Avatar Image"
+msgstr "Immagine Avatar"
+
+#: bp-links.php:1550
+#, php-format
+msgid "%1$s wrote on the wire of the link %2$s:"
+msgstr "%s ha scritto nel Wire del link %s:"
+
+#: bp-links.php:1665
+#, php-format
+msgid "%1$s voted %s the link %2$s:"
+msgstr "%1$s ha votato %s il link %2$s:"
+
+#: links/create.php:22
+#: links/single/admin.php:26
+msgid "Link Category"
+msgstr "Categoria Link"
+
+#: links/create.php:22
+#: links/create.php:25
+#: links/create.php:28
+#: links/create.php:31
+msgid "(required)"
+msgstr "(richiesto)"
+
+#: links/create.php:25
+#: links/single/admin.php:29
+msgid "Link URL"
+msgstr "URL Link"
+
+#: links/create.php:28
+#: links/single/admin.php:32
+msgid "Link Name"
+msgstr "Nome Link"
+
+#: links/create.php:31
+#: links/single/admin.php:35
+msgid "Link Description"
+msgstr "Descrizione Link"
+
+#: links/create.php:47
+#: links/single/admin.php:60
+msgid "Enable comment wire"
+msgstr "Abilita commenti Wire"
+
+#: links/create.php:51
+#: links/single/admin.php:65
+msgid "Privacy Options"
+msgstr "Opzioni Privacy"
+
+#: links/create.php:55
+#: links/single/admin.php:70
+msgid "This is a public link"
+msgstr "Questo è un link pubblico"
+
+#: links/create.php:57
+#: links/single/admin.php:72
+msgid "Any site member can see this link, and comment on the wire if enabled."
+msgstr "Qualunque membro può vedere questo link e commentare il Wire se abilitato."
+
+#: links/create.php:58
+#: links/single/admin.php:73
+msgid "This link will be listed in the links directory and in search results."
+msgstr "Questo link sarà aggiunto alla directory dei link e visualizzato nelle ricerche"
+
+#: links/create.php:59
+#: links/single/admin.php:74
+msgid "Link content and activity will be visible to any site member."
+msgstr "Il contenuto del link sarà visibile a tutti i visitatori del sito."
+
+#: links/create.php:64
+msgid "This is a friends-only link"
+msgstr "Questo è un link visibile solo agli amici"
+
+#: links/create.php:66
+#: links/single/admin.php:82
+msgid "Only users who are in your friends list can see the link and comment on the wire if enabled."
+msgstr "Solo gli utenti che sono tuoi amici potranno visualizzare e commentare sul Wire di questo link."
+
+#: links/create.php:67
+#: links/single/admin.php:83
+msgid "This link will NOT be listed in the links directory or in search results."
+msgstr "Questo link NON sarà aggiunto alle directory e ai risultati delle ricerche."
+
+#: links/create.php:68
+#: links/single/admin.php:84
+msgid "Link content and activity will only be visible to your friends."
+msgstr "Il contenuto del link sarà visibile solo ai tuoi amici."
+
+#: links/create.php:73
+#: links/single/admin.php:90
+msgid "This is a hidden link"
+msgstr "Questo è un link nascosco."
+
+#: links/create.php:75
+#: links/single/admin.php:92
+msgid "Only you can see the link."
+msgstr "Solo tu puoi vedere il link."
+
+#: links/create.php:76
+#: links/single/admin.php:93
+msgid "This link will NOT be listed in the links directory or search results."
+msgstr "Questo link NON sarà aggiunto alle directory e ai risultati delle ricerche."
+
+#: links/create.php:77
+#: links/single/admin.php:94
+msgid "Link content and activity will only be visible to you."
+msgstr "Il contenuto dei link sarà visibile solo da te."
+
+#: links/create.php:98
+#: links/single/admin.php:125
+msgid "Upload an image to use as an avatar for this link. The image will be shown on the main link page, and in search results."
+msgstr "Carica un immagine da usare come Avatar per questo link. L'immagine sarà visualizata nella pagina del link e nei risultati della ricerca."
+
+#: links/create.php:104
+#: links/single/admin.php:129
+msgid "Upload Image"
+msgstr "Carica Immagine"
+
+#: links/create.php:118
+#: links/single/admin.php:143
+msgid "Embed Image"
+msgstr "Incorpora Immagine"
+
+#: links/create.php:126
+msgid "Crop Link Avatar"
+msgstr "Taglia Avatar del link"
+
+#: links/create.php:128
+#: links/single/admin.php:155
+msgid "Avatar to crop"
+msgstr "Avatar da ritagliare"
+
+#: links/create.php:131
+#: links/single/admin.php:158
+msgid "Avatar preview"
+msgstr "Anteprima Avatar"
+
+#: links/create.php:134
+#: links/single/admin.php:161
+msgid "Crop Image"
+msgstr "Taglia Immagine"
+
+#: links/create.php:145
+msgid "To skip the avatar upload process, hit the \"Finish\" button."
+msgstr "Per saltare il caricamento dell'Avatar, clicca il pulsante \"Fine\""
+
+#: links/create.php:161
+msgid "Previous Step"
+msgstr "Avanti"
+
+#: links/create.php:166
+msgid "Next Step"
+msgstr "Indietro"
+
+#: links/create.php:171
+msgid "Create Link and Continue"
+msgstr "Crea Link e Continua"
+
+#: links/create.php:176
+msgid "Finish"
+msgstr "Fine"
+
+#: links/directory/index.php:10
+msgid "Links Directory"
+msgstr "Directory Link"
+
+#: links/directory/index.php:51
+msgid "Links Listing"
+msgstr "Lista Link"
+
+#: links/directory/index.php:74
+msgid "Find Links"
+msgstr "Cerca Link"
+
+#: links/directory/links-loop.php:24
+msgid "There were no links found."
+msgstr "Nessun Link trovato"
+
+#: links/index.php:11
+#, php-format
+msgid "%1$s's Links"
+msgstr "Link di %s"
+
+#: links/link-loop.php:26
+msgid "You haven't added any links yet."
+msgstr "Non hai ancora aggiunto nessun link."
+
+#: links/link-loop.php:26
+#, php-format
+msgid "%1$s hasn't added any links yet."
+msgstr "%s non ha ancora aggiunto nessun link."
+
+#: links/link-loop.php:32
+msgid "No matching links found."
+msgstr "Nessun Link trovato."
+
+#: links/single/admin.php:43
+#: links/single/admin.php:101
+msgid "Save Changes"
+msgstr "Salva Modifiche"
+
+#: links/single/admin.php:44
+msgid "Start Over"
+msgstr "Inizia"
+
+#: links/single/admin.php:80
+msgid "This is a friends only link"
+msgstr "Questo è un link per soli amici"
+
+#: links/single/admin.php:116
+msgid "Delete Avatar"
+msgstr "Cancella Avatar"
+
+#: links/single/admin.php:153
+msgid "Crop Avatar"
+msgstr "Taglia Avatar"
+
+#: links/single/admin.php:187
+msgid "WARNING: Deleting this link will completely remove ALL content associated with it. There is no way back, please be careful with this option."
+msgstr "ATTENZIONE: Eliminando questo link saranno completamente rimossi tutti i contenuti associati a esso."
+
+#: links/single/admin.php:190
+msgid "I understand the consequences of deleting this link."
+msgstr "Ho capito le conseguenze dell'eliminazione di questo link."
+
+#: links/single/home.php:57
+msgid "Gallery"
+msgstr "Galleria"
+
+#: links/single/home.php:70
+#: links/single/wire.php:30
+msgid "Link Wire"
+msgstr "Wire Link"
+
+#: links/single/home.php:70
+#: links/single/wire.php:30
+#, php-format
+msgid "There are no wire posts for %s"
+msgstr "Non c'è nessun post sul Wire per %s"
+
+#: links/single/home.php:87
+msgid "Sorry, the link does not exist."
+msgstr "Mi dispiace, il link non esiste."
+
+#: links/single/menu.php:17
+msgid "Link Owner"
+msgstr "Proprietario Link"
+
+#: links/single/menu.php:29
+msgid "Cast Your Vote"
+msgstr "Vota"
+
+#. Plugin Name of an extension
+msgid "BuddyPress Links"
+msgstr "BuddyPress Links"
+
+#. Plugin URI of an extension
+msgid "http://wordpress.org/extend/plugins/buddypress-links/"
+msgstr "http://wordpress.org/extend/plugins/buddypress-links/"
+
+#. Description of an extension
+msgid "BuddyPress Links is a link sharing component for BuddyPress."
+msgstr "BuddyPress Links è un plugin per Buddypress"
+
+#. Author of an extension
+msgid "Marshall Sorenson (MrMaz)"
+msgstr "Marshall Sorenson (MrMaz)"
+
+#. Author URI of an extension
+msgid "http://buddypress.org/developers/mrmaz/"
+msgstr "http://buddypress.org/developers/mrmaz/"
+
+msgid "day"
+msgstr "giorno"
+
+msgid "days"
+msgstr "giorni"
+
+msgid "minutes"
+msgstr "minuti"
+
+msgid "minute"
+msgstr "minuto"
+
+msgid "second"
+msgstr "secondo"
+
+msgid "seconds"
+msgstr "secondi"
+
+msgid "hour"
+msgstr "ora"
+
+msgid "hours"
+msgstr "ore"
+
+msgid "ago"
+msgstr "fa"
+
+#~ msgid "Every 5 minutes"
+#~ msgstr "Ogni 5 minuti"
+#~ msgid "Every 15 minutes"
+#~ msgstr "Ogni 15 minuti"
+#~ msgid "Every 20 minutes"
+#~ msgstr "Ogni 20 minuti"
+#~ msgid "Every 30 minutes"
+#~ msgstr "Ogni 30 minuti"
+
