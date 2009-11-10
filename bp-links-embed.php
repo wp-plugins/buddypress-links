@@ -305,6 +305,10 @@ function bp_links_embed_fotoglif_check( $embed_code ) {
 	return preg_match( '/fotoglif\.com/', $embed_code );
 }
 
+function bp_links_embed_fotoglif_publisher_check( $embed_code ) {
+	return preg_match( '/embed_login\.js/', $embed_code );
+}
+
 function bp_links_embed_fotoglif_iframe_check( $embed_code ) {
 	return preg_match( '/iframe/i', $embed_code );
 }
@@ -314,15 +318,20 @@ function bp_links_embed_fotoglif_match( $embed_code ) {
 	$embed_code = bp_links_embed_trim_strip( $embed_code );
 	$embed_code = bp_links_embed_clean_whitespace( $embed_code );
 
-	$div_bits = bp_links_embed_fotoglif_match_div( $embed_code );
+	if ( bp_links_embed_fotoglif_publisher_check( $embed_code ) ) {
+		$style_bits = bp_links_embed_fotoglif_match_img( $embed_code );
+	} else {
+		$style_bits = bp_links_embed_fotoglif_match_div( $embed_code );
+	}
+
 	$script_bits = bp_links_embed_fotoglif_match_script( $embed_code );
 
-	if ( ( $div_bits ) && ( $script_bits ) ) {
+	if ( ( $style_bits ) && ( $script_bits ) ) {
 
 		// start building up embed data array
 		$embed_data =
 			array(
-				'div' => $div_bits,
+				'div' => $style_bits,
 				'script' => $script_bits
 			);
 
@@ -334,7 +343,6 @@ function bp_links_embed_fotoglif_match( $embed_code ) {
 		return false;
 	}
 }
-
 
 function bp_links_embed_fotoglif_match_div( $string ) {
 
@@ -364,13 +372,46 @@ function bp_links_embed_fotoglif_match_div( $string ) {
 	return $arr_to_return;
 }
 
+function bp_links_embed_fotoglif_match_img( $string ) {
+
+	$arr_to_return = array();
+
+	// match img tag and find get src URL
+	if  ( preg_match( '/<img([^>]+)>/', $string, $matches ) ) {
+		$img_attributes = $matches[1];
+	} else {
+		return false;
+	}
+
+	// match width
+	if  ( preg_match( '/width:\s*(\d+)px/', $img_attributes, $matches ) ) {
+		$arr_to_return['width'] = $matches[1];
+	} else {
+		return false;
+	}
+
+	// no height given by this embed method
+	$arr_to_return['height'] = null;
+
+	// match image hash
+	/*
+	if  ( preg_match( '/src="[^"]+\/([A-Za-z0-9]{1,20})\.jpg"/', $img_attributes, $matches ) ) {
+		$arr_to_return['image_hash'] = $matches[1];
+	} else {
+		return false;
+	}
+	*/
+
+	return $arr_to_return;
+}
+
 function bp_links_embed_fotoglif_match_script( $string ) {
 
 	$arr_to_return = array();
 
 	// match img tag and find path
-	if  ( preg_match( '/<script\stype="[^"]+"\ssrc="http:\/\/www\.fotoglif\.com\/embed\/embed\.py\?([^"]+)">\s*<\/script>/', $string, $matches ) ) {
-		$query_string = $matches[1];
+	if  ( preg_match( '/<script\stype="[^"]+"\ssrc="http:\/\/www\.fotoglif\.com\/(embed\/)?embed(\.py|_login\.js)\?([^"]+)">\s*<\/script>/', $string, $matches ) ) {
+		$query_string = $matches[3];
 	} else {
 		return false;
 	}
@@ -573,11 +614,15 @@ function bp_link_embed_fotoglif_div_tag( $embed_data ) {
 	echo bp_get_link_embed_fotoglif_div_tag( $embed_data );
 }
 	function bp_get_link_embed_fotoglif_div_tag( $embed_data ) {
+
+		$width_style = ( empty( $embed_data['div']['width'] ) ) ? '' : sprintf( ' width: %1$dpx;', $embed_data['div']['width'] );
+		$height_style = ( empty( $embed_data['div']['height'] ) ) ? '' : sprintf( ' height: %1$dpx;', $embed_data['div']['height'] );
+
 		return sprintf(
-			'<div id="fotoglif_place_holder_%1$d" style="border-style: double; border-width: 5px; border-color: #bbbbbb; width: %2$dpx; height: %3$dpx; background-color: rgb(122, 122, 122);"></div>',
+			'<div id="fotoglif_place_holder_%1$d" style="border-style: double; border-width: 5px; border-color: #bbbbbb; background-color: rgb(122, 122, 122);"%2$s%3$s></div>',
 			$embed_data['script']['imageuid'], // arg 1
-			$embed_data['div']['width'], // arg 2
-			$embed_data['div']['height'] // arg 3
+			$width_style, // arg 2
+			$height_style // arg 3
 		);
 	}
 
