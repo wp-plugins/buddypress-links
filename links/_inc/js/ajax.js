@@ -230,6 +230,8 @@ jQuery(document).ready( function() {
 
 						if ( err_num <= -1 ) {
 							jQuery('ul#link-list').before('<div id="message" class="error fade"><p>' + response_split[1] + '</p></div>')
+						} else if ( err_num == 0 ) {
+							jQuery('ul#link-list').before('<div id="message" class="updated"><p>' + response_split[1] + '</p></div>')
 						} else {
 							jQuery('ul#link-list').before('<div id="message" class="updated"><p>' + response_split[1] + '</p></div>')
 							jQuery("div.link-vote-panel div#vote-total-" + link[2]).html(response_split[2]);

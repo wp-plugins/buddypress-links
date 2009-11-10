@@ -1651,47 +1651,61 @@ function bp_links_cast_vote( $link_id, $up_or_down ) {
 		return false;
 	}
 
-	// the default behavior is to only record activity if this is their original vote.
-	// use the filter below to override this behavior. you must return a boolean value!
+	// determine if member has voted for this link already
 	$is_first_vote = ( is_numeric( $vote->vote ) ) ? false : true;
-	$record_activity = (boolean) apply_filters( 'bp_links_cast_vote_record_activity', $is_first_vote );
 
-	switch ( $up_or_down ) {
-		case 'up':
-			$vote->up();
-			break;
-		case 'down':
-			$vote->down();
-			break;
-		default:
-			return false;
-	}
+	// the default behavior is to allow members to change their vote.
+	// use the filter below to override this behavior. you must return a boolean value!
+	$allow_change = (boolean) apply_filters( 'bp_links_cast_vote_allow_change', true );
 
-	if ( true === $bp->links->current_link->save() ) {
+	// member can vote if its first time, or they are allowed to change
+	if ( $is_first_vote || $allow_change ) {
+		
+		// the default behavior is to only record activity if this is their original vote.
+		// use the filter below to override this behavior. you must return a boolean value!
+		$record_activity = (boolean) apply_filters( 'bp_links_cast_vote_record_activity', $is_first_vote );
 
-		if ( $record_activity ) {
-			
-			// translate up or down string
-			$up_or_down_translated = ( 'up' == $up_or_down ) ? __( 'up', 'buddypress-links') : __( 'down', 'buddypress-links');
-
-			// record the activity
-			$activity_content = sprintf( __( '%1$s voted %2$s the link %3$s', 'buddypress-links'), bp_core_get_userlink( $bp->loggedin_user->id ), $up_or_down_translated, '<a href="' . bp_get_link_permalink( $bp->links->current_link ) . '">' . attribute_escape( $bp->links->current_link->name ) . '</a>' );
-
-			bp_links_record_activity( array(
-				'content' => apply_filters( 'bp_links_activity_voted', $activity_content ),
-				'primary_link' => apply_filters( 'bp_links_activity_voted_primary_link', bp_get_link_permalink( $bp->links->current_link ) ),
-				'component_action' => 'voted_on_link',
-				'item_id' => $bp->links->current_link->id
-			) );
-
+		switch ( $up_or_down ) {
+			case 'up':
+				$vote->up();
+				break;
+			case 'down':
+				$vote->down();
+				break;
+			default:
+				return false;
 		}
 
-		do_action( 'bp_links_cast_vote_success', $bp->links->current_link->id );
+		if ( true === $bp->links->current_link->save() ) {
 
-		// return the link object
-		return $bp->links->current_link;
+			if ( $record_activity ) {
+
+				// translate up or down string
+				$up_or_down_translated = ( 'up' == $up_or_down ) ? __( 'up', 'buddypress-links') : __( 'down', 'buddypress-links');
+
+				// record the activity
+				$activity_content = sprintf( __( '%1$s voted %2$s the link %3$s', 'buddypress-links'), bp_core_get_userlink( $bp->loggedin_user->id ), $up_or_down_translated, '<a href="' . bp_get_link_permalink( $bp->links->current_link ) . '">' . attribute_escape( $bp->links->current_link->name ) . '</a>' );
+
+				bp_links_record_activity( array(
+					'content' => apply_filters( 'bp_links_activity_voted', $activity_content ),
+					'primary_link' => apply_filters( 'bp_links_activity_voted_primary_link', bp_get_link_permalink( $bp->links->current_link ) ),
+					'component_action' => 'voted_on_link',
+					'item_id' => $bp->links->current_link->id
+				) );
+
+			}
+
+			do_action( 'bp_links_cast_vote_success', $bp->links->current_link->id );
+
+			// return the link object
+			return $bp->links->current_link;
+		} else {
+			return false;
+		}
 	} else {
-		return false;
+		// member not allowed change vote
+		// this is not an error, so return true!
+		return true;
 	}
 }
 
