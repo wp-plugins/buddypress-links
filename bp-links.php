@@ -1651,8 +1651,10 @@ function bp_links_cast_vote( $link_id, $up_or_down ) {
 		return false;
 	}
 
-	// only record activity if this is their original vote
-	$record_activity = ( is_numeric( $vote->vote ) ) ? false : true;
+	// the default behavior is to only record activity if this is their original vote.
+	// use the filter below to override this behavior. you must return a boolean value!
+	$is_first_vote = ( is_numeric( $vote->vote ) ) ? false : true;
+	$record_activity = (boolean) apply_filters( 'bp_links_cast_vote_record_activity', $is_first_vote );
 
 	switch ( $up_or_down ) {
 		case 'up':
