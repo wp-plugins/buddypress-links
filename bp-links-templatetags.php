@@ -1856,6 +1856,7 @@ function bp_the_site_link_categories_category() {
 function bp_site_link_categories_pagination_count() {
 	global $bp, $site_link_categories_template;
 
+	// TODO, this is not displaying properly
 	$from_num = intval( ( $site_link_categories_template->pag_page - 1 ) * $site_link_categories_template->pag_num ) + 1;
 	$to_num = ( $from_num + ( $site_link_categories_template->pag_num - 1 ) > $site_link_categories_template->total_link_count ) ? $site_link_categories_template->total_link_count : $from_num + ( $site_link_categories_template->pag_num - 1) ;
 
