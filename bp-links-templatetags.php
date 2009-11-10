@@ -2149,29 +2149,17 @@ function bp_link_list_item_left( $args = array() ) {
 function bp_link_list_item_right( $args = array() ) {
 
 	extract( bp_link_list_parse_args( $args ) );
-
-	switch ( $avatar_type ) {
-		case 'full':
-//			$vote_panel = bp_get_link_list_item_vote_panel( $args );
-			$vote_panel = null;
-			break;
-		case 'thumb':
-		default:
-			$vote_panel = null;
-			
-	}
 	
 	printf('
 		%1$s<div class="link-list-right">%2$s
-			%3$s%4$s%5$s
-		%6$s</div>%7$s',
+			%3$s%4$s
+		%5$s</div>%6$s',
 		apply_filters( 'bp_before_my_links_list_item_right', '', $args ), // arg 1
 		apply_filters( 'bp_before_my_links_list_item_right_content', '', $args ), // arg 2
 		bp_get_link_list_item_title( $args ), // arg 3
 		bp_get_link_list_item_description( $args ), // arg 4
-		$vote_panel, // arg 5
-		apply_filters( 'bp_after_my_links_list_item_right_content', '', $args ), // arg 6
-		apply_filters( 'bp_after_my_links_list_item_right', '', $args ) // arg 7
+		apply_filters( 'bp_after_my_links_list_item_right_content', '', $args ), // arg 5
+		apply_filters( 'bp_after_my_links_list_item_right', '', $args ) // arg 6
 	);
 }
 
