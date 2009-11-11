@@ -255,6 +255,10 @@ msgstr "Note enregistrée."
 msgid "There was a problem recording your vote. Please try again."
 msgstr "Un problème est survenu pendant la procédure de vote. Merci de bien vouloir recommencer."
 
+#: bp-links-ajax.php:41
+msgid "You have already voted."
+msgstr "Vous avez déjà voté pour ce lien"
+
 #: bp-links-ajax.php:45
 msgid "You must be logged in to vote!"
 msgstr "Vous devez vous connecter pour voter !"
@@ -487,7 +491,7 @@ msgstr "il y a %1$s"
 #: bp-links-templatetags.php:1862
 #, php-format
 msgid "Viewing category %1$d to %2$d (of %3$d categories)"
-msgstr "Cat&eacute;gories de %1$d à %2$d (sur %3$d cat&eacute;gories)"
+msgstr "Cat&eacute;gories de %1$d &agrave; %2$d (sur %3$d cat&eacute;gories)"
 
 #: bp-links-templatetags.php:2005
 msgid "Search anything..."
@@ -1005,7 +1009,7 @@ msgstr "Désolé, le lien n'existe pas."
 
 #: links/single/menu.php:17
 msgid "Link Owner"
-msgstr "Propriétaire du lien"
+msgstr "Lien géré par"
 
 #: links/single/menu.php:29
 msgid "Cast Your Vote"

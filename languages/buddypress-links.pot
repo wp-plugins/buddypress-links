@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/buddypress-links\n"
-"POT-Creation-Date: 2009-11-09 20:06+0000\n"
+"POT-Creation-Date: 2009-11-11 17:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -203,7 +203,7 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#: admin/link-manager.php:75 bp-links-templatetags.php:1966
+#: admin/link-manager.php:75 bp-links-templatetags.php:1967
 msgid "Category"
 msgstr ""
 
@@ -227,15 +227,19 @@ msgstr ""
 msgid "No links found."
 msgstr ""
 
-#: bp-links-ajax.php:38
+#: bp-links-ajax.php:39
 msgid "Vote recorded."
 msgstr ""
 
-#: bp-links-ajax.php:40
+#: bp-links-ajax.php:41
+msgid "You have already voted."
+msgstr ""
+
+#: bp-links-ajax.php:44
 msgid "There was a problem recording your vote. Please try again."
 msgstr ""
 
-#: bp-links-ajax.php:45
+#: bp-links-ajax.php:49
 msgid "You must be logged in to vote!"
 msgstr ""
 
@@ -294,26 +298,26 @@ msgid "To disable these notifications please log in and go to: %1$s"
 msgstr ""
 
 #: bp-links-templatetags.php:6 bp-links-templatetags.php:22
-#: bp-links-templatetags.php:1963
+#: bp-links-templatetags.php:1964
 msgid "Recently Active"
 msgstr ""
 
 #: bp-links-templatetags.php:7 bp-links-templatetags.php:25
-#: bp-links-templatetags.php:1964 bp-links-widgets.php:36
+#: bp-links-templatetags.php:1965 bp-links-widgets.php:36
 msgid "Newest"
 msgstr ""
 
 #: bp-links-templatetags.php:8 bp-links-templatetags.php:28
-#: bp-links-templatetags.php:1960
+#: bp-links-templatetags.php:1961
 msgid "Most Popular"
 msgstr ""
 
 #: bp-links-templatetags.php:9 bp-links-templatetags.php:31
-#: bp-links-templatetags.php:1961
+#: bp-links-templatetags.php:1962
 msgid "Most Votes"
 msgstr ""
 
-#: bp-links-templatetags.php:10 bp-links-templatetags.php:1962
+#: bp-links-templatetags.php:10 bp-links-templatetags.php:1963
 msgid "Vote Rating"
 msgstr ""
 
@@ -321,8 +325,8 @@ msgstr ""
 msgid "Highest Votes"
 msgstr ""
 
-#: bp-links-templatetags.php:73 bp-links-templatetags.php:1965
-#: bp-links-templatetags.php:1981
+#: bp-links-templatetags.php:73 bp-links-templatetags.php:1966
+#: bp-links-templatetags.php:1982
 msgid "All"
 msgstr ""
 
@@ -435,32 +439,32 @@ msgstr ""
 msgid "active %1$s ago"
 msgstr ""
 
-#: bp-links-templatetags.php:1862
+#: bp-links-templatetags.php:1863
 #, php-format
 msgid "Viewing category %1$d to %2$d (of %3$d categories)"
 msgstr ""
 
-#: bp-links-templatetags.php:2005
+#: bp-links-templatetags.php:2006
 msgid "Search anything..."
 msgstr ""
 
-#: bp-links-templatetags.php:2006
+#: bp-links-templatetags.php:2007
 msgid "Search"
 msgstr ""
 
-#: bp-links-templatetags.php:2235 bp-links-widgets.php:38
+#: bp-links-templatetags.php:2224 bp-links-widgets.php:38
 msgid "Votes"
 msgstr ""
 
-#: bp-links-templatetags.php:2300
+#: bp-links-templatetags.php:2289
 msgid "Comments"
 msgstr ""
 
-#: bp-links-templatetags.php:2314 bp-links.php:304
+#: bp-links-templatetags.php:2303 bp-links.php:304
 msgid "Home"
 msgstr ""
 
-#: bp-links-templatetags.php:2320 links/single/menu.php:20
+#: bp-links-templatetags.php:2309 links/single/menu.php:20
 msgid "created"
 msgstr ""
 
@@ -695,15 +699,15 @@ msgstr ""
 msgid "%1$s wrote on the wire of the link %2$s:"
 msgstr ""
 
-#: bp-links.php:1673
+#: bp-links.php:1684
 msgid "up"
 msgstr ""
 
-#: bp-links.php:1673
+#: bp-links.php:1684
 msgid "down"
 msgstr ""
 
-#: bp-links.php:1676
+#: bp-links.php:1687
 #, php-format
 msgid "%1$s voted %2$s the link %3$s"
 msgstr ""
