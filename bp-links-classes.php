@@ -45,6 +45,7 @@ class BP_Links_Link {
 	const EMBED_SERVICE_NONE = 0;
 	const EMBED_SERVICE_PICAPP = 1;
 	const EMBED_SERVICE_FOTOGLIF = 2;
+	const EMBED_SERVICE_YOUTUBE = 3;
 
 	// embed service constants
 	const EMBED_STATUS_PARTIAL = -1;
