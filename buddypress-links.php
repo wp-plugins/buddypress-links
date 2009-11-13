@@ -17,9 +17,19 @@ Site Wide Only: false
 //
 
 // Define the slug for the component
-// At this time, it is not recommended that you try to change this!
+// At this time, it is not recommended that you try to override this!
 if ( !defined( 'BP_LINKS_SLUG' ) )
 	define ( 'BP_LINKS_SLUG', 'links' );
+
+// The default behavior is to allow members to change their vote.
+// Override this constant and set to false to prevent vote changing.
+if ( !defined( 'BP_LINKS_VOTE_ALLOW_CHANGE' ) )
+	define( 'BP_LINKS_VOTE_ALLOW_CHANGE', true );
+
+// The default behavior is to record vote activity (if it is their original vote).
+// Override this constant and set to false to prevent ANY vote activity recording.
+if ( !defined( 'BP_LINKS_VOTE_RECORD_ACTIVITY' ) )
+	define( 'BP_LINKS_VOTE_RECORD_ACTIVITY', true );
 
 // The following three constants are used by the create/edit link validation
 // code to limit the number of characters allowed for url, name and description.
