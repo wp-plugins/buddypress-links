@@ -1654,16 +1654,26 @@ function bp_links_cast_vote( $link_id, $up_or_down ) {
 	// determine if member has voted for this link already
 	$is_first_vote = ( is_numeric( $vote->vote ) ) ? false : true;
 
-	// the default behavior is to allow members to change their vote.
-	// use the filter below to override this behavior. you must return a boolean value!
-	$allow_change = (boolean) apply_filters( 'bp_links_cast_vote_allow_change', true );
+	// the default behavior is to allow members to change their vote,
+	// which can be overriden with the configuration constant you see passed
+	// to the filter below. use this filter to override the `configured` behavior
+	// for special circumstances. you must return a boolean value!
+	$allow_change = (boolean) apply_filters( 'bp_links_cast_vote_allow_change', (boolean) BP_LINKS_VOTE_ALLOW_CHANGE, $vote );
 
-	// member can vote if its first time, or they are allowed to change
+	// member can vote if its first time, or they are allowed to change vote
 	if ( $is_first_vote || $allow_change ) {
 		
-		// the default behavior is to only record activity if this is their original vote.
-		// use the filter below to override this behavior. you must return a boolean value!
-		$record_activity = (boolean) apply_filters( 'bp_links_cast_vote_record_activity', $is_first_vote );
+		// the default behavior is to record vote activity.
+		// this can be overriden with the configuration constant you see below.
+		if ( (boolean) BP_LINKS_VOTE_RECORD_ACTIVITY === true ) {
+			// the default behavior is to only record activity if this is their
+			// original vote. use the filter below to override this behavior.
+			// you must return a boolean value!
+			$record_activity = (boolean) apply_filters( 'bp_links_cast_vote_record_activity', $is_first_vote, $vote );
+		} else {
+			// do not record activity per configuration constant
+			$record_activity = false;
+		}
 
 		switch ( $up_or_down ) {
 			case 'up':
