@@ -1153,20 +1153,23 @@ function bp_links_is_link_visibile( $link_id_or_obj, $user_id = null ) {
 		$user_id = $bp->loggedin_user->id;
 	}
 
-	if ( BP_Links_Link::STATUS_PUBLIC == $link->status ) {
+	// owners and site admins can always see the link
+	if ( $bp->is_item_admin ) {
 		return true;
-	} elseif ( BP_Links_Link::STATUS_HIDDEN == $link->status ) {
-		if ( $bp->loggedin_user->id == $link->user_id ) {
-			return true;
-		}
-	} elseif ( BP_Links_Link::STATUS_FRIENDS == $link->status ) {
-		if ( friends_check_friendship( $user_id, $link->user_id ) ) {
-			return true;
-		}
 	}
 
-	// sorry, not visible
-	return false;
+	// who else can see this link?
+	// check friendship last because of DB hit
+	switch ( $link->status ) {
+		case BP_Links_Link::STATUS_PUBLIC:
+			return true;
+		case BP_Links_Link::STATUS_HIDDEN:
+			return false;
+		case BP_Links_Link::STATUS_FRIENDS:
+			return friends_check_friendship( $user_id, $link->user_id );
+		default:
+			return false;
+	}
 }
 
 function bp_links_is_valid_status( $status ) {
