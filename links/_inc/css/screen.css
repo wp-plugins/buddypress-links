@@ -418,11 +418,12 @@ div#link-url-embed {
 
 	div#link-url-embed div#link-url-embed-content p {
 		margin: 0;
+		min-height: 50px;
 	}
 
 	div#link-url-embed div#link-url-embed-options {
-		text-align: right;
 		padding: 0;
+		text-align: right;
 	}
 
 .internal-page #content img.avatar-embed, ul#link-list img.avatar-embed {
