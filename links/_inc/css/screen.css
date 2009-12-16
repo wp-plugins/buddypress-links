@@ -416,9 +416,13 @@ div#link-url-embed {
 		max-height: 150px;
 	}
 
+	div#link-url-embed div#link-url-embed-content p {
+		margin: 0;
+	}
+
 	div#link-url-embed div#link-url-embed-options {
 		text-align: right;
-		padding: 18px 0 0 0;
+		padding: 0;
 	}
 
 .internal-page #content img.avatar-embed, ul#link-list img.avatar-embed {
