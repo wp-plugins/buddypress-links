@@ -33,7 +33,10 @@ class BP_Links_Link {
 	const STATUS_PUBLIC = 1;
 	const STATUS_FRIENDS = 2;
 	const STATUS_HIDDEN = 3;
-	const STATUS_DEFAULT = self::STATUS_PUBLIC;
+
+	// wire constants
+	const COMMENT_WIRE_DISABLED = 0;
+	const COMMENT_WIRE_ENABLED = 1;
 
 	// popularity constants
 	const POPULARITY_THRESH = 1;
@@ -42,12 +45,11 @@ class BP_Links_Link {
 	const POPULARITY_RETIRED = 16777215;
 
 	// embed service constants
-	const EMBED_SERVICE_NONE = 0;
+	const EMBED_SERVICE_NONE = null;
 	const EMBED_SERVICE_PICAPP = 1;
 	const EMBED_SERVICE_FOTOGLIF = 2;
-	const EMBED_SERVICE_YOUTUBE = 3;
 
-	// embed service constants
+	// embed status constants
 	const EMBED_STATUS_PARTIAL = -1;
 	const EMBED_STATUS_DISABLED = 0;
 	const EMBED_STATUS_ENABLED = 1;
@@ -63,36 +65,44 @@ class BP_Links_Link {
 	var $slug;
 	var $name;
 	var $description;
-	var $status;
-	var $enable_wire;
+	var $status = self::STATUS_PUBLIC;
+	var $enable_wire = self::COMMENT_WIRE_ENABLED;
 	var $date_created;
 	var $date_updated;
 
 	// denormalized vote data
-	var $vote_count;
-	var $vote_total;
-	var $popularity;
+	var $vote_count = 0;
+	var $vote_total = 0;
+	var $popularity = self::POPULARITY_DEFAULT;
 
 	// embedded media options
-	var $embed_service;
-	var $embed_status;
-	var $embed_data;
+	private $embed_service;
+	private $embed_status;
+	private $embed_data;
 
 	/**
 	 * Category object for this link
 	 *
 	 * @var BP_Links_Category
 	 */
-	var $_category;
+	private $_category_obj;
 
 	/**
 	 * Vote object of currently logged in member
 	 *
 	 * @var BP_Links_Vote
 	 */
-	var $_user_vote;
+	private $_user_vote_obj;
+
+	/**
+	 * Embed service object for this link
+	 *
+	 * @var BP_Links_Embed_Service
+	 */
+	private $_embed_service_obj;
 
 	function bp_links_link( $id = null, $single = false ) {
+		
 		if ( $id ) {
 			$this->id = $id;
 			$this->populate();
@@ -116,8 +126,8 @@ class BP_Links_Link {
 			$this->target = $link->target;
 			$this->rel = $link->rel;
 			$this->slug = $link->slug;
-			$this->name = stripslashes($link->name);
-			$this->description = stripslashes($link->description);
+			$this->name = $link->name;
+			$this->description = $link->description;
 			$this->status = $link->status;
 			$this->enable_wire = $link->enable_wire;
 			$this->vote_count = $link->vote_count;
@@ -125,10 +135,9 @@ class BP_Links_Link {
 			$this->popularity = $link->popularity;
 			$this->embed_service = $link->embed_service;
 			$this->embed_status = $link->embed_status;
-			$this->embed_data = unserialize( $link->embed_data );
+			$this->embed_data = $link->embed_data;
 			$this->date_created = strtotime( $link->date_created );
 			$this->date_updated = strtotime( $link->date_updated );
-				
 		}
 	}
 
@@ -152,9 +161,14 @@ class BP_Links_Link {
 		$this->description = apply_filters( 'bp_links_link_description_before_save', $this->description, $this->id );
  		$this->status = apply_filters( 'bp_links_link_status_before_save', $this->status, $this->id );
 		$this->enable_wire = apply_filters( 'bp_links_link_enable_wire_before_save', $this->enable_wire, $this->id );
-		$this->embed_service = apply_filters( 'bp_links_link_embed_service_before_save', $this->embed_service, $this->id );
-		$this->embed_status = apply_filters( 'bp_links_link_embed_status_before_save', $this->embed_status, $this->id );
-		$this->embed_data = apply_filters( 'bp_links_link_embed_data_before_save', $this->embed_data, $this->id );
+
+		// handle embed service values
+		if ( $this->embed() instanceof BP_Links_Embed_Service ) {
+			$this->embed_service = $this->embed()->key();
+			$this->embed_data = $this->embed()->export_data();
+		} elseif ( empty( $this->embed_service ) ) {
+			$this->embed_remove();
+		}
 
 		// make sure category_id actually exists
 		if ( !BP_Links_Category::check_category( $this->category_id ) ) {
@@ -166,8 +180,8 @@ class BP_Links_Link {
 
 		// save the user vote if exists
 		// (BP_Links_Vote::save() only triggers when a vote was cast)
-		if ( $this->_user_vote instanceof BP_Links_Vote ) {
-			if ( true !== $this->_user_vote->save() ) {
+		if ( $this->_user_vote_obj instanceof BP_Links_Vote ) {
+			if ( true !== $this->_user_vote_obj->save() ) {
 				return false;
 			}
 		}
@@ -202,7 +216,7 @@ class BP_Links_Link {
 					vote_count = %d,
 					vote_total = %d,
 					popularity = %d,
-					embed_service = %d,
+					embed_service = %s,
 					embed_status = %d,
 					embed_data = %s,
 					date_updated = NOW()
@@ -225,7 +239,7 @@ class BP_Links_Link {
 					$this->popularity,
 					$this->embed_service,
 					$this->embed_status,
-					serialize( $this->embed_data ),
+					$this->embed_data,
 					$this->id
 			);
 			
@@ -259,7 +273,7 @@ class BP_Links_Link {
 					embed_data,
 					date_created
 				) VALUES (
-					%d, %d, %s, MD5(%s), %s, %s, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, %s, NOW()
+					%d, %d, %s, MD5(%s), %s, %s, %s, %s, %s, %d, %d, %d, %d, %d, %s, %d, %s, NOW()
 				)",
 					$this->user_id,
 					$this->category_id,
@@ -277,7 +291,7 @@ class BP_Links_Link {
 					$this->popularity,
 					$this->embed_service,
 					$this->embed_status,
-					serialize( $this->embed_data )
+					$this->embed_data
 			);
 		}
 		
@@ -334,22 +348,85 @@ class BP_Links_Link {
 	function vote() {
 		global $bp;
 		
-		if ( !$this->_user_vote instanceof BP_Links_Vote ) {
+		if ( !$this->_user_vote_obj instanceof BP_Links_Vote ) {
 			if ( ( $this->id ) && ( $bp->loggedin_user->id ) ) {
-				$this->_user_vote = new BP_Links_Vote( $this->id, $bp->loggedin_user->id );
+				$this->_user_vote_obj = new BP_Links_Vote( $this->id, $bp->loggedin_user->id );
 			} else {
 				return false;
 			}
 		}
 
-		return $this->_user_vote;
+		return $this->_user_vote_obj;
+	}
+
+	function category() {
+		return $this->get_category();
 	}
 
 	function get_category() {
-		if ( !$this->_category instanceof BP_Links_Category ) {
-			$this->_category = new BP_Links_Category( $this->category_id );
+		if ( !$this->_category_obj instanceof BP_Links_Category ) {
+			$this->_category_obj = new BP_Links_Category( $this->category_id );
 		}
-		return $this->_category;
+		return $this->_category_obj;
+	}
+
+	function embed() {
+		if ( !$this->_embed_service_obj instanceof BP_Links_Embed_Service && empty( $this->embed_data ) === false ) {
+			// handle backwards compatibility with deprecated storage method (arrays)
+			switch ( $this->embed_service ) {
+				case self::EMBED_SERVICE_PICAPP:
+					$this->_embed_service_obj = new BP_Links_Embed_Service_PicApp();
+					$this->_embed_service_obj->from_deprecated_data( unserialize( $this->embed_data ) );
+					break;
+				case self::EMBED_SERVICE_FOTOGLIF:
+					$this->_embed_service_obj = new BP_Links_Embed_Service_Fotoglif();
+					$this->_embed_service_obj->from_deprecated_data( unserialize( $this->embed_data ) );
+					break;
+				default:
+					$this->_embed_service_obj = BP_Links_Embed::LoadService( $this->embed_data );
+			}
+		}
+		return $this->_embed_service_obj;
+	}
+
+	function embed_attach( BP_Links_Embed_Service $service ) {
+		$this->_embed_service_obj = $service;
+		return true;
+	}
+
+	function embed_remove( $save = false ) {
+		$this->_embed_service_obj = null;
+		$this->embed_service = self::EMBED_SERVICE_NONE;
+		$this->embed_status = self::EMBED_STATUS_DISABLED;
+		$this->embed_data = null;
+
+		return ( $save === true ) ? $this->save() : true;
+	}
+
+	function embed_status_partial() {
+		return ( self::EMBED_STATUS_PARTIAL === $this->embed_status );
+	}
+
+	function embed_status_set_partial( $save = false ) {
+		if ( $this->embed() instanceof BP_Links_Embed_Service ) {
+			$this->embed_status = self::EMBED_STATUS_PARTIAL;
+			return ( $save === true ) ? $this->save() : true;
+		} else {
+			return false;
+		}
+	}
+
+	function embed_status_enabled() {
+		return ( self::EMBED_STATUS_ENABLED == $this->embed_status && $this->embed() instanceof BP_Links_Embed_Service );
+	}
+	
+	function embed_status_set_enabled( $save = false ) {
+		if ( $this->embed() instanceof BP_Links_Embed_Service ) {
+			$this->embed_status = self::EMBED_STATUS_ENABLED;
+			return ( $save === true ) ? $this->save() : true;
+		} else {
+			return false;
+		}
 	}
 
 	function get_wire_count() {
@@ -361,18 +438,22 @@ class BP_Links_Link {
 	// Static Functions
 
 	/**
-	 * Return array of valid status constants
+	 * Check if status is a valid value
 	 *
 	 * @static
+	 * @param integer $status
 	 * @return array
 	 */
-	function valid_status() {
-		return
+	function is_valid_status( $status ) {
+		
+		$valid =
 			array(
 				self::STATUS_PUBLIC,
 				self::STATUS_FRIENDS,
 				self::STATUS_HIDDEN
 			);
+
+		return in_array( $status, $valid );
 	}
 
 	function popularity_recalculate_all() {

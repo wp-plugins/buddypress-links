@@ -29,7 +29,7 @@ function bp_links_install() {
 				`vote_count` smallint NOT NULL default '0',
 				`vote_total` smallint NOT NULL default '0',
 				`popularity` mediumint UNSIGNED NOT NULL default '0',
-				`embed_service` tinyint(1) default '0',
+				`embed_service` char(32) default null,
 				`embed_status` tinyint(1) default '0',
 				`embed_data` text,
 				`date_created` datetime NOT NULL,
@@ -174,14 +174,7 @@ function bp_links_setup_globals() {
 		$bp->links->table_name_wire = $wpdb->base_prefix . 'bp_links_wire';
 	
 	$bp->links->forbidden_names = apply_filters( 'bp_links_forbidden_names', array( 'my-links', 'link-finder', 'create', 'invites', 'delete', 'add', 'admin', 'most-popular', 'most-votes', 'high-votes', 'recently-active', 'newest', 'all', 'submit', 'feed' ) );
-	
-	$bp->links->link_creation_steps = apply_filters( 'bp_links_create_link_steps', array(
-		'link-details' => array( 'name' => __( 'Link Details', 'buddypress-links' ), 'position' => 0 ),
-		'link-settings' => array( 'name' => __( 'Link Settings', 'buddypress-links' ), 'position' => 10 ),
-		'link-avatar' => array( 'name' => __( 'Link Avatar', 'buddypress-links' ), 'position' => 20 ),
-	) );
-	
-	$bp->links->valid_status = apply_filters( 'bp_links_valid_status', BP_Links_Link::valid_status() );
+
 }
 add_action( 'plugins_loaded', 'bp_links_setup_globals', 6 );
 add_action( 'admin_menu', 'bp_links_setup_globals', 6 );
@@ -268,8 +261,8 @@ function bp_links_setup_nav() {
 			
 		} else if ( !bp_is_home() && !$bp->is_single_item ) {
 
-			$bp->bp_options_avatar = bp_links_fetch_avatar( array( 'item_id' => $bp->displayed_user->id, 'type' => 'thumb' ) );
-			$bp->bp_options_title = $bp->displayed_user->fullname;
+			$bp->bp_options_avatar = bp_links_fetch_avatar( array( 'type' => 'thumb' ), $bp->links->current_link );
+			$bp->bp_options_title = $bp->links->current_link->name;
 			
 		} else if ( $bp->is_single_item ) {
 			// We are viewing a single link, so set up the
@@ -283,7 +276,7 @@ function bp_links_setup_nav() {
 									
 			$bp->bp_options_title = $bp->links->current_link->name;
 
-			$bp->bp_options_avatar = bp_links_fetch_avatar( array( 'item_id' => $bp->links->current_link->id, 'object' => 'link', 'type' => 'thumb', 'avatar_dir' => 'link-avatars', 'alt' => __( 'Link Avatar', 'buddypress-links' ) ) );
+			$bp->bp_options_avatar = bp_links_fetch_avatar( array( 'type' => 'thumb' ), $bp->links->current_link );
 			
 			$link_link = $bp->root_domain . '/' . $bp->links->slug . '/' . $bp->links->current_link->slug . '/';
 			
@@ -425,164 +418,56 @@ function bp_links_screen_my_links() {
 
 function bp_links_screen_create_link() {
 	global $bp;
-
-	/* If no current step is set, reset everything so we can start a fresh link creation */
-	if ( !$bp->links->current_create_step = $bp->action_variables[1] ) {
-
-		unset( $bp->links->current_create_step );
-		unset( $bp->links->completed_create_steps );
-		
-		setcookie( 'bp_new_link_id', false, time() - 1000, COOKIEPATH );
-		setcookie( 'bp_completed_create_steps', false, time() - 1000, COOKIEPATH );
-
-		bp_links_validate_details_reset('bp_new_link_');
-		
-		$reset_steps = true;
-		bp_core_redirect( $bp->loggedin_user->domain . $bp->links->slug . '/create/step/' . array_shift( array_keys( $bp->links->link_creation_steps )  ) );
-	}
 	
-	/* If this is a creation step that is not recognized, just redirect them back to the first screen */
-	if ( $bp->action_variables[1] && !$bp->links->link_creation_steps[$bp->action_variables[1]] ) {
-		bp_core_add_message( sprintf( '%s %s', __( 'There was an error saving link details.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
-		bp_core_redirect( $bp->loggedin_user->domain . $bp->links->slug . '/create' );
-	}
-
-	/* Fetch the currently completed steps variable */
-	if ( isset( $_COOKIE['bp_completed_create_steps'] ) && !$reset_steps )
-		$bp->links->completed_create_steps = unserialize( stripslashes( $_COOKIE['bp_completed_create_steps'] ) );
-
-	/* Set the ID of the new link, if it has already been created in a previous step */
-	if ( isset( $_COOKIE['bp_new_link_id'] ) ) {
-		$bp->links->new_link_id = $_COOKIE['bp_new_link_id'];
-		$bp->links->current_link = new BP_Links_Link( $bp->links->new_link_id, false, false );
-	}
-
-	/* If the save, upload or skip button is hit, lets calculate what we need to save */
+	// If the save, upload or skip button is hit, lets calculate what we need to save
 	if ( isset( $_POST['save'] ) ) {
-		
-		/* Check the nonce */
-		check_admin_referer( 'bp_links_create_save_' . $bp->links->current_create_step );
-		
-		if ( 'link-details' == $bp->links->current_create_step ) {
 
-			// validate the data fields, redirects on error
-			$data_valid = bp_links_validate_details(
-					$_POST,
-					'bp_new_link_',
-					$bp->loggedin_user->domain . $bp->links->slug . '/create/step/' . $bp->links->current_create_step
+		// Check the nonce
+		check_admin_referer( 'bp_link_details_form_save' );
+		
+		// validate the data fields, redirects on error
+		$data_valid = bp_links_validate_create_form_input();
+
+		if ( $data_valid == false ) {
+			return false;
+		}
+
+		// try to create the link
+		$bp->links->current_link =
+			bp_links_manage_link(
+				array(
+					'category_id' => $data_valid['link-category'],
+					'url' => $data_valid['link-url'],
+					'name' => $data_valid['link-name'],
+					'description' => $data_valid['link-desc'],
+					'status' => $data_valid['link-status'],
+					'enable_wire' => $data_valid['link-enable-wire'],
+					'embed_data' => $data_valid['link-url-embed-data']
+				)
 			);
 
-			// try to create the link
-			if ( !$bp->links->new_link_id = bp_links_create_link( array( 'link_id' => $bp->links->new_link_id, 'category_id' => $data_valid['link-category'], 'url' => $data_valid['link-url'], 'name' => $data_valid['link-name'], 'description' => $data_valid['link-desc'], 'slug' => bp_links_check_slug( sanitize_title_with_dashes( $data_valid['link-name'] ) ) ) ) ) {
-				bp_core_add_message( sprintf( '%s %s', __( 'There was an error saving link details.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
-				bp_core_redirect( $bp->loggedin_user->domain . $bp->links->slug . '/create/step/' . $bp->links->current_create_step );
-			}
+		if ( bp_links_current_link_exists() ) {
 
-			// update meta data
-			bp_links_update_linkmeta( $bp->links->new_link_id, 'last_activity', time() );
-//			bp_links_update_linkmeta( $bp->links->new_link_id, 'theme', 'buddypress-links' );
-//			bp_links_update_linkmeta( $bp->links->new_link_id, 'stylesheet', 'buddypress-links' );
-		}
-		
-		if ( 'link-settings' == $bp->links->current_create_step ) {
-			$link_status = BP_Links_Link::STATUS_PUBLIC;
-			$link_enable_wire = 1;
-			
-			if ( !isset($_POST['link-show-wire']) )
-				$link_enable_wire = 0;
-			
-			if ( in_array( $_POST['link-status'], BP_Links_Link::valid_status(), true ) )
-				$link_status = $_POST['link-status'];
-		
-			if ( !$bp->links->new_link_id = bp_links_create_link( array( 'link_id' => $bp->links->new_link_id, 'status' => $link_status, 'enable_wire' => $link_enable_wire ) ) ) {
-				bp_core_add_message( sprintf( '%s %s', __( 'There was an error saving link settings.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
-				bp_core_redirect( $bp->loggedin_user->domain . $bp->links->slug . '/create/step/' . $bp->links->current_create_step );
-			}
-		}
+			bp_links_update_linkmeta( $bp->links->current_link->id, 'last_activity', time() );
 
-		do_action( 'bp_links_create_link_step_save_' . $bp->links->current_create_step );
-		do_action( 'bp_links_create_link_step_complete' ); // Mostly for clearing cache on a generic action name
-		
-		/**
-		 * Once we have successfully saved the details for this step of the creation process
-		 * we need to add the current step to the array of completed steps, then update the cookies
-		 * holding the information
-		 */
-		if ( !in_array( $bp->links->current_create_step, (array)$bp->links->completed_create_steps ) )
-			$bp->links->completed_create_steps[] = $bp->links->current_create_step;
-		
-		/* Reset cookie info */
-		setcookie( 'bp_new_link_id', $bp->links->new_link_id, time()+60*60*24, COOKIEPATH );
-		setcookie( 'bp_completed_create_steps', serialize( $bp->links->completed_create_steps ), time()+60*60*24, COOKIEPATH );
-
-		/* If we have completed all steps and hit done on the final step we can redirect to the completed link */
-		if ( count( $bp->links->completed_create_steps ) == count( $bp->links->link_creation_steps ) && $bp->links->current_create_step == array_pop( array_keys( $bp->links->link_creation_steps ) ) ) {
-			unset( $bp->links->current_create_step );
-			unset( $bp->links->completed_create_steps );
-
-			/* Once we compelete all steps, record the link creation in the activity stream. */
 			bp_links_record_activity( array(
+				'item_id' => $bp->links->current_link->id,
 				'content' => apply_filters( 'bp_links_activity_created_link', sprintf( __( '%1$s created the link %2$s', 'buddypress-links'), bp_core_get_userlink( $bp->loggedin_user->id ), '<a href="' . bp_get_link_permalink( $bp->links->current_link ) . '">' . attribute_escape( $bp->links->current_link->name ) . '</a>' ) ),
 				'primary_link' => apply_filters( 'bp_links_activity_created_link_primary_link', bp_get_link_permalink( $bp->links->current_link ) ),
-				'component_action' => 'created_link',
-				'item_id' => $bp->links->new_link_id
+				'component_action' => 'created_link'
 			) );
 
-			do_action( 'bp_links_link_create_complete', $bp->links->new_link_id );
-			
-			bp_core_redirect( bp_get_link_permalink( $bp->links->current_link ) );
-		} else {
-			/**
-			 * Since we don't know what the next step is going to be (any plugin can insert steps)
-			 * we need to loop the step array and fetch the next step that way.
-			 */
-			foreach ( $bp->links->link_creation_steps as $key => $value ) {
-				if ( $key == $bp->links->current_create_step ) {
-					$next = 1; 
-					continue;
-				}
-				
-				if ( $next ) {
-					$next_step = $key; 
-					break;
-				}
-			}
+			do_action( 'bp_links_create_complete', $bp->links->current_link->id );
 
-			bp_core_redirect( $bp->loggedin_user->domain . $bp->links->slug . '/create/step/' . $next_step );
-		}
-	}
-	
-	/* Link avatar is handled seperately */
-	if ( 'link-avatar' == $bp->links->current_create_step &&  ( isset( $_POST['upload'] ) || isset( $_POST['embed-submit'] ) ) ) {
-
-		/* Normally we would check a nonce here, but the link save nonce is used instead */
-
-		if ( isset( $_POST['embed-html'] ) && !empty( $_POST['embed-html'] ) ) {
-			if ( bp_links_embed_handle_upload( $bp->links->current_link, $_POST['embed-html'] ) ) {
-				// we are good to crop
-				$bp->avatar_admin->step = 'crop-image';
-				// Make sure we include the jQuery jCrop file for image cropping
-				add_action( 'wp', 'bp_core_add_jquery_cropper' );
-			}
-		} elseif ( !empty( $_FILES ) ) {
-			// Pass the file to the avatar upload handler
-			if ( bp_core_avatar_handle_upload( $_FILES, 'bp_links_avatar_upload_dir' ) ) {
-				// we are good to crop
-				$bp->avatar_admin->step = 'crop-image';
-				// Make sure we include the jQuery jCrop file for image cropping
-				add_action( 'wp', 'bp_core_add_jquery_cropper' );
-			}
-		}
-
-		/* If the image cropping is done, crop the image and save a full/thumb version */
-		if ( isset( $_POST['avatar-crop-submit'] ) ) {
-			if ( bp_core_avatar_handle_crop( array( 'object' => 'link', 'avatar_dir' => 'link-avatars', 'item_id' => $bp->links->current_link->id, 'original_file' => $_POST['image_src'], 'crop_x' => $_POST['x'], 'crop_y' => $_POST['y'], 'crop_w' => $_POST['w'], 'crop_h' => $_POST['h'] ) ) ) {
-				bp_links_embed_handle_crop( $bp->links->current_link );
-				bp_core_add_message( __( 'The link avatar was uploaded successfully!', 'buddypress-links' ) );
+			if ( $_POST['link-avatar-option'] == 1 ) {
+				bp_core_redirect( bp_get_link_permalink( $bp->links->current_link ) . '/admin/link-avatar' );
 			} else {
-				bp_core_add_message( sprintf( '%s %s', __( 'There was an error saving link avatar.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
+				bp_core_redirect( bp_get_link_permalink( $bp->links->current_link ) );
 			}
-				
+			
+		} else {
+			bp_core_add_message( sprintf( '%s %s', __( 'There was an error saving link details.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
+			return false;
 		}
 	}
 	
@@ -675,203 +560,180 @@ function bp_links_screen_link_admin() {
 
 function bp_links_screen_link_admin_edit_details() {
 	global $bp;
-	
-	if ( $bp->current_component == $bp->links->slug && 'edit-details' == $bp->action_variables[0] ) {
-	
-		if ( $bp->is_item_admin || $bp->is_item_mod  ) {
+
+	if ( !$bp->is_item_admin && !$bp->is_item_mod ) {
+		return false;
+	}
+
+	if ( 'edit-details' != bp_links_admin_current_action_variable() ) {
+		return false;
+	}
+
+	// If the edit form has been submitted, save the edited details
+	if ( isset( $_POST['save'] ) ) {
 		
-			// If the edit form has been submitted for reset, kill cookies and redirect
-			if ( isset( $_POST['reset'] ) ) {
-				bp_links_validate_details_reset( 'bp_edit_link_' );
+		/* Check the nonce first. */
+		if ( !check_admin_referer( 'bp_link_details_form_save' ) )
+			return false;
+
+		// validate the data fields
+		$data_valid = bp_links_validate_create_form_input();
+
+		if ( $data_valid == false ) {
+			return false;
+		}
+
+		// try to update the link
+		$link =
+			bp_links_manage_link(
+				array(
+					'link_id' => $bp->links->current_link->id,
+					'category_id' => $data_valid['link-category'],
+					'url' => $data_valid['link-url'],
+					'name' => $data_valid['link-name'],
+					'description' => $data_valid['link-desc'],
+					'status' => $data_valid['link-status'],
+					'enable_wire' => $data_valid['link-enable-wire'],
+					'embed_data' => $data_valid['link-url-embed-data']
+				)
+			);
+
+		if ( $link instanceof BP_Links_Link ) {
+			$bp->links->current_link = $link;
+			do_action( 'bp_links_link_details_edited', $bp->links->current_link->id );
+			bp_core_add_message( __( 'Link details were successfully updated.', 'buddypress-links' ) );
+
+			if ( $_POST['link-avatar-option'] == 1 ) {
+				bp_core_redirect( bp_get_link_permalink( $bp->links->current_link ) . '/admin/link-avatar' );
+			} else {
 				bp_core_redirect( bp_get_link_permalink( $bp->links->current_link ) . '/admin/edit-details' );
 			}
-
-			// If the edit form has been submitted, save the edited details
-			if ( isset( $_POST['save'] ) ) {
-				/* Check the nonce first. */
-				if ( !check_admin_referer( 'bp_links_edit_link_details' ) )
-					return false;
-					
-				$data_valid = bp_links_validate_details(
-					$_POST,
-					'bp_edit_link_',
-					bp_get_link_permalink( $bp->links->current_link ) . '/admin/edit-details'
-				);
-
-				if ( !bp_links_edit_base_link_details( $_POST['link-id'], $data_valid['link-category'], $data_valid['link-url'], $data_valid['link-name'], $data_valid['link-desc'] ) ) {
-//				if ( !bp_links_edit_base_link_details( $_POST['link-id'], $_POST['link-category'], $_POST['link-url'], $_POST['link-name'], $_POST['link-desc'] ) ) {
-					bp_core_add_message( sprintf( '%s %s', __( 'There was an error updating link details.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
-				} else {
-					bp_core_add_message( __( 'Link details were successfully updated.', 'buddypress-links' ) );
-				}
-				
-				do_action( 'bp_links_link_details_edited', $bp->links->current_link->id );
-				
-				bp_core_redirect( bp_get_link_permalink( $bp->links->current_link ) . '/admin/edit-details' );
-			}
-
-			do_action( 'bp_links_screen_link_admin_edit_details', $bp->links->current_link->id );
-
-			if ( '' != locate_template( array( 'links/single/admin.php' ), false ) )
-				bp_core_load_template( apply_filters( 'bp_links_template_link_admin', 'links/single/admin' ) );
-			else
-				bp_core_load_template( apply_filters( 'bp_links_template_link_admin', 'links/admin/edit-details' ) );
-
-			// once template loads, we don't need the cookies anymore
-			bp_links_validate_details_reset( 'bp_edit_link_' );
+			
+		} else {
+			bp_core_add_message( sprintf( '%s %s', __( 'There was an error updating link details.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
 		}
 	}
+
+	do_action( 'bp_links_screen_link_admin_edit_details', $bp->links->current_link->id );
+
+	if ( '' != locate_template( array( 'links/single/admin.php' ), false ) )
+		bp_core_load_template( apply_filters( 'bp_links_template_link_admin', 'links/single/admin' ) );
+	else
+		bp_core_load_template( apply_filters( 'bp_links_template_link_admin', 'links/admin/edit-details' ) );
+
 }
 add_action( 'wp', 'bp_links_screen_link_admin_edit_details', 4 );
 
-function bp_links_screen_link_admin_settings() {
-	global $bp;
-	
-	if ( $bp->current_component == $bp->links->slug && 'link-settings' == $bp->action_variables[0] ) {
-		
-		if ( !$bp->is_item_admin )
-			return false;
-		
-		// If the edit form has been submitted, save the edited details
-		if ( isset( $_POST['save'] ) ) {
-			$enable_wire = ( isset($_POST['link-show-wire'] ) ) ? 1 : 0;
-			
-			$allowed_status = apply_filters( 'bp_links_allowed_status', BP_Links_Link::valid_status() );
-			$status = ( in_array( $_POST['link-status'], (array)$allowed_status ) ) ? $_POST['link-status'] : BP_Links_Link::STATUS_PUBLIC;
-			
-			/* Check the nonce first. */
-			if ( !check_admin_referer( 'bp_links_edit_link_settings' ) )
-				return false;
-			
-			if ( !bp_links_edit_link_settings( $_POST['link-id'], $enable_wire, $status ) ) {
-				bp_core_add_message( sprintf( '%s %s', __( 'There was an error updating link settings.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
-			} else {
-				bp_core_add_message( __( 'Link settings were successfully updated.', 'buddypress-links' ) );
-			}
-
-			do_action( 'bp_links_link_settings_edited', $bp->links->current_link->id );
-			
-			bp_core_redirect( bp_get_link_permalink( $bp->links->current_link ) . '/admin/link-settings' );
-		}
-
-		do_action( 'bp_links_screen_link_admin_settings', $bp->links->current_link->id );
-		
-		if ( '' != locate_template( array( 'links/single/admin.php' ), false ) )
-			bp_core_load_template( apply_filters( 'bp_links_template_link_admin_settings', 'links/single/admin' ) );
-		else
-			bp_core_load_template( apply_filters( 'bp_links_template_link_admin_settings', 'links/admin/link-settings' ) );
-	}
-}
-add_action( 'wp', 'bp_links_screen_link_admin_settings', 4 );
-
 function bp_links_screen_link_admin_avatar() {
 	global $bp;
-	
-	if ( $bp->current_component == $bp->links->slug && 'link-avatar' == $bp->action_variables[0] ) {
-		
-		if ( !$bp->is_item_admin )
-			return false;
 
-		/* If the link admin has deleted the admin avatar */
-		if ( 'delete' == $bp->action_variables[1] ) {
-
-			/* Check the nonce */
-			check_admin_referer( 'bp_link_avatar_delete' );
-
-			if ( bp_core_delete_existing_avatar( array( 'item_id' => $bp->links->current_link->id, 'object' => 'link', 'avatar_dir' => 'link-avatars' ) ) )
-				bp_core_add_message( __( 'Your avatar was deleted successfully!', 'buddypress-links' ) );
-			else
-				bp_core_add_message( sprintf( '%s %s', __( 'There was a problem deleting that avatar', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
-
-		}
-
-		$bp->avatar_admin->step = 'upload-image';
-
-		if ( isset( $_POST['embed-html'] ) && !empty( $_POST['embed-html'] ) ) {
-
-			/* Check the nonce */
-			check_admin_referer( 'bp_avatar_upload' );
-
-			if ( bp_links_embed_handle_upload( $bp->links->current_link, $_POST['embed-html'] ) ) {
-				// we are good to crop
-				$bp->avatar_admin->step = 'crop-image';
-				// Make sure we include the jQuery jCrop file for image cropping
-				add_action( 'wp', 'bp_core_add_jquery_cropper' );
-			}
-			
-		} elseif ( !empty( $_FILES ) ) {
-	
-			/* Check the nonce */
-			check_admin_referer( 'bp_avatar_upload' );
-
-			/* Pass the file to the avatar upload handler */
-			if ( bp_core_avatar_handle_upload( $_FILES, 'bp_links_avatar_upload_dir' ) ) {
-				// we are good to crop
-				$bp->avatar_admin->step = 'crop-image';
-				// Make sure we include the jQuery jCrop file for image cropping
-				add_action( 'wp', 'bp_core_add_jquery_cropper' );
-			}
-		}
-
-		/* If the image cropping is done, crop the image and save a full/thumb version */
-		if ( isset( $_POST['avatar-crop-submit'] ) ) {
-	
-			/* Check the nonce */
-			check_admin_referer( 'bp_avatar_cropstore' );
-
-			if ( bp_core_avatar_handle_crop( array( 'object' => 'link', 'avatar_dir' => 'link-avatars', 'item_id' => $bp->links->current_link->id, 'original_file' => $_POST['image_src'], 'crop_x' => $_POST['x'], 'crop_y' => $_POST['y'], 'crop_w' => $_POST['w'], 'crop_h' => $_POST['h'] ) ) ) {
-				bp_links_embed_handle_crop( $bp->links->current_link );
-				bp_core_add_message( __( 'The new link avatar was uploaded successfully!', 'buddypress-links' ) );
-			} else {
-				bp_core_add_message( sprintf( '%s %s', __( 'There was an error saving link avatar.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
-			}
-
-
-		}
-
-		do_action( 'bp_links_screen_link_admin_avatar', $bp->links->current_link->id );
-		
-		if ( '' != locate_template( array( 'links/single/admin.php' ), false ) )
-			bp_core_load_template( apply_filters( 'bp_links_template_link_admin_avatar', 'links/single/admin' ) );
-		else
-			bp_core_load_template( apply_filters( 'bp_links_template_link_admin_avatar', 'links/admin/link-avatar' ) );
+	if ( !$bp->is_item_admin || 'link-avatar' != bp_links_admin_current_action_variable() ) {
+		return false;
 	}
+
+	// If the link admin has deleted the admin avatar
+	if ( 'delete' == $bp->action_variables[1] ) {
+
+		/* Check the nonce */
+		check_admin_referer( 'bp_link_avatar_delete' );
+
+		if ( bp_core_delete_existing_avatar( array( 'item_id' => $bp->links->current_link->id, 'object' => 'link', 'avatar_dir' => 'link-avatars' ) ) ) {
+			bp_core_add_message( __( 'Your avatar was deleted successfully!', 'buddypress-links' ) );
+		} else {
+			bp_core_add_message( sprintf( '%s %s', __( 'There was a problem deleting that avatar', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
+		}
+	}
+
+	$bp->avatar_admin->step = 'upload-image';
+
+	if ( isset( $_POST['avatar-crop-submit'] ) ) {
+
+		// Check the nonce
+		check_admin_referer( 'bp_avatar_cropstore' );
+
+		// received crop coords, crop the image and save a full/thumb version
+		if ( bp_core_avatar_handle_crop( array( 'object' => 'link', 'avatar_dir' => 'link-avatars', 'item_id' => $bp->links->current_link->id, 'original_file' => $_POST['image_src'], 'crop_x' => $_POST['x'], 'crop_y' => $_POST['y'], 'crop_w' => $_POST['w'], 'crop_h' => $_POST['h'] ) ) ) {
+			bp_links_embed_handle_crop( $bp->links->current_link );
+			bp_core_add_message( __( 'The link avatar was uploaded successfully!', 'buddypress-links' ) );
+		} else {
+			bp_core_add_message( sprintf( '%s %s', __( 'There was an error saving link avatar.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
+		}
+		
+	} elseif ( isset( $_POST['upload'] ) || isset( $_POST['embed-submit'] ) ) {
+
+		// Check the nonce
+		check_admin_referer( 'bp_avatar_upload' );
+
+		// handle image uploading
+		if ( !empty( $_POST['embed-submit'] ) && bp_links_embed_handle_upload( $bp->links->current_link, $_POST['embed-html'] ) ) {
+			
+			// we are good to crop
+			$bp->avatar_admin->step = 'crop-image';
+
+			// Make sure we include the jQuery jCrop file for image cropping
+			add_action( 'wp', 'bp_core_add_jquery_cropper' );
+
+		} elseif ( isset( $_POST['upload'] ) && !empty( $_FILES ) ) {
+
+			// Pass the file to the avatar upload handler
+			if ( bp_core_avatar_handle_upload( $_FILES, 'bp_links_avatar_upload_dir' ) ) {
+
+				// we are good to crop
+				$bp->avatar_admin->step = 'crop-image';
+
+				// Make sure we include the jQuery jCrop file for image cropping
+				add_action( 'wp', 'bp_core_add_jquery_cropper' );
+			}
+		}
+	}
+
+	do_action( 'bp_links_screen_link_admin_avatar', $bp->links->current_link->id );
+
+	if ( '' != locate_template( array( 'links/single/admin.php' ), false ) ) {
+		bp_core_load_template( apply_filters( 'bp_links_template_link_admin_avatar', 'links/single/admin' ) );
+	} else {
+		bp_core_load_template( apply_filters( 'bp_links_template_link_admin_avatar', 'links/admin/link-avatar' ) );
+	}
+		
 }
 add_action( 'wp', 'bp_links_screen_link_admin_avatar', 4 );
 
 function bp_links_screen_link_admin_delete_link() {
 	global $bp;
-	
-	if ( $bp->current_component == $bp->links->slug && 'delete-link' == $bp->action_variables[0] ) {
-		
-		if ( !$bp->is_item_admin && !is_site_admin() )
+
+	if ( !$bp->is_item_admin && !is_site_admin() ) {
+		return false;
+	}
+
+	if ( 'delete-link' != bp_links_admin_current_action_variable() ) {
+		return false;
+	}
+
+	if ( isset( $_REQUEST['delete-link-button'] ) && !empty( $_REQUEST['delete-link-understand'] ) ) {
+
+		/* Check the nonce first. */
+		if ( !check_admin_referer( 'bp_links_delete_link' ) ) {
 			return false;
-		
-		if ( isset( $_REQUEST['delete-link-button'] ) && isset( $_REQUEST['delete-link-understand'] ) ) {
-			/* Check the nonce first. */
-			if ( !check_admin_referer( 'bp_links_delete_link' ) )
-				return false;
-		
-			// Link admin has deleted the link, now do it.
-			if ( !bp_links_delete_link( $bp->links->current_link->id ) ) {
-				bp_core_add_message( __( 'There was an error deleting the link, please try again.', 'buddypress-links' ), 'error' );
-			} else {
-				bp_core_add_message( __( 'The link was deleted successfully', 'buddypress-links' ) );
-
-				do_action( 'bp_links_link_deleted', $bp->links->current_link->id );
-
-				bp_core_redirect( $bp->loggedin_user->domain . $bp->links->slug . '/' );
-			}
-
-			bp_core_redirect( $bp->loggedin_user->domain . $bp->current_component );
 		}
 
-		do_action( 'bp_links_screen_link_admin_delete_link', $bp->links->current_link->id );
+		// Link admin has deleted the link, now do it.
+		if ( bp_links_delete_link( $bp->links->current_link->id ) ) {
+			do_action( 'bp_links_link_deleted', $bp->links->current_link->id );
+			bp_core_add_message( __( 'The link was deleted successfully', 'buddypress-links' ) );
+			bp_core_redirect( $bp->loggedin_user->domain . $bp->links->slug . '/' );
+		} else {
+			bp_core_add_message( __( 'There was an error deleting the link, please try again.', 'buddypress-links' ), 'error' );
+		}
 
-		if ( '' != locate_template( array( 'links/single/admin.php' ), false ) )
-			bp_core_load_template( apply_filters( 'bp_links_template_link_admin_delete_link', 'links/single/admin' ) );
-		else
-			bp_core_load_template( apply_filters( 'bp_links_template_link_admin_delete_link', 'links/admin/delete-link' ) );
+		bp_core_redirect( $bp->loggedin_user->domain . $bp->current_component );
+	}
+
+	do_action( 'bp_links_screen_link_admin_delete_link', $bp->links->current_link->id );
+
+	if ( '' != locate_template( array( 'links/single/admin.php' ), false ) ) {
+		bp_core_load_template( apply_filters( 'bp_links_template_link_admin_delete_link', 'links/single/admin' ) );
+	} else {
+		bp_core_load_template( apply_filters( 'bp_links_template_link_admin_delete_link', 'links/admin/delete-link' ) );
 	}
 }
 add_action( 'wp', 'bp_links_screen_link_admin_delete_link', 4 );
@@ -899,97 +761,104 @@ function bp_links_screen_notification_settings() {
 }
 add_action( 'bp_notification_settings', 'bp_links_screen_notification_settings' );
 
-function bp_links_validate_details( $data, $cookie_prefix, $redirect_to ) {
+function bp_links_validate_create_form_input() {
+	
+	$message_required = __( 'Please fill in all of the required fields', 'buddypress-links' );
 
-	$missing_required = false;
-
-	if ( !empty( $data['link-category'] ) ) {
-		setcookie( $cookie_prefix . 'category_id', $data['link-category'], time()+60*60, COOKIEPATH );
-		$return_data['link-category'] = $data['link-category'];
+	if ( !empty( $_POST['link-category'] ) ) {
+		$bp_new_link_category = stripslashes( $_POST['link-category'] );
+		$return_data['link-category'] = $bp_new_link_category;
 	} else {
-		$missing_required = true;
+		bp_core_add_message( $message_required, 'error' );
+		return false;
 	}
 
 	// link url
-	if ( !empty( $data['link-url'] ) ) {
+	if ( !empty( $_POST['link-url'] ) ) {
 
-		$bp_new_link_url = trim( $data['link-url'] );
-		$bp_new_link_url_truncated = false;
+		$bp_new_link_url = trim( stripslashes( $_POST['link-url'] ) );
 
-		if ( ( function_exists('mb_strlen') && mb_strlen( $bp_new_link_url ) > BP_LINKS_MAX_CHARACTERS_URL ) || strlen( $bp_new_link_url ) > BP_LINKS_MAX_CHARACTERS_URL ) {
-			$bp_new_link_url = ( function_exists('mb_substr') ) ? mb_substr( $bp_new_link_url, 0, BP_LINKS_MAX_CHARACTERS_URL + 50 ) : substr( $bp_new_link_url, 0, BP_LINKS_MAX_CHARACTERS_URL + 50 );
-			$bp_new_link_url_truncated = true;
+		if ( strlen( $bp_new_link_url ) > BP_LINKS_MAX_CHARACTERS_URL ) {
+			bp_core_add_message( sprintf( __( 'Link URL must be %1$d characters or less, please make corrections and re-submit.', 'buddypress-links' ), BP_LINKS_MAX_CHARACTERS_URL ), 'error' );
+			return false;
+		} elseif ( bp_links_is_url_valid( $bp_new_link_url ) !== true ) {
+			bp_core_add_message( __( 'The URL you entered is not valid.', 'buddypress-links' ), 'error' );
+			return false;
 		}
 
-		setcookie( $cookie_prefix . 'url', $bp_new_link_url, time()+60*60, COOKIEPATH );
 		$return_data['link-url'] = $bp_new_link_url;
 
 	} else {
-		$missing_required = true;
+		bp_core_add_message( $message_required, 'error' );
+		return false;
 	}
 
 	// link name
-	if ( !empty( $data['link-name'] ) ) {
+	if ( !empty( $_POST['link-name'] ) ) {
 
-		$bp_new_link_name = trim( $data['link-name'] );
-		$bp_new_link_name_truncated = false;
+		$bp_new_link_name = trim( stripslashes( $_POST['link-name'] ) );
 
 		if ( ( function_exists('mb_strlen') && mb_strlen( $bp_new_link_name ) > BP_LINKS_MAX_CHARACTERS_NAME ) || strlen( $bp_new_link_name ) > BP_LINKS_MAX_CHARACTERS_NAME ) {
-			$bp_new_link_name = ( function_exists('mb_substr') ) ? mb_substr( $bp_new_link_name, 0, BP_LINKS_MAX_CHARACTERS_NAME + 50 ) : substr( $bp_new_link_name, 0, BP_LINKS_MAX_CHARACTERS_NAME + 50 );
-			$bp_new_link_name_truncated = true;
+			bp_core_add_message( sprintf( __( 'Link Name must be %1$d characters or less, please make corrections and re-submit.', 'buddypress-links' ), BP_LINKS_MAX_CHARACTERS_NAME ), 'error' );
+			return false;
 		}
 
-		setcookie( $cookie_prefix . 'name', $bp_new_link_name, time()+60*60, COOKIEPATH );
 		$return_data['link-name'] = $bp_new_link_name;
 
 	} else {
-		$missing_required = true;
+		bp_core_add_message( $message_required, 'error' );
+		return false;
 	}
 
 	// link description
-	if ( !empty( $data['link-desc'] ) ) {
+	if ( !empty( $_POST['link-desc'] ) ) {
 
-		$bp_new_link_description = trim( $data['link-desc'] );
-		$bp_new_link_description_truncated = false;
+		$bp_new_link_description = trim( stripslashes( $_POST['link-desc'] ) );
 
 		if ( ( function_exists('mb_strlen') && mb_strlen( $bp_new_link_description ) > BP_LINKS_MAX_CHARACTERS_DESCRIPTION ) || strlen( $bp_new_link_description ) > BP_LINKS_MAX_CHARACTERS_DESCRIPTION ) {
-			$bp_new_link_description = ( function_exists('mb_substr') ) ? mb_substr( $bp_new_link_description, 0, BP_LINKS_MAX_CHARACTERS_DESCRIPTION + 100 ) : substr( $bp_new_link_description, 0, BP_LINKS_MAX_CHARACTERS_DESCRIPTION + 100 );
-			$bp_new_link_description_truncated = true;
+			bp_core_add_message( sprintf( __( 'Link Description must be %1$d characters or less, please make corrections and re-submit.', 'buddypress-links' ), BP_LINKS_MAX_CHARACTERS_DESCRIPTION ), 'error' );
+			return false;
 		}
 
-		setcookie( $cookie_prefix . 'description', $bp_new_link_description, time()+60*60, COOKIEPATH );
 		$return_data['link-desc'] = $bp_new_link_description;
 
 	} else {
-		$missing_required = true;
+		bp_core_add_message( $message_required, 'error' );
+		return false;
 	}
 
-	// error test block
-	if ( true === $missing_required ) {
-		bp_core_add_message( __( 'Please fill in all of the required fields', 'buddypress-links' ), 'error' );
-		bp_core_redirect( $redirect_to );
-	} elseif ( true === $bp_new_link_url_truncated ) {
-		bp_core_add_message( sprintf( __( 'Link URL must be %1$d characters or less, please make corrections and re-submit.', 'buddypress-links' ), BP_LINKS_MAX_CHARACTERS_URL ), 'error' );
-		bp_core_redirect( $redirect_to );
-	} elseif ( bp_links_is_url_valid( $bp_new_link_url ) !== true ) {
-		bp_core_add_message( __( 'The URL you entered is not valid.', 'buddypress-links' ), 'error' );
-		bp_core_redirect( $redirect_to );
-	} elseif ( true === $bp_new_link_name_truncated ) {
-		bp_core_add_message( sprintf( __( 'Link Name must be %1$d characters or less, please make corrections and re-submit.', 'buddypress-links' ), BP_LINKS_MAX_CHARACTERS_NAME ), 'error' );
-		bp_core_redirect( $redirect_to );
-	} elseif ( true === $bp_new_link_description_truncated ) {
-		bp_core_add_message( sprintf( __( 'Link Description must be %1$d characters or less, please make corrections and re-submit.', 'buddypress-links' ), BP_LINKS_MAX_CHARACTERS_DESCRIPTION ), 'error' );
-		bp_core_redirect( $redirect_to );
+	// enable wire
+	if ( empty($_POST['link-enable-wire']) ) {
+		$return_data['link-enable-wire'] = 0;
+	} else {
+		$return_data['link-enable-wire'] = null;
+	}
+
+	// link status
+	if ( bp_links_is_valid_status( $_POST['link-status'] ) ) {
+		$return_data['link-status'] = (integer) $_POST['link-status'];
+	} else {
+		$return_data['link-status'] = null;
+	}
+
+	// link url embed service (optional)
+	if ( !empty( $_POST['link-url-embed-data'] ) ) {
+		$return_data['link-url-embed-data'] = trim( $_POST['link-url-embed-data'] );
+	} else {
+		$return_data['link-url-embed-data'] = null;
 	}
 
 	return $return_data;
 }
 
-function bp_links_validate_details_reset( $cookie_prefix ) {
-	setcookie( $cookie_prefix . 'category_id', false, time() - 1000, COOKIEPATH );
-	setcookie( $cookie_prefix . 'url', false, time() - 1000, COOKIEPATH );
-	setcookie( $cookie_prefix . 'name', false, time() - 1000, COOKIEPATH );
-	setcookie( $cookie_prefix . 'description', false, time() - 1000, COOKIEPATH );
+function bp_links_admin_current_action_variable() {
+	global $bp;
+
+	if ( $bp->current_component == BP_LINKS_SLUG && 'admin' == $bp->current_action ) {
+		return $bp->action_variables[0];
+	} else {
+		return false;
+	}
 }
 
 /********************************************************************************
@@ -999,27 +868,6 @@ function bp_links_validate_details_reset( $cookie_prefix ) {
  * have a template screen associated with them. Usually they will send the user
  * back to the default screen after execution.
  */
-
-function bp_links_action_sort_creation_steps() {
-	global $bp;
-	
-	if ( $bp->current_component != BP_LINKS_SLUG && $bp->current_action != 'create' )
-		return false;
-
-	if ( !is_array( $bp->links->link_creation_steps ) )
-		return false;
-		
-	foreach ( $bp->links->link_creation_steps as $slug => $step )
-		$temp[$step['position']] = array( 'name' => $step['name'], 'slug' => $slug );
-
-	/* Sort the steps by their position key */
-	ksort($temp);
-	unset($bp->links->link_creation_steps);
-	
-	foreach( $temp as $position => $step )
-		$bp->links->link_creation_steps[$step['slug']] = array( 'name' => $step['name'], 'position' => $position );
-}
-add_action( 'wp', 'bp_links_action_sort_creation_steps', 3 );
 
 function bp_links_action_redirect_to_random_link() {
 	global $bp, $wpdb;
@@ -1140,7 +988,7 @@ function bp_links_format_notifications( $action, $item_id, $secondary_item_id, $
 
 /*** Link Creation, Editing & Deletion *****************************************/
 
-function bp_links_create_link( $args = '' ) {
+function bp_links_manage_link( $args = '' ) {
 	global $bp;
 	
 	extract( $args );
@@ -1153,100 +1001,84 @@ function bp_links_create_link( $args = '' ) {
 	 *	'url'
 	 *	'target'
 	 *	'rel'
-	 *	'slug'
 	 *	'name'
 	 *	'description'
 	 *	'status'
-	 *	'enable_wire'
-	 *	'vote_count'
-	 *	'vote_total'
-	 *	'popularity'
-	 *	'embed_service'
-	 *	'embed_status'
 	 *	'embed_data'
-	 *	'date_created'
 	 */
 
-	if ( $link_id )
+	if ( $link_id ) {
 		$link = new BP_Links_Link( $link_id );
-	else
+	} else {
 		$link = new BP_Links_Link();
+	}
 	
 	if ( $user_id ) {
 		$link->user_id = $user_id;
 	} else {
-		$link->user_id = $bp->loggedin_user->id;
+		if ( empty( $link->id ) ) {
+			$link->user_id = $bp->loggedin_user->id;
+		}
 	}
 	
-	if ( isset( $category_id ) )
+	if ( isset( $category_id ) ) {
 		$link->category_id = $category_id;
+	}
 
-	if ( isset( $url ) )
+	if ( isset( $url ) ) {
 		$link->url = $url;
+	}
 
-	if ( isset( $target ) )
+	if ( isset( $target ) ) {
 		$link->target = $target;
+	}
 
-	if ( isset( $rel ) )
+	if ( isset( $rel ) ) {
 		$link->rel = $rel;
+	}
 
-	if ( isset( $slug ) && bp_links_check_slug( $slug ) )
-		$link->slug = $slug;
-
-	if ( isset( $name ) )
+	if ( isset( $name ) ) {
 		$link->name = $name;
+		if ( empty( $link->id ) ) {
+			$link->slug = bp_links_check_slug( sanitize_title_with_dashes( $name ) );
+		}
+	}
 	
-	if ( isset( $description ) )
+	if ( isset( $description ) ) {
 		$link->description = $description;
+	}
 	
 	if ( isset( $status ) ) {
-		if ( bp_links_is_valid_status($status) )
+		if ( bp_links_is_valid_status( $status ) ) {
 			$link->status = $status;
-	} else {
-		$link->status = BP_Links_Link::STATUS_PUBLIC;
+		}
 	}
 	
-	if ( isset( $enable_wire ) )
+	if ( isset( $enable_wire ) ) {
 		$link->enable_wire = $enable_wire;
-	else if ( !$link_id && !isset( $enable_wire ) )
-		$link->enable_wire = 1;
-
-	if ( isset( $vote_count ) )
-		$link->vote_count = $vote_count;
-	else
-		$link->vote_count = 0;
-
-	if ( isset( $vote_total ) )
-		$link->vote_total = $vote_total;
-	else
-		$link->vote_total = 0;
-
-	if ( isset( $popularity ) )
-		$link->popularity = $popularity;
-	else
-		$link->popularity = BP_Links_Link::POPULARITY_DEFAULT;
-
-	if ( isset( $embed_service ) )
-		$link->embed_service = $embed_service;
-
-	if ( isset( $embed_status ) )
-		$link->embed_status = $embed_status;
-
-	if ( isset( $embed_data ) )
-		$link->embed_data = $embed_data;
-
-	if ( isset( $date_created ) )
-		$link->date_created = $date_created;
+	}
+	
+	if ( !empty( $embed_data ) ) {
+		try {
+			// load service
+			$service = BP_Links_Embed::LoadService( $embed_data );
+			// try to attach embed service to link
+			if ( $service instanceof BP_Links_Embed_Service ) {
+				$link->embed_attach( $service );
+				$link->embed_status_set_enabled();
+			}
+		} catch ( BP_Links_Embed_Exception $e ) {
+			// TODO what should we do with an exception here?
+			throw( $e );
+		}
+	}
 
 	if ( $link->save() ) {
-		// vote own link up
-		$link->vote()->up();
-		$link->save();
 		// all done
-		return $link->id;
-	} else {
-		return false;
+		return $link;
 	}
+	
+	return false;
 }
 
 function bp_links_edit_base_link_details( $link_id, $link_category_id, $link_url, $link_name, $link_desc ) {
@@ -1288,7 +1120,7 @@ function bp_links_delete_link( $link_id ) {
 	global $bp;
 	
 	// Check the user is the link admin.
-	if ( !$bp->is_item_admin )
+	if ( !$bp->is_item_admin && !is_site_admin())
 		return false;
 	
 	// Get the link object
@@ -1340,9 +1172,7 @@ function bp_links_is_link_visibile( $link_id_or_obj, $user_id = null ) {
 }
 
 function bp_links_is_valid_status( $status ) {
-	global $bp;
-	
-	return in_array( $status, (array)$bp->links->valid_status );
+	return BP_Links_Link::is_valid_status( $status );
 }
 
 function bp_links_check_slug( $slug ) {
@@ -1372,6 +1202,38 @@ function bp_links_get_slug( $link_id ) {
 
 function bp_links_get_last_updated() {
 	return apply_filters( 'bp_links_get_last_updated', BP_Links_Link::get_last_updated() );
+}
+
+function bp_links_current_link() {
+	global $bp;
+
+	return $bp->links->current_link;
+}
+
+function bp_links_current_link_exists() {
+	global $bp;
+
+	return ( $bp->links->current_link instanceof BP_Links_Link );
+}
+
+function bp_links_current_link_embed_enabled() {
+	global $bp;
+
+	if ( bp_links_current_link_exists() ) {
+		return ( $bp->links->current_link->embed_status_enabled() );
+	} else {
+		return false;
+	}
+}
+
+function bp_links_current_link_embed_service() {
+	global $bp;
+
+	if ( bp_links_current_link_embed_enabled() ) {
+		return $bp->links->current_link->embed();
+	} else {
+		return false;
+	}
 }
 
 /*** General Link Functions ****************************************************/
@@ -1471,50 +1333,101 @@ function bp_links_search_links( $search_terms, $pag_num_per_page = 5, $pag_page 
 
 /*** Link Avatars *************************************************************/
 
-function bp_links_fetch_avatar( $args = '' ) {
+function bp_links_check_avatar( $item_id ) {
 
-	// do NOT try to use a gravatar
-	$args['no_grav'] = true;
+	$params = array(
+		'item_id' => $item_id,
+		'object' => 'link',
+		'avatar_dir' => 'link-avatars',
+		'no_grav' => true
+	);
+
+	$avatar = bp_core_fetch_avatar( $params );
+
+	return ( empty( $avatar ) ) ? false : true;
+}
+
+function bp_links_fetch_avatar( $args = '', $link = false ) {
+
+	$defaults = array(
+		'item_id' => false,
+		'type' => 'full',
+		'width' => false,
+		'height' => false,
+		'class' => 'avatar',
+		'css_id' => false,
+		'alt' => __( 'Link Avatar', 'buddypress-links' )
+	);
+
+	$params = wp_parse_args( $args, $defaults );
+
+	// hard code these options to prevent tampering
+	// DO NOT try to use a gravatar, ever!
+	$params['object'] = 'link';
+	$params['avatar_dir'] = 'link-avatars';
+	$params['no_grav'] = true;
 
 	// try to grab avatar file
-	$avatar = bp_core_fetch_avatar( $args );
+	$avatar = bp_core_fetch_avatar( $params );
 
 	if ( !empty( $avatar ) ) {
+
 		// found an avatar file, return html for it
 		return $avatar;
-	} else {
-		// no avatar file found, use the default image
 		
-		$defaults = array(
-			'item_id' => false,
-			'object' => 'link',
-			'type' => 'thumb',
-			'width' => false,
-			'height' => false,
-			'class' => 'avatar',
-			'css_id' => false,
-			'alt' => __( 'Avatar Image', 'buddypress-links' )
-		);
-
-		$params = wp_parse_args( $args, $defaults );
+	} else {
+		
 		extract( $params, EXTR_SKIP );
 
-		$avatar_url = get_stylesheet_directory_uri() . '/links/_inc/images/default_avatar.gif';
+		// check if we can use thumb from embedded content
+		if ( !empty( $link ) && $link->embed_status_enabled() ) {
+
+			// append class avatar-embed
+			$class .= ' avatar-embed';
+
+			// check for additional avatar class
+			if ( $link->embed()->avatar_class() ) {
+				$class .= ' ' . $link->embed()->avatar_class();
+			}
+
+			// when avatar type is 'full', check for avatar size limits and special class
+			if ( 'full' == $type ) {
+				// get large thumb url from service object
+				$avatar_url = $link->embed()->image_large_thumb_url();
+
+				// check for custom width and height
+				if ( $link->embed()->avatar_max_width() && $link->embed()->avatar_max_height() ) {
+					$width = $link->embed()->avatar_max_width();
+					$height = $link->embed()->avatar_max_height();
+				}
+			} else {
+				// get standard thumb url from service object
+				$avatar_url = $link->embed()->image_thumb_url();
+			}
+
+		} else {
+
+			// no avatar file found, use the default image
+			$avatar_url = get_stylesheet_directory_uri() . '/links/_inc/images/default_avatar.png';
+			
+			// default width/height
+			if ( empty( $width ) )
+				$width = ( 'thumb' == $type ) ? BP_AVATAR_THUMB_WIDTH : BP_AVATAR_FULL_WIDTH;
+			if ( empty( $height ) )
+				$height = ( 'thumb' == $type ) ? BP_AVATAR_THUMB_HEIGHT : BP_AVATAR_FULL_HEIGHT;
+				
+		}
 
 		if ( !$css_id )
 			$css_id = $object . '-' . $item_id . '-avatar';
 
 		if ( $width )
-			$html_width = " width='{$width}'";
-		else
-			$html_width = ( 'thumb' == $type ) ? ' width="' . BP_AVATAR_THUMB_WIDTH . '"' : ' width="' . BP_AVATAR_FULL_WIDTH . '"';
+			$attr_width = " width='{$width}'";
 
 		if ( $height )
-			$html_height = " height='{$height}'";
-		else
-			$html_height = ( 'thumb' == $type ) ? ' height="' . BP_AVATAR_THUMB_HEIGHT . '"' : ' height="' . BP_AVATAR_FULL_HEIGHT . '"';
+			$attr_height = " height='{$height}'";
 	
-		return apply_filters( 'bp_links_fetch_avatar_not_found', sprintf( '<img src="%s" alt="%s" id="%s" class="%s"%s%s />', $avatar_url, $alt, $css_id, $class, $html_width, $html_height ), $args );
+		return apply_filters( 'bp_links_fetch_avatar_not_found', sprintf( '<img src="%s" alt="%s" id="%s" class="%s"%s%s />', $avatar_url, $alt, $css_id, $class, $attr_width, $attr_height ), $args );
 	}
 }
 
@@ -1836,12 +1749,10 @@ function bp_links_update_linkmeta( $link_id, $meta_key, $meta_value ) {
 function bp_links_delete_existing_avatar( $args ) {
 	if ( 'link' == $args['object'] ) {
 		$link = new BP_Links_Link( $args['item_id'] );
-		$link->embed_service = BP_Links_Link::EMBED_SERVICE_NONE;
-		$link->embed_status = BP_Links_Link::EMBED_STATUS_DISABLED;
-		$link->embed_data = null;
-		return $link->save();
+		if ( $link->embed_status_enabled() && $link->embed()->avatar_only() === true ) {
+			return $link->embed_remove(true);
+		}
 	}
-	
 	return true;
 }
 add_action( 'bp_core_delete_existing_avatar', 'bp_links_delete_existing_avatar' );
@@ -1873,7 +1784,7 @@ add_action( 'bp_links_new_wire_post', 'bp_core_clear_cache' );
 add_action( 'bp_links_deleted_wire_post', 'bp_core_clear_cache' );
 add_action( 'bp_links_details_updated', 'bp_core_clear_cache' );
 add_action( 'bp_links_settings_updated', 'bp_core_clear_cache' );
-add_action( 'bp_links_create_link_step_complete', 'bp_core_clear_cache' );
+add_action( 'bp_links_create_complete', 'bp_core_clear_cache' );
 add_action( 'bp_links_created_link', 'bp_core_clear_cache' );
 add_action( 'bp_links_link_avatar_updated', 'bp_core_clear_cache' );
 add_action( 'bp_links_cast_vote_success', 'bp_core_clear_cache' );

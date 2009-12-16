@@ -12,7 +12,7 @@ jQuery(document).ready( function() {
 				'cookie': encodeURIComponent(document.cookie),
 				'_wpnonce': jQuery("input#_wpnonce-links").val(),
 				'max_links': jQuery("input#links_widget_max").val(),
-				'avatar_type': jQuery("input#links_avatar_type").val(),
+				'avatar_size': jQuery("input#links_avatar_size").val(),
 				'filter': jQuery(this).attr('id')
 			},
 			function(response)

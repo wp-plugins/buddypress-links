@@ -41,9 +41,9 @@ class BP_Links_Widget extends WP_Widget {
 			</div>
 			<?php wp_nonce_field( 'bp_links_widget_links_list', '_wpnonce-links' ); ?>
 			<input type="hidden" name="links_widget_max" id="links_widget_max" value="<?php echo attribute_escape( $instance['max_links'] ); ?>" />
-			<input type="hidden" name="links_avatar_type" id="links_avatar_type" value="<?php echo attribute_escape( $instance['avatar_type'] ); ?>" />
+			<input type="hidden" name="links_avatar_size" id="links_avatar_size" value="<?php echo attribute_escape( $instance['avatar_size'] ); ?>" />
 
-			<?php bp_the_site_link_list( array('avatar_type' => $instance['avatar_type'] ) ) ?>
+			<?php bp_the_site_link_list( array('avatar_size' => $instance['avatar_size'] ) ) ?>
 			
 		<?php else: ?>
 
@@ -60,15 +60,15 @@ class BP_Links_Widget extends WP_Widget {
 	function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 		$instance['max_links'] = strip_tags( $new_instance['max_links'] );
-		$instance['avatar_type'] = strip_tags( $new_instance['avatar_type'] );
+		$instance['avatar_size'] = strip_tags( $new_instance['avatar_size'] );
 
 		return $instance;
 	}
 
 	function form( $instance ) {
-		$instance = wp_parse_args( (array) $instance, array( 'max_links' => 5, 'avatar_type' => 'thumb' ) );
+		$instance = wp_parse_args( (array) $instance, array( 'max_links' => 5, 'avatar_size' => 100 ) );
 		$max_links = strip_tags( $instance['max_links'] );
-		$avatar_type = strip_tags( $instance['avatar_type'] );
+		$avatar_size = strip_tags( $instance['avatar_size'] );
 		?>
 
 		<p>
@@ -80,9 +80,10 @@ class BP_Links_Widget extends WP_Widget {
 		<p>
 			<label for="bp-links-widget-avatar-type">
 				<?php _e('Avatar Size:', 'buddypress-links'); ?>
-				<select id="<?php echo $this->get_field_id( 'avatar_type' ); ?>" name="<?php echo $this->get_field_name( 'avatar_type' ); ?>">
-					<option value="thumb"<?php echo ( attribute_escape( $avatar_type ) == 'thumb' ) ? ' selected="selected"' : null; ?>>Thumb </option>
-					<option value="full"<?php echo ( attribute_escape( $avatar_type ) == 'full' ) ? ' selected="selected"' : null; ?>>Full </option>
+				<select id="<?php echo $this->get_field_id( 'avatar_size' ); ?>" name="<?php echo $this->get_field_name( 'avatar_size' ); ?>">
+					<?php foreach ( range(50, 130, 10) as $pixels ): ?>
+						<option value="<?php echo $pixels ?>"<?php echo ( attribute_escape( $avatar_size ) == $pixels ) ? ' selected="selected"' : null; ?>><?php echo $pixels ?> Pixels</option>
+					<?php endforeach; ?>
 				</select>
 			</label>
 		</p>
@@ -116,7 +117,7 @@ function bp_links_ajax_widget_links_list() {
 	if ( bp_has_site_links( 'type=' . $type . '&per_page=' . $_POST['max_links'] . '&max=' . $_POST['max_links'] ) ) : ?>
 		<?php echo "0[[SPLIT]]"; ?>
 				
-		<?php bp_the_site_link_list( array('avatar_type' => $_POST['avatar_type'] ) ) ?>
+		<?php bp_the_site_link_list( array('avatar_size' => $_POST['avatar_size'] ) ) ?>
 		
 	<?php else: ?>
 

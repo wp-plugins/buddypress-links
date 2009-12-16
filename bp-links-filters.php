@@ -33,6 +33,20 @@ add_filter( 'bp_get_link_description', 'esc_html' );
 add_filter( 'bp_get_link_description_excerpt', 'esc_html' );
 add_filter( 'bp_links_add_meta_description_single_item', 'esc_html' );
 
+// forms - strip
+add_filter( 'bp_get_link_details_form_category_id', 'stripslashes' );
+add_filter( 'bp_get_link_details_form_url', 'stripslashes' );
+add_filter( 'bp_get_link_details_form_name', 'stripslashes' );
+add_filter( 'bp_get_link_details_form_description', 'stripslashes' );
+add_filter( 'bp_get_link_avatar_form_embed_html', 'stripslashes' );
+
+// forms - escape
+add_filter( 'bp_get_link_details_form_category_id', 'esc_attr' );
+add_filter( 'bp_get_link_details_form_url', 'esc_attr' );
+add_filter( 'bp_get_link_details_form_name', 'esc_attr' );
+add_filter( 'bp_get_link_details_form_description', 'esc_html' );
+add_filter( 'bp_get_link_avatar_form_embed_html', 'esc_html' );
+
 add_filter( 'bp_get_link_description', 'convert_smilies' );
 add_filter( 'bp_get_link_description_excerpt', 'convert_smilies' );
 ?>

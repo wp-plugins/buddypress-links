@@ -55,7 +55,7 @@
 
 						<div class="bp-widget">
 							<h4><?php _e( 'Gallery', 'buddypress-links' ); ?></h4>
-							<p><?php bp_link_embed_tags() ?></p>
+							<p><?php bp_link_embed_html() ?></p>
 						</div>
 					
 						<?php do_action( 'bp_after_link_embed' ) ?>

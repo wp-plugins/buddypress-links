@@ -2,7 +2,7 @@
 Contributors: MrMaz
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8591311
 Tags: wpmu, buddypress, social, networking, links
-Requires at least: PHP 5, WordPress MU 2.8.4, BuddyPress 1.1
+Requires at least: PHP 5.2, WordPress MU 2.8.4, BuddyPress 1.1
 Tested up to: PHP 5.2.9, WordPress MU 2.8.4, BuddyPress 1.1.2
 Stable tag: 0.1.3
 
