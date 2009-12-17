@@ -410,29 +410,29 @@ msgstr "Les plus plébiscités"
 #: bp-links-templatetags.php:10
 #: bp-links-templatetags.php:1899
 msgid "Vote Rating"
-msgstr "Les plus notés"
+msgstr "Les mieux notés"
 
 #: bp-links-templatetags.php:34
 msgid "Highest Votes"
-msgstr "Les mieux notés "
+msgstr "Les plus notés"
 
 #: bp-links-templatetags.php:73
 #: bp-links-templatetags.php:1902
 #: bp-links-templatetags.php:1918
 msgid "All"
-msgstr "Toutes"
+msgstr "Tout"
 
 #: bp-links-templatetags.php:437
 msgid "Public Link"
-msgstr "Lien public"
+msgstr "Ce lien est public"
 
 #: bp-links-templatetags.php:439
 msgid "Friends Only Link"
-msgstr "Lien réservé aux amis"
+msgstr "Ce lien est réservé aux amis"
 
 #: bp-links-templatetags.php:441
 msgid "Hidden Link"
-msgstr "Lien masqué"
+msgstr "ce lien est masqué"
 
 #: bp-links-templatetags.php:443
 msgid "Link"
@@ -633,7 +633,7 @@ msgstr "Créer un lien"
 
 #: bp-links.php:301
 msgid "Wire"
-msgstr "Fil des Liens"
+msgstr "Le Fil du lien"
 
 #: bp-links.php:306
 msgid "Admin"
@@ -900,7 +900,7 @@ msgstr "Options de confidentialité"
 
 #: links/single/forms/details.php:89
 msgid "This is a public link"
-msgstr "Ceci est un lien public"
+msgstr "Le lien est public"
 
 #: links/single/forms/details.php:92
 msgid "Any site member can see this link, and comment on the wire if enabled."
@@ -916,7 +916,7 @@ msgstr "Tous les membres du site peuvent voir le contenu et l'activité du lien.
 
 #: links/single/forms/details.php:99
 msgid "This is a friends-only link"
-msgstr "Ceci est un lien réservé aux amis."
+msgstr "Le lien est réservé aux amis."
 
 #: links/single/forms/details.php:102
 msgid "Only users who are in your friends list can see the link and comment on the wire if enabled."
@@ -933,7 +933,7 @@ msgstr "Le contenu et l'activité du lien ne seront visibles que par vos amis."
 
 #: links/single/forms/details.php:109
 msgid "This is a hidden link"
-msgstr "Ceci est un lien masqué."
+msgstr "Le lien est masqué."
 
 #: links/single/forms/details.php:112
 msgid "Only you can see the link."
@@ -945,16 +945,16 @@ msgstr "Il n'y a que vous qui pourrez voir le contenu et l'activité du lien."
 
 #: links/single/forms/details.php:125
 msgid "Save Link"
-msgstr "enregistrer le lien"
+msgstr "Enregistrer"
 
 #: links/single/home.php:57
 msgid "Gallery"
-msgstr "Galerie"
+msgstr "Médiathèque"
 
 #: links/single/home.php:70
 #: links/single/wire.php:30
 msgid "Link Wire"
-msgstr "Fil des Liens"
+msgstr "Tous les messages du Fil"
 
 #: links/single/home.php:70
 #: links/single/wire.php:30
@@ -968,11 +968,11 @@ msgstr "Désolé, le lien n'existe pas."
 
 #: links/single/menu.php:17
 msgid "Link Owner"
-msgstr "Lien géré par"
+msgstr "Proposé par"
 
 #: links/single/menu.php:29
 msgid "Cast Your Vote"
-msgstr "Notez le lien"
+msgstr "Cote du lien"
 
 #. Plugin Name of an extension
 msgid "BuddyPress Links"
