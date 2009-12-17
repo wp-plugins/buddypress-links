@@ -10,20 +10,20 @@ BuddyPress Links is a full featured link sharing component for BuddyPress 1.1
 
 == Description ==
 
-BuddyPress Links is a drop in link sharing component for BuddyPress 1.1
+#### Update! Rich media embedding is now available in version 0.2-RC1.
 
-Complete integration with...
+Get it from the download page here:
+<http://wordpress.org/extend/plugins/buddypress-links/download/>
 
-* Profiles
-* Directory
-* Activity Stream
-* Widgets
-* Notifications
-* Admin Bar
-* Admin Dashboard
-* Full i18n support (need translators!)
+#### What is BuddyPress Links?
 
-Members can...
+BuddyPress Links is a drop in link and rich media sharing component for BuddyPress 1.1
+
+It supports complete integration with...
+
+>Profiles, Directory, Activity Stream, Widgets, Notifications, Admin Bar, Admin Dashboard
+
+Members can:
 
 * create and manage links from their profile.
 * assign links to a category
@@ -32,28 +32,30 @@ Members can...
 * upload an image "avatar" to show with a link.
 * embed a PicApp.com image and use as the avatar
 * embed a Fotoglif.com image and use as the avatar
+* embed rich media in the link (YouTube, Flickr, and metacafe are supported)
 * vote on other member's links
 * comment on other member's links (if wire is enabled)
 
-Administrators can...
+Administrators can:
 
 * Manage all links (modify, delete)
 * Manage link categories (create, modify, delete)
 * Enable and customize widgets
 
-Other features include...
+Other features include:
 
 * "Digg style" popularity algorithm
 * Rich profile and directory sorting and filtering
 * Most recent links news feed
 * Hundreds of action and filter hooks
+* Full i18n support (need translators!)
 
 See it in action at http://primehockey.com
 (Please do not create test accounts, thank you!)
 
 == Installation ==
 
-*This plugin is under heavy development, and is not recommended for production environments as there may not be simple upgrade paths available to future releases!*
+**This plugin is under heavy development, and is not recommended for production environments as there may not be simple upgrade paths available to future releases!**
 
 BuddyPress Links requires WordPress MU 2.8.4 or higher with BuddyPress 1.1 or higher installed.
 
@@ -72,6 +74,23 @@ BuddyPress Links requires WordPress MU 2.8.4 or higher with BuddyPress 1.1 or hi
 --- Upgrading from an earlier version: ---
 
 Not applicable (yet)
+
+== Changelog ==
+
+= 0.2 Branch =
+
+* Added support for auto-embedding of rich media (API documentation coming soon!)
+* Reduced create/admin form to one page
+* Wider selection of thumb sizes for the links widget
+* Many CSS improvements and fixes
+* Lots of general refactoring
+* Some minor bug fixes
+
+= 0.1 Branch =
+
+* First beta versions
+* Many, many i18n fixes
+* A few bug fixes
 
 == License ==
 
