@@ -465,7 +465,6 @@ function bp_links_screen_create_link() {
 
 			} else {
 				bp_core_add_message( sprintf( '%s %s', __( 'There was an error saving link details.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) ), 'error' );
-				return false;
 			}
 		}
 	}
