@@ -304,6 +304,26 @@ jQuery(document).ready( function() {
 		});
 	}
 
+	// detect if url is embeddable
+	function detectUrl()
+	{
+		var url = jQuery.trim( e_url.val() );
+		var services = e_url.data("embed_regex");
+		
+		// only try to match if url has some meat AND has changed
+		if ( url.length >= 15 && !e_url.attr("readonly") ) {
+			// make sure embed content is blank
+			e_embed.html(''); e_name.val(''); e_desc.val('');
+			// loop through supported services and try to match url
+			for ( var i in services ) {
+				if ( url.match( services[i] ) ) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	// need to bind these if embed panel is visible on page load
 	if ( e_embed.is(':visible') ) {
 		bindClearUrlClick();
@@ -315,24 +335,7 @@ jQuery(document).ready( function() {
 	{
 		e_loader.toggle();
 		
-		var match = false;
-		var url = jQuery.trim( e_url.val() );
-		var services = e_url.data("embed_regex");
-
-		// only try to match if url has some meat AND has changed
-		if ( url.length >= 15 && !e_url.attr("readonly") ) {
-			// make sure embed content is blank
-			e_embed.html(''); e_name.val(''); e_desc.val('');
-			// loop through supported services and try to match url
-			for ( var i in services ) {
-				if ( url.match( services[i] ) ) {
-					match = true;
-					break;
-				}
-			}
-		}
-
-		if ( match ) {
+		if ( detectUrl() ) {
 			if ( confirm( e_conf.html() ) ) {
 				e_url.attr("readonly", "readonly");
 				e_url_ro.val(1);
@@ -350,7 +353,7 @@ jQuery(document).ready( function() {
 			action: 'link_auto_embed_url',
 			'cookie': encodeURIComponent(document.cookie),
 			'_wpnonce': jQuery("input#_wpnonce-link-auto-embed").val(),
-			'url': url
+			'url': e_url.val()
 		},
 		function(response) {
 
