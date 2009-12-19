@@ -100,6 +100,11 @@ ul#activity-filter-links li#afilter-links a {
 	display: none;
 }
 
+#link-details-form div.link-avatar-option p img.avatar-current {
+	max-width: 200px;
+	max-height: 150px;
+}
+
 /**** LINKS LIST *****************/
 
 ul#link-list li {
