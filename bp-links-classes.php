@@ -375,12 +375,18 @@ class BP_Links_Link {
 			// handle backwards compatibility with deprecated storage method (arrays)
 			switch ( $this->embed_service ) {
 				case self::EMBED_SERVICE_PICAPP:
-					$this->_embed_service_obj = new BP_Links_Embed_Service_PicApp();
-					$this->_embed_service_obj->from_deprecated_data( unserialize( $this->embed_data ) );
+					$embed_data = unserialize( $this->embed_data );
+					if ( !empty( $embed_data ) ) {
+						$this->_embed_service_obj = new BP_Links_Embed_Service_PicApp();
+						$this->_embed_service_obj->from_deprecated_data( $embed_data  );
+					}
 					break;
 				case self::EMBED_SERVICE_FOTOGLIF:
-					$this->_embed_service_obj = new BP_Links_Embed_Service_Fotoglif();
-					$this->_embed_service_obj->from_deprecated_data( unserialize( $this->embed_data ) );
+					$embed_data = unserialize( $this->embed_data );
+					if ( !empty( $embed_data ) ) {
+						$this->_embed_service_obj = new BP_Links_Embed_Service_Fotoglif();
+						$this->_embed_service_obj->from_deprecated_data( $embed_data );
+					}
 					break;
 				default:
 					$this->_embed_service_obj = BP_Links_Embed::LoadService( $this->embed_data );
