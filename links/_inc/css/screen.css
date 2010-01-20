@@ -24,6 +24,11 @@ li a#link-home, li a#link-wire, li a#link-admin {
 		background: url(../images/icons/key.png) 88% 52% no-repeat;
 	}
 
+div#optionsbar p.avatar img.avatar-embed {
+	max-width: 50px;
+	max-height: 50px;
+}
+
 /*** Home Widgets ************************************************************/
 
 .widget #ajax-loader-links {
@@ -358,6 +363,7 @@ div#links-directory-page ul#filter-nav {
 	list-style: none;
 	margin: 5px 10px 0px 0px;
 	padding: 0;
+	height: 40px;
 }
 	div#links-directory-page ul#filter-nav li {
 		float: left;
@@ -406,28 +412,63 @@ div#link-url-embed {
 
 	div#link-url-embed div#link-url-embed-content {
 		width: 90%;
-		padding: 10px 20px 10px 10px;
-		border: 1px solid #eaeaea;
+		padding: 10px 20px 0px 10px;
+		border: 2px solid #eaeaea;
 		background-color: #fafafa;
 		overflow: auto;
 	}
 
-	div#link-url-embed div#link-url-embed-content img {
+	div#link-url-embed div#link-url-embed-avatar {
 		float: left;
-		padding: 0;
+		width: 160px;
+		padding: 8px;
 		margin-right: 15px;
-		border: 2px solid black;
-		max-width: 200px;
-		max-height: 150px;
+		border: 1px solid #eaeaea;
+		background-color: white;
+		text-align: center;
 	}
 
+	div#link-url-embed div#link-url-embed-avatar img {
+		padding: 0;
+		margin: 0;
+		border: 1px solid black;
+		max-width: 150px;
+		max-height: 100px;
+	}
+
+	div#link-url-embed div#link-url-embed-thpick {
+		width: 160px;
+		padding-top: 6px;
+		font-size: 11px;
+	}
+		div#link-url-embed div#link-url-embed-thpick a {
+			margin: 0 5px 0 5px;
+			padding: 0 3px 2px 3px;
+			color: #4e4e4e;
+			text-decoration: none;
+			font-size: 14px;
+			font-weight: bold;
+			background-color: #e0e0e0;
+			border: 1px solid gray;
+		}
+			div#link-url-embed div#link-url-embed-thpick a#thprev {}
+			div#link-url-embed div#link-url-embed-thpick a#thnext {}
+
+		div#link-url-embed div#link-url-embed-thpick div#thnone {
+			padding: 6px 0 0 0;
+		}
+		div#link-url-embed input#link-url-embed-thskip {
+			vertical-align: top;
+		}
+	
 	div#link-url-embed div#link-url-embed-content p {
 		margin: 0;
 		min-height: 50px;
 	}
 
 	div#link-url-embed div#link-url-embed-options {
-		padding: 0;
+		clear: left;
+		padding: 0 20px 0 0;
 		text-align: right;
 	}
 

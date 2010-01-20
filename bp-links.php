@@ -440,7 +440,8 @@ function bp_links_screen_create_link() {
 						'description' => $data_valid['link-desc'],
 						'status' => $data_valid['link-status'],
 						'enable_wire' => $data_valid['link-enable-wire'],
-						'embed_data' => $data_valid['link-url-embed-data']
+						'embed_data' => $data_valid['link-url-embed-data'],
+						'embed_thidx' => $data_valid['link-url-embed-thidx']
 					)
 				);
 
@@ -469,7 +470,7 @@ function bp_links_screen_create_link() {
 		}
 	}
 	
- 	bp_core_load_template( apply_filters( 'bp_links_template_create_link', 'links/create' ) );
+ 	bp_core_load_template( apply_filters( 'bp_links_template_create_link', $bp->links->slug . '/create' ) );
 }
 
 
@@ -590,7 +591,8 @@ function bp_links_screen_link_admin_edit_details() {
 						'description' => $data_valid['link-desc'],
 						'status' => $data_valid['link-status'],
 						'enable_wire' => $data_valid['link-enable-wire'],
-						'embed_data' => $data_valid['link-url-embed-data']
+						'embed_data' => $data_valid['link-url-embed-data'],
+						'embed_thidx' => $data_valid['link-url-embed-thidx']
 					)
 				);
 
@@ -845,6 +847,13 @@ function bp_links_validate_create_form_input() {
 		$return_data['link-url-embed-data'] = null;
 	}
 
+	// link url embed service selected image index (optional)
+	if ( isset( $_POST['link-url-embed-thidx'] ) ) {
+		$return_data['link-url-embed-thidx'] = trim( $_POST['link-url-embed-thidx'] );
+	} else {
+		$return_data['link-url-embed-thidx'] = null;
+	}
+
 	return $return_data;
 }
 
@@ -987,7 +996,7 @@ function bp_links_format_notifications( $action, $item_id, $secondary_item_id, $
 
 function bp_links_manage_link( $args = '' ) {
 	global $bp;
-	
+
 	extract( $args );
 	
 	/**
@@ -1002,6 +1011,7 @@ function bp_links_manage_link( $args = '' ) {
 	 *	'description'
 	 *	'status'
 	 *	'embed_data'
+	 *	'embed_thidx'
 	 */
 
 	if ( $link_id ) {
@@ -1054,13 +1064,20 @@ function bp_links_manage_link( $args = '' ) {
 	if ( isset( $enable_wire ) ) {
 		$link->enable_wire = $enable_wire;
 	}
-	
+
 	if ( !empty( $embed_data ) ) {
 		try {
 			// load service
 			$service = BP_Links_Embed::LoadService( $embed_data );
 			// try to attach embed service to link
 			if ( $service instanceof BP_Links_Embed_Service ) {
+				// handle selectable image
+				if ( $service instanceof BP_Links_Embed_Has_Selectable_Image ) {
+					if ( isset( $embed_thidx ) ) {
+						$service->image_set_selected( $embed_thidx );
+					}
+				}
+				// attach and enable service
 				$link->embed_attach( $service );
 				$link->embed_status_set_enabled();
 			}
@@ -1333,6 +1350,10 @@ function bp_links_search_links( $search_terms, $pag_num_per_page = 5, $pag_page 
 
 /*** Link Avatars *************************************************************/
 
+function bp_links_default_avatar_uri() {
+	return apply_filters( 'bp_links_default_avatar_uri', get_stylesheet_directory_uri() . '/links/_inc/images/default_avatar.png' );
+}
+
 function bp_links_check_avatar( $item_id ) {
 
 	$params = array(
@@ -1379,36 +1400,45 @@ function bp_links_fetch_avatar( $args = '', $link = false ) {
 		
 		extract( $params, EXTR_SKIP );
 
+		$avatar_url = null;
+
 		// check if we can use thumb from embedded content
 		if ( !empty( $link ) && $link->embed_status_enabled() ) {
 
-			// append class avatar-embed
-			$class .= ' avatar-embed';
+			$image_thumb_url = $link->embed()->image_thumb_url();
 
-			// check for additional avatar class
-			if ( $link->embed()->avatar_class() ) {
-				$class .= ' ' . $link->embed()->avatar_class();
-			}
+			if ( !empty( $image_thumb_url ) ) {
 
-			// when avatar type is 'full', check for avatar size limits and special class
-			if ( 'full' == $type ) {
-				// get large thumb url from service object
-				$avatar_url = $link->embed()->image_large_thumb_url();
+				// append class avatar-embed
+				$class .= ' avatar-embed';
 
-				// check for custom width and height
-				if ( $link->embed()->avatar_max_width() && $link->embed()->avatar_max_height() ) {
-					$width = $link->embed()->avatar_max_width();
-					$height = $link->embed()->avatar_max_height();
+				// check for additional avatar class
+				if ( $link->embed()->avatar_class() ) {
+					$class .= ' ' . $link->embed()->avatar_class();
 				}
-			} else {
-				// get standard thumb url from service object
-				$avatar_url = $link->embed()->image_thumb_url();
-			}
 
-		} else {
+				// when avatar type is 'full', check for avatar size limits and special class
+				if ( 'full' == $type ) {
+					// get large thumb url from service object
+					$avatar_url = $link->embed()->image_large_thumb_url();
+
+					// check for custom width and height
+					if ( $link->embed()->avatar_max_width() && $link->embed()->avatar_max_height() ) {
+						$width = $link->embed()->avatar_max_width();
+						$height = $link->embed()->avatar_max_height();
+					}
+				} else {
+					// get standard thumb url from service object
+					$avatar_url = $link->embed()->image_thumb_url();
+				}
+			}
+		}
+
+		// have an avatar file yet?
+		if ( empty( $avatar_url ) ) {
 
 			// no avatar file found, use the default image
-			$avatar_url = get_stylesheet_directory_uri() . '/links/_inc/images/default_avatar.png';
+			$avatar_url = bp_links_default_avatar_uri();
 			
 			// default width/height
 			if ( empty( $width ) )

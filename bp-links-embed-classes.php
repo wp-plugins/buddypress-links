@@ -84,13 +84,6 @@ interface BP_Links_Embed_From_Data
 	public function image_large_thumb_url();
 
 	/**
-	 * Return HTML embed code (for gallery)
-	 *
-	 * @return string
-	 */
-	public function html();
-
-	/**
 	 * Return service name
 	 *
 	 * @return string
@@ -206,12 +199,166 @@ interface BP_Links_Embed_From_Json
 }
 
 /**
+ * Services that only exist as an alternative for the avatar should implement this interface
+ *
+ * @package BP_Links
+ * @author Marshall Sorenson
+ */
+interface BP_Links_Embed_Avatar_Only
+{
+	/* no required methods yet */
+}
+
+/**
+ * Services that support displaying their original content with HTML must adhere to this interface
+ *
+ * @package BP_Links
+ * @author Marshall Sorenson
+ */
+interface BP_Links_Embed_Has_Html
+{
+	/**
+	 * Return HTML embed code (for example in a gallery)
+	 *
+	 * @return string
+	 */
+	public function html();
+}
+
+/**
+ * Services that support selecting the link thumb from multiple images must adhere to this interface
+ *
+ * Instead of defining a rigid interface and over complicating things, it is left up
+ * to the developer to handle the data storage and processing necessary to facilitate
+ * this feature.  In the future, helper methods may be added to the base service class
+ * if a pattern for supporting this interface develops.
+ *
+ * @package BP_Links
+ * @author Marshall Sorenson
+ */
+interface BP_Links_Embed_Has_Selectable_Image
+{
+	/**
+	 * Return array of image src URLs
+	 *
+	 * @return array|false
+	 */
+	public function image_selection();
+
+	/**
+	 * The index selected from the image selection will be passed to this method
+	 *
+	 * Passing a value of NULL should result in disabling of thumbs for the link
+	 *
+	 * @see image_selection()
+	 * @param mixed|null $index
+	 * @return boolean
+	 */
+	public function image_set_selected( $index );
+
+	/**
+	 * Return the currently selected image index or NULL if not set
+	 *
+	 * @see image_set_selected()
+	 * @return string|integer|null
+	 */
+	public function image_get_selected();
+}
+
+/**
+ * Abstract base class that is mostly for sharing core helper methods
+ *
+ * @package BP_Links
+ * @author Marshall Sorenson
+ */
+abstract class BP_Links_Embed_Base
+{
+	//
+	// string helpers
+	//
+
+	/**
+	 * Prepare a string for most types of processing
+	 *
+	 * @param string $string
+	 * @return string
+	 */
+	final protected function clean_string( $string )
+	{
+		// just a trim
+		return stripslashes( trim( $string ) );
+	}
+
+	/**
+	 * Prepare a really messy string for processing by a service
+	 *
+	 * @param string $string
+	 * @return string
+	 */
+	final protected function deep_clean_string( $string )
+	{
+		// start with a basic cleaning
+		$ret_string = $this->clean_string( $string );
+		// convert newlines, carriage returns, tabs and two or more spaces into one space
+		$ret_string = preg_replace( '/[\n\r\t]+|\s{2,}/u', ' ', $ret_string );
+		// all done
+		return $ret_string;
+	}
+
+	//
+	// api helpers
+	//
+
+	/**
+	 * Fetch remote API raw data from a URL
+	 *
+	 * @param string $url
+	 * @return string
+	 */
+	final protected function api_fetch( $url )
+	{
+		// get RSS2 feed data for this video
+		$response = wp_remote_get( $url );
+
+		// only return data from a successful request
+		if ( 200 == wp_remote_retrieve_response_code( $response ) ) {
+			return wp_remote_retrieve_body( $response );
+		} else {
+			throw new BP_Links_Embed_User_Exception( $this->err_api_fetch() );
+		}
+	}
+
+	/**
+	 * Retrieve the entire HTML of a web page
+	 *
+	 * @param string $url
+	 * @return string
+	 */
+	final protected function html_fetch( $url )
+	{
+		// just use api fetch for now since its identical
+		return $this->api_fetch( $url );
+	}
+
+	//
+	// error helpers
+	//
+
+	protected function err_api_fetch()
+	{
+		return sprintf( __( 'Downloading content details from %1$s failed.', 'buddypress-links' ), __( 'URL', 'buddypress-links' ) );
+	}
+}
+
+
+/**
  * Singleton embed service registry and prototype object factory
  *
  * @package BP_Links
  * @author Marshall Sorenson
  */
 final class BP_Links_Embed
+	extends BP_Links_Embed_Base
 {
 	// service interface prefix
 	const INTERFACE_PREFIX = 'BP_Links_Embed_';
@@ -298,16 +445,32 @@ final class BP_Links_Embed
 		$service_interface = self::INTERFACE_PREFIX . $interface;
 		$locate_method = strtolower( $interface );
 
+		// store fallback keys in an array
+		$fallback_services = array();
+
 		// loop through all registered services
 		foreach ( $this->services as $service_protoype ) {
 			// if service supports the required interface, try to construct
 			if ( $service_protoype instanceof $service_interface ) {
 				// clone it!!! otherwise a reference to the registered object will be returned
 				$service = clone $service_protoype;
+				// is this service acting as a fallback?
+				if ( $service->is_fallback() ) {
+					// save this service for later
+					$fallback_services[] = $service;
+					continue;
+				}
 				// exec locate method, return service on success
 				if ( call_user_func( array( $service, $locate_method ), $string_clean ) ) {
 					return $service;
 				}
+			}
+		}
+
+		// no luck, try the fallback services (if any)
+		foreach ( $fallback_services as $fallback_service ) {
+			if ( call_user_func( array( $fallback_service, $locate_method ), $string_clean ) ) {
+				return $fallback_service;
 			}
 		}
 
@@ -440,6 +603,7 @@ final class BP_Links_Embed
 			self::$instance->register_service( new BP_Links_Embed_Service_YouTube() );
 			self::$instance->register_service( new BP_Links_Embed_Service_Flickr() );
 			self::$instance->register_service( new BP_Links_Embed_Service_MetaCafe() );
+			self::$instance->register_service( new BP_Links_Embed_Service_WebPage(true) );
 		}
 		return self::$instance;
 	}
@@ -679,7 +843,8 @@ final class BP_Links_Embed_Data
  * @author Marshall Sorenson
  */
 abstract class BP_Links_Embed_Service
-	implements BP_Links_Embed_From_Data
+	extends BP_Links_Embed_Base
+		implements BP_Links_Embed_From_Data
 {
 	/**
 	 * Unique key which is an MD5 hash of the class name
@@ -695,15 +860,40 @@ abstract class BP_Links_Embed_Service
 	private $key;
 
 	/**
+	 * Data storage object
+	 *
 	 * @var BP_Links_Embed_Data
 	 */
 	private $data;
 
 	/**
-	 * Constructor, denied!
-	 * Override one or more of the from_*() methods to contruct
+	 * Whether this service should behave like a fallback
+	 *
+	 * @var boolean
 	 */
-	final public function __construct() {}
+	private $act_as_fallback = false;
+
+	/**
+	 * Override one or more of the from_*() methods to complete contruction
+	 *
+	 * @param boolean $act_as_fallback Setting this to true will cause this service to be tried after all other services
+	 */
+	final public function __construct( $act_as_fallback = false )
+	{
+		if ( $act_as_fallback === true ) {
+			$this->act_as_fallback = true;
+		}
+	}
+
+	/**
+	 * Return fallback status
+	 *
+	 * @return boolean
+	 */
+	final public function is_fallback()
+	{
+		return $this->act_as_fallback;
+	}
 
 	/**
 	 * Return api key set by concrete embed service class.
@@ -789,6 +979,15 @@ abstract class BP_Links_Embed_Service
 		return false;
 	}
 
+	/**
+	 * Provide backwards compatibility for versions before 0.2.1
+	 *
+	 * @return boolean
+	 */
+	final public function avatar_only() {
+		return ( $this instanceof BP_Links_Embed_Avatar_Only );
+	}
+
 	//
 	// optional concrete methods
 	//
@@ -800,63 +999,6 @@ abstract class BP_Links_Embed_Service
 	public function avatar_play_photo() { return false; }
 	public function avatar_max_width() { return false; }
 	public function avatar_max_height() { return false; }
-	public function avatar_only() { return false; }
-
-
-	//
-	// api helpers
-	//
-
-	/**
-	 * Fetch remote API raw data from a URL
-	 *
-	 * @param string $url
-	 * @return string
-	 */
-	final protected function api_fetch( $url )
-	{
-		// get RSS2 feed data for this video
-		$response = wp_remote_get( $url );
-
-		// only return data from a successful request
-		if ( 200 == wp_remote_retrieve_response_code( $response ) ) {
-			return wp_remote_retrieve_body( $response );
-		} else {
-			throw new BP_Links_Embed_User_Exception( $this->err_api_fetch() );
-		}
-	}
-
-	//
-	// string helpers
-	//
-	
-	/**
-	 * Prepare a string for processing by a service
-	 *
-	 * @param string $string
-	 * @return string
-	 */
-	protected function clean_string( $string )
-	{
-		// just a trim
-		return stripslashes( trim( $string ) );
-	}
-
-	/**
-	 * Prepare a string for processing by a service
-	 *
-	 * @param string $string
-	 * @return string
-	 */
-	protected function deep_clean_string( $string )
-	{
-		// start with a basic cleaning
-		$ret_string = $this->clean_string( $string );
-		// convert newlines, carriage returns, tabs and two or more spaces into one space
-		$ret_string = preg_replace( '/[\n\r\t]+|\s{2,}/u', ' ', $ret_string );
-		// all done
-		return $ret_string;
-	}
 	
 	//
 	// error message helpers
@@ -871,10 +1013,359 @@ abstract class BP_Links_Embed_Service
 	{
 		return sprintf( __( 'The code you entered is not valid %1$s embedding code.', 'buddypress-links' ), $this->service_name() );
 	}
-	
+
 	final protected function err_api_fetch()
 	{
 		return sprintf( __( 'Downloading content details from %1$s failed.', 'buddypress-links' ), $this->service_name() );
+	}
+}
+
+/**
+ * A spider for parsing remote web page DOM. Singleton used so we can cache results.
+ *
+ * @package BP_Links
+ * @author Marshall Sorenson
+ */
+final class BP_Links_Embed_Page_Parser
+	extends BP_Links_Embed_Base
+{
+	/**
+	 * Singleton instance
+	 *
+	 * @var BP_Links_Embed_Page_Parser
+	 */
+	private static $instance;
+
+	/**
+	 * The current URL being parsed
+	 *
+	 * @var string
+	 */
+	private $url;
+
+	/**
+	 * Current DOM document object
+	 *
+	 * @var DOMDocument
+	 */
+	private $dom;
+
+	/**
+	 * Array of DOMDocument objects
+	 * 
+	 * @var array The key is an MD5 hash
+	 */
+	private $cache = array();
+
+	/**
+	 * Whether to use the dom cache
+	 *
+	 * @var boolean
+	 */
+	private $cache_enabled = true;
+	
+	/**
+	 * Constructor, denied!
+	 */
+	private function __construct() {}
+
+	/**
+	 * Get singleton instance
+	 *
+	 * @return BP_Links_Embed_Page_Parser
+	 */
+	final public static function GetInstance()
+	{
+		if ( empty( self::$instance ) ) {
+			self::$instance = new BP_Links_Embed_Page_Parser();
+		}
+		return self::$instance;
+	}
+
+	/**
+	 * Build DOM from a URL
+	 * 
+	 * @param string $url
+	 * @param string $cache_key
+	 * @return boolean
+	 */
+	final public function from_url( $url, $cache_key = null )
+	{
+		if ( bp_links_is_url_valid( $url ) ) {
+
+			// set url
+			$this->url = $url;
+
+			// create a key if none received
+			if ( empty( $cache_key ) || !is_string( $cache_key ) ) {
+				$cache_key = md5( $this->url );
+			}
+
+			// try to parse the web page's html
+			return $this->from_html( $this->html_fetch( $this->url ), $cache_key );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Build DOM from HTML
+	 *
+	 * @param string $html
+	 * @param string $cache_key
+	 * @return boolean
+	 */
+	final public function from_html( $html, $cache_key = null )
+	{
+		// create a key if none received
+		if ( empty( $cache_key ) || !is_string( $cache_key ) ) {
+			// hrmm. ok md5 first 250 chars of the string
+			$cache_key = md5( substr( $html, 0, 250 ) );
+		}
+
+		// check for cached data
+		if ( $this->has_cache( $cache_key ) ) {
+			$this->dom = $this->get_cache( $cache_key );
+			return true;
+		}
+
+		// load html document into a DOMDocument object
+		libxml_use_internal_errors(true);
+		$dom = new DOMDocument();
+
+		if ( $dom->loadHTML($html) ) {
+			$this->dom = $dom;
+			$this->update_cache( $cache_key );
+			return true;
+		} else {
+			// failed to parse html document
+			throw new BP_Links_Embed_User_Exception( $this->err_api_fetch() );
+		}
+	}
+
+	/**
+	 * Return current URL
+	 *
+	 * @return string
+	 */
+	final public function url()
+	{
+		return $this->url;
+	}
+
+	/**
+	 * Try to return contents of the title element
+	 *
+	 * @return string|false
+	 */
+	final public function title()
+	{
+		$nodes_title = $this->dom->getElementsByTagName('title');
+
+		// should only be one title tag
+		if ( $nodes_title->length == 1 ) {
+
+			$node_title = $nodes_title->item(0);
+			$page_title = $this->deep_clean_string( $node_title->nodeValue );
+
+			if ( !empty( $page_title ) ) {
+				return $page_title;
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Try to return contents of the meta element where name="description"
+	 *
+	 * @return string|false
+	 */
+	final public function description()
+	{
+		//
+		// try to get the description
+		//
+		$nodes_meta = $this->dom->getElementsByTagName('meta');
+
+		// did we find any meta tags?
+		if ( $nodes_meta->length >= 1 ) {
+
+			foreach( $nodes_meta as $node_meta ) {
+
+				if ( strtolower( $node_meta->getAttribute( 'name' ) ) == 'description' ) {
+
+					$meta_description = $this->deep_clean_string( $node_meta->getAttribute( 'content' ) );
+
+					if ( !empty( $meta_description ) ) {
+						return $meta_description;
+					} else {
+						return null;
+					}
+					
+				} else {
+					continue;
+				}
+			}
+		}
+
+		// no description found
+		return null;
+	}
+
+	/**
+	 * Return an array of all img elements in the DOM with their src, height and width
+	 *
+	 * @param integer $min_pixels At least one dimension must be this many pixels
+	 * @param integer $max_pixels Both dimensions must be less than this many pixels
+	 * @param integer $max_ratio Longer dimension must be no more than N times longer than the shorter dimension
+	 * @param integer $limit Maximum number of images to return
+	 * @return array|false
+	 */
+	final public function images( $min_pixels, $max_pixels, $max_ratio, $limit, $strict = false )
+	{
+		// try to find some images
+		$nodes_img = $this->dom->getElementsByTagName('img');
+
+		// if we found at least one image, sort through them
+		if ( $nodes_img->length >= 1 ) {
+
+			$img_array = array();
+
+			foreach( $nodes_img as $node_img ) {
+
+				$src = null;
+				$width = null;
+				$height = null;
+
+				// check for required attributes
+				if ( $node_img->hasAttribute( 'src' ) ) {
+					$src = $this->deep_clean_string( $node_img->getAttribute( 'src' ) );
+				} else {
+					continue;
+				}
+
+				if ( $node_img->hasAttribute( 'width' ) ) {
+					$width = (integer) $node_img->getAttribute( 'width' );
+				} elseif ( $strict ) {
+					continue;
+				}
+				
+				if ( $node_img->hasAttribute( 'height' ) ) {
+					$height = (integer) $node_img->getAttribute( 'height' );
+				} elseif ( $strict ) {
+					continue;
+				}
+
+				// validate the attributes we found
+				if ( bp_links_is_url_valid( $src ) ) {
+					
+					// if we have a width AND height set, check image size and ratio
+					if ( $width && $height && !$this->check_image_size( $width, $height, $min_pixels, $max_pixels, $max_ratio ) ) {
+						continue;
+					}
+					// append to return array
+					$img_array[] = array( 'src' => $src, 'height' => $height, 'width' => $width );
+				}
+
+				// break out of loop if we have reached limit threshold
+				if ( count( $img_array ) >= $limit ) {
+					break;
+				}
+			}
+
+			// if we found at least one image, return the array
+			if ( count( $img_array ) >= 1 ) {
+				return $img_array;
+			}
+
+		}
+
+		// no images found
+		return null;
+	}
+
+	/**
+	 * Enable cache
+	 */
+	final public function enable_cache()
+	{
+		$this->cache_enabled = true;
+	}
+
+	/**
+	 * Disable cache
+	 */
+	final public function disable_cache()
+	{
+		$this->cache_enabled = false;
+	}
+
+	//
+	// private methods
+	//
+
+	/**
+	 * Check image size to make sure its dimensions are within range
+	 *
+	 * @param integer $width Image width in pixels
+	 * @param integer $height Image height in pixels
+	 * @param integer $min_pixels At least one dimension must be this many pixels
+	 * @param integer $max_pixels Both dimensions must be less than this many pixels
+	 * @param integer $max_ratio Longer dimension must be no more than N times longer than the shorter dimension
+	 * @return boolean
+	 */
+	private function check_image_size( $width, $height, $min_pixels, $max_pixels, $max_ratio )
+	{
+		// are dimensions within range?
+		if ( ( $width >= $min_pixels || $height >= $min_pixels ) && ( $width <= $max_pixels && $height <= $max_pixels ) ) {
+
+			// is long size to short side ratio OK?
+			$long = ( $width > $height ) ? $width : $height;
+			$short = ( $width > $height ) ? $height : $width;
+
+			// is long size no more than N times longer than short side?
+			return ( $long / $short <= $max_ratio );
+		}
+	}
+
+	/**
+	 * Does DOM object exist is cache for given key?
+	 *
+	 * @param string $cache_key
+	 * @return boolean
+	 */
+	private function has_cache( $cache_key )
+	{
+		return ( $this->cache_enabled === true && array_key_exists( $cache_key, $this->cache ) );
+	}
+
+	/**
+	 * Try to retrieve DOM object for cache with given key
+	 *
+	 * @param string $cache_key
+	 * @return DOMDocument|false
+	 */
+	private function get_cache( $cache_key )
+	{
+		// look up key in cache
+		if ( $this->has_cache( $cache_key ) ) {
+			return $this->cache[$cache_key];
+		}
+		// not found
+		return false;
+	}
+
+	/**
+	 * Update/create DOM object entry in cache for given key
+	 *
+	 * @param string $cache_key
+	 */
+	private function update_cache( $cache_key )
+	{
+		$this->cache[$cache_key] = $this->dom;
 	}
 }
 ?>

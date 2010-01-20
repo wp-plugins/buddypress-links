@@ -13,7 +13,8 @@ BuddyPress Links is a drop in link and rich media sharing component for BuddyPre
 #### Update!
 
 Rich media embedding is now available in version 0.2. Currently there is
-support for YouTube, Flickr, and metacafe with more to come.
+support for YouTube, Flickr, and metacafe with more to come. As of 0.2.1 there
+is now support for embedding regular web pages as rich media!
 
 #### What is BuddyPress Links?
 
@@ -31,8 +32,8 @@ Members can:
 * Enable a comment wire for a link
 * Upload an image "avatar" to show with a link.
 * Auto embed rich media from URLs (YouTube, Flickr, and metacafe are supported)
-* Embed a PicApp.com image and use as the avatar
-* Embed a Fotoglif.com image and use as the avatar
+* Automatic thumbnail picker available as of 0.2.1
+* Embed a PicApp.com or Fotoglif.com image and use as the avatar
 * Vote on other member's links
 * Comment on other member's links (if wire is enabled)
 
@@ -87,6 +88,13 @@ BuddyPress Links requires WordPress MU 2.8.4 or higher with BuddyPress 1.1 or hi
 This version contains the first support for rich media embedding. *Please make sure that you update the "links" directory in your theme (see Installation).*
 
 == Changelog ==
+
+= 0.2.1 =
+
+* Added support for auto embedding standard web pages
+* Added automatic thumb picker for rich web pages
+* Fixed layout bug that was affecting all webkit browsers
+* Some other minor bug fixes
 
 = 0.2 =
 

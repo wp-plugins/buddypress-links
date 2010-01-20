@@ -46,8 +46,8 @@ class BP_Links_Link {
 
 	// embed service constants
 	const EMBED_SERVICE_NONE = null;
-	const EMBED_SERVICE_PICAPP = 1;
-	const EMBED_SERVICE_FOTOGLIF = 2;
+	const EMBED_SERVICE_PICAPP = '1';
+	const EMBED_SERVICE_FOTOGLIF = '2';
 
 	// embed status constants
 	const EMBED_STATUS_PARTIAL = -1;
@@ -373,7 +373,7 @@ class BP_Links_Link {
 	function embed() {
 		if ( !$this->_embed_service_obj instanceof BP_Links_Embed_Service && empty( $this->embed_data ) === false ) {
 			// handle backwards compatibility with deprecated storage method (arrays)
-			switch ( $this->embed_service ) {
+			switch ( (string) $this->embed_service ) {
 				case self::EMBED_SERVICE_PICAPP:
 					$embed_data = unserialize( $this->embed_data );
 					if ( !empty( $embed_data ) ) {

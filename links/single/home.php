@@ -50,7 +50,7 @@
 					
 					<?php do_action( 'bp_after_link_description' ) ?>
 
-					<?php if ( bp_link_is_visible() && bp_link_embed_is_enabled() ) : ?>
+					<?php if ( bp_link_is_visible() && bp_link_embed_has_html() ) : ?>
 						<?php do_action( 'bp_before_link_embed' ) ?>
 
 						<div class="bp-widget">

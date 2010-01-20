@@ -4,8 +4,10 @@
  */
 function bp_links_ajax_response_string() {
 	$args = func_get_args();
-	return join( '[[split]]', $args );
+	echo join( '[[split]]', $args );
+	die();
 }
+
 
 function bp_links_ajax_link_filter() {
 	check_ajax_referer( 'link-filter-box' );
@@ -15,7 +17,14 @@ add_action( 'wp_ajax_link_filter', 'bp_links_ajax_link_filter' );
 
 
 function bp_links_ajax_directory_links() {
+	global $bp;
+	
 	check_ajax_referer('directory_links');
+	
+	if ( isset( $_POST['category_id'] ) && is_numeric( $_POST['category_id'] ) ) {
+		setcookie( 'bp_directory_links_category_id', $_POST['category_id'], 0, sprintf( '%s/%s', $bp->root_domain, $bp->links->slug ) );
+	}
+	
 	locate_template( array( 'links/directory/links-loop.php' ), true );
 }
 add_action( 'wp_ajax_directory_links', 'bp_links_ajax_directory_links' );
@@ -30,21 +39,21 @@ function bp_links_ajax_link_vote() {
 
 		if ( !empty( $link ) ) {
 			if ( $link instanceof BP_Links_Link ) {
-				echo bp_links_ajax_response_string( 1, __( 'Vote recorded.', 'buddypress-links' ), sprintf( '%1$+d', $link->vote_total), $link->vote_count );
+				bp_links_ajax_response_string( 1, __( 'Vote recorded.', 'buddypress-links' ), sprintf( '%1$+d', $link->vote_total), $link->vote_count );
 			} else {
-				echo bp_links_ajax_response_string( 0, __( 'You have already voted.', 'buddypress-links' ) );
+				bp_links_ajax_response_string( 0, __( 'You have already voted.', 'buddypress-links' ) );
 			}
 		} else {
-			echo bp_links_ajax_response_string( -1, __( 'There was a problem recording your vote. Please try again.', 'buddypress-links' ) );
+			bp_links_ajax_response_string( -1, __( 'There was a problem recording your vote. Please try again.', 'buddypress-links' ) );
 		}
 
 	} else {
 		// sorry, not logged in
-		echo bp_links_ajax_response_string( -1, __( 'You must be logged in to vote!', 'buddypress-links' ) );
-		return false;
+		bp_links_ajax_response_string( -1, __( 'You must be logged in to vote!', 'buddypress-links' ) );
 	}
 }
 add_action( 'wp_ajax_link_vote', 'bp_links_ajax_link_vote' );
+
 
 function bp_links_ajax_link_auto_embed_url() {
 
@@ -53,28 +62,43 @@ function bp_links_ajax_link_auto_embed_url() {
 	try {
 		// try to load a service
 		$embed_service = BP_Links_Embed::FromUrl( $_POST['url'] );
-		// did we get a service?
+
+		// did we get a rich media service?
 		if ( $embed_service instanceof BP_Links_Embed_From_Url ) {
 			// output response
-			echo
-				bp_links_ajax_response_string(
-					1, // 0
-					bp_get_links_auto_embed_panel_content( $embed_service ), // 1
-					$embed_service->title(), // 2
-					$embed_service->description()
-				);
-			return;
+			bp_links_ajax_response_string(
+				1, // 0
+				$embed_service->title(), // 1
+				$embed_service->description(), // 2
+				bp_get_links_auto_embed_panel_content( $embed_service ) // 3
+			);
 		}
+
+		// NOT rich media, fall back to page parser
+		$page_parser = BP_Links_Embed_Page_Parser::GetInstance();
+
+		if ( $page_parser->from_url( $_POST['url'] ) ) {
+
+			$page_title = $page_parser->title();
+			$page_desc = $page_parser->description();
+
+			if ( !empty( $page_title ) || !empty( $page_desc ) ) {
+				// output response
+				bp_links_ajax_response_string( 2, $page_title, $page_desc );
+			}
+		}
+
 	} catch ( BP_Links_Embed_User_Exception $e ) {
-		echo bp_links_ajax_response_string( -1, esc_html( $e->getMessage() ) );
-		return;
+		bp_links_ajax_response_string( -1, esc_html( $e->getMessage() ) );
 	} catch ( Exception $e ) {
-		// TODO log these or what?
 		// fall through to generic error for all other exceptions
+		// TODO log these or what?
+		// TODO comment out this debug line before tagging a version
+//		bp_links_ajax_response_string( -1, esc_html( $e->getMessage() ) );
 	}
 
-	// if all else fails, just spit out generic error message response
-	echo bp_links_ajax_response_string( -1, __( 'Failed to auto embed this URL.', 'buddypress-links' ) );
+	// if all else fails, just spit out generic warning message
+	bp_links_ajax_response_string( -2, __( 'Auto-fill not available for this URL.', 'buddypress-links' ) );
 }
 add_action( 'wp_ajax_link_auto_embed_url', 'bp_links_ajax_link_auto_embed_url' );
 ?>

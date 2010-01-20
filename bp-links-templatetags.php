@@ -315,7 +315,7 @@ function bp_the_link() {
 
 function bp_link_is_visible( $link = false ) {
 	global $bp, $links_template;
-	
+
 	if ( !$link )
 		$link =& $links_template->link;
 
@@ -888,7 +888,7 @@ function bp_link_details_form_name_desc_fields_display() {
 		} elseif ( bp_links_current_link_embed_enabled() )  {
 			return ( bp_links_current_link_embed_service() instanceof BP_Links_Embed_From_Url ) ? 0 : 1;
 		} else {
-			return 1;
+			return 0;
 		}
 	}
 

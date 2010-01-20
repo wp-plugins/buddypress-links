@@ -8,10 +8,10 @@
 
 /**
  * Video sites by reach:
- * YouTube*, Flickr*, MetaCafe*, Hulu, Veoh, Vimeo, BlinkX, Revver
+ * YouTube*, Flickr*, MetaCafe*, Hulu (no api), Veoh, Vimeo, ustream.tv, BlinkX, Revver
  *
  * Photo sites by reach:
- * Flickr*, PhotoBucket, PicasaWeb, BuzzNet
+ * Flickr*, PhotoBucket, PicasaWeb, TwitPic, BuzzNet, twitgoo
  *
  * Just keeping track of thumb sizes here...
  * (so far the sweet spot is 100 to 120 pixels)
@@ -26,6 +26,299 @@
  */
 
 /**
+ * Generic web page embedding service
+ *
+ * @package BP_Links
+ * @author Marshall Sorenson
+ */
+final class BP_Links_Embed_Service_WebPage
+	extends BP_Links_Embed_Service
+		implements	BP_Links_Embed_From_Url,
+					BP_Links_Embed_From_Html,
+					BP_Links_Embed_Has_Selectable_Image
+{
+
+	// max number of images to grab from page
+	const WEBPAGE_MAX_IMAGES = 12;
+	const WEBPAGE_MAX_IMAGE_HEAD = 24;
+	const WEBPAGE_MIN_IMAGE_BYTES = 2048;
+	const WEBPAGE_MAX_IMAGE_BYTES = 51200;
+
+	/**
+	 * @var BP_Links_Embed_Page_Parser
+	 */
+	private $parser;
+
+	//
+	// required concrete methods
+	//
+
+	final public function from_url( $url )
+	{
+		if ( bp_links_is_url_valid( $url ) ) {
+
+			$this->data()->url = $url;
+
+			$page_parser = BP_Links_Embed_Page_Parser::GetInstance();
+
+			if ( $page_parser->from_url( $url ) ) {
+				$this->parser = $page_parser;
+				return $this->find_elements();
+			}
+		}
+		
+		return false;
+	}
+
+	final public function from_html( $html )
+	{
+		$page_parser = BP_Links_Embed_Page_Parser::GetInstance();
+
+		if ( $page_parser->from_html( $html ) ) {
+			$this->parser = $page_parser;
+			return $this->find_elements();
+		}
+
+		return false;
+	}
+
+	final public function url()
+	{
+		return $this->data()->url;
+	}
+
+	final public function title()
+	{
+		return $this->data()->title;
+	}
+
+	final public function description()
+	{
+		return $this->data()->description;
+	}
+
+	final public function image_url()
+	{
+		if ( isset( $this->data()->images_idx ) ) {
+			$idx = $this->data()->images_idx;
+			return $this->data()->images[$idx]['src'];
+		}
+		
+		return null;
+	}
+
+	final public function image_thumb_url()
+	{
+		return $this->image_url();
+	}
+
+	final public function image_large_thumb_url()
+	{
+		return $this->image_url();
+	}
+
+	final public function service_name()
+	{
+		return __( 'Web Page', 'buddypress-links' );
+	}
+
+	final public function from_url_pattern()
+	{
+		return '/^http:\/\/([a-z0-9-]+\.)+[a-z0-9-]{2,4}\/?.*/i';
+	}
+
+	final public function image_selection()
+	{
+		$image_array = array();
+
+		foreach ( $this->data()->images as $image ) {
+			if ( isset( $image['bytes'] ) && $image['bytes'] >= self::WEBPAGE_MIN_IMAGE_BYTES && $image['bytes'] <= self::WEBPAGE_MAX_IMAGE_BYTES ) {
+				$image_array[] = $image['src'];
+			}
+		}
+
+		return $image_array;
+	}
+
+	final public function image_set_selected( $index )
+	{
+		// do some sanity checking
+		if ( is_numeric( $index ) && $index <= self::WEBPAGE_MAX_IMAGES ) {
+			// cast to integer
+			$idx = (integer) $index;
+			// must exist in found images array
+			if ( array_key_exists( $idx, $this->data()->images ) ) {
+				// ok, set the index
+				$this->data()->images_idx = (integer) $idx;
+				return true;
+			}
+		} else {
+			$this->data()->images_idx = null;
+		}
+
+		return false;
+	}
+
+	final public function image_get_selected()
+	{
+		return ( isset( $this->data()->images_idx ) ) ? $this->data()->images_idx : null;
+	}
+
+	//
+	// private methods
+	//
+	
+	private function find_elements()
+	{
+		//
+		// try to get the title
+		//
+		$page_title = $this->parser->title();
+
+		if ( !empty( $page_title ) ) {
+			$this->data()->title = $page_title;
+		} else {
+			return false;
+		}
+
+		//
+		// try to get the description
+		//
+		$page_desc = $this->parser->description();
+
+		if ( !empty( $page_desc ) ) {
+			$this->data()->description = $page_desc;
+		} else {
+			$this->data()->description = null;
+		}
+
+		//
+		// try to find some images
+		//
+		$page_images = $this->parser->images( 100, 800, 2, 50 );
+		$page_images_sorted = $this->filter_images( $page_images );
+		$page_images_bytes = $this->get_images_bytes( $page_images_sorted );
+
+		if ( is_array( $page_images_bytes ) && count( $page_images_bytes ) ) {
+			// use the array as is
+			$this->data()->images = $page_images_bytes;
+			// set index to first key from array
+			$this->data()->images_idx = key( $page_images_bytes );
+		} else {
+			return false;
+		}
+
+		return true;
+	}
+
+	// TODO implement a timeout based on total seconds elapsed
+	private function get_images_bytes( $images )
+	{
+		global $bp;
+
+		if ( count( $images ) < 1 ) {
+			return $images;
+		}
+		
+		$return_array = array();
+		$checked_count = 0;
+		$good_count = 0;
+
+		foreach ( $images as $image ) {
+
+			// don't loop forever
+			$checked_count++;
+
+			// bytes are null by default
+			$image['bytes'] = null;
+
+			// run checks only if we are under thresholds
+			if ( $checked_count < self::WEBPAGE_MAX_IMAGE_HEAD && $good_count < self::WEBPAGE_MAX_IMAGES ) {
+
+				// do a head request for the image
+				$response =
+					wp_remote_head(
+						$image['src'],
+						array( 'timeout' => 2, 'headers' => array( 'Referer' => $bp->root_domain ) )
+					);
+
+				// did we get a valid response?
+				if ( 200 == wp_remote_retrieve_response_code( $response ) ) {
+					// yes, grab content length (remote file size)
+					$content_length = (integer) wp_remote_retrieve_header( $response, 'content-length' );
+					// did we get the length header?
+					if ( $content_length > 0 ) {
+						// set the bytes
+						$image['bytes'] = $content_length;
+						// check if size is within range
+						if ( $content_length >= self::WEBPAGE_MIN_IMAGE_BYTES && $content_length <= self::WEBPAGE_MAX_IMAGE_BYTES ) {
+							// increment found count
+							$good_count++;
+						}
+					}
+				}
+			}
+
+			// append modified image details to return array
+			$return_array[] = $image;
+		}
+
+		return $return_array;
+	}
+	
+	private function filter_images( $images )
+	{
+		if ( count( $images ) < 1 ) {
+			return $images;
+		}
+
+		$array_high = array();
+		$array_med = array();
+		$array_low = array();
+		$array_lowest = array();
+
+		foreach ( $images as $image ) {
+
+			$url = $image['src'];
+			$width = $image['width'];
+			$height = $image['height'];
+
+			// try to parse url
+			$url_parsed = parse_url( $url );
+
+			if ( isset( $url_parsed['path'] ) ) {
+				// parsed url successfully
+				if ( preg_match( '/\.jpe?g/i', $url_parsed['path'] ) ) {
+					// its a JPEG
+					if ( $width > 0 && $height > 0 ) {
+						// width and height were set in DOM
+						$array_high[] = $image;
+					} else {
+						// width and/or height missing from DOM
+						$array_med[] = $image;
+					}
+				} elseif ( preg_match( '/\.png/i', $url_parsed['path'] ) ) {
+					// PNG, lower priority
+					$array_low[] = $image;
+				} elseif ( preg_match( '/\.gif/i', $url_parsed['path'] ) ) {
+					// GIF, lowest priority
+					$array_lowest[] = $image;
+				} else {
+					// some other image type, we don't want it
+					continue;
+				}
+			} else {
+				// unable to parse url
+				continue;
+			}
+		}
+
+		return array_merge( $array_high, $array_med, $array_low, $array_lowest );
+	}
+}
+
+
+/**
  * PicApp photo embedding service
  *
  * @package BP_Links
@@ -33,7 +326,9 @@
  */
 final class BP_Links_Embed_Service_PicApp
 	extends BP_Links_Embed_Service
-		implements BP_Links_Embed_From_Html
+		implements	BP_Links_Embed_From_Html,
+					BP_Links_Embed_Has_Html,
+					BP_Links_Embed_Avatar_Only
 {
 	//
 	// required concrete methods
@@ -135,11 +430,6 @@ final class BP_Links_Embed_Service_PicApp
 	final public function avatar_max_height()
 	{
 		return 140;
-	}
-
-	final public function avatar_only()
-	{
-		return true;
 	}
 
 	/**
@@ -269,7 +559,10 @@ final class BP_Links_Embed_Service_PicApp
  */
 final class BP_Links_Embed_Service_Fotoglif
 	extends BP_Links_Embed_Service
-		implements BP_Links_Embed_From_Html, BP_Links_Embed_From_Json
+		implements	BP_Links_Embed_From_Html,
+					BP_Links_Embed_From_Json,
+					BP_Links_Embed_Avatar_Only,
+					BP_Links_Embed_Has_Html
 {
 	//
 	// required concrete methods
@@ -375,11 +668,6 @@ final class BP_Links_Embed_Service_Fotoglif
 	final public function image_height()
 	{
 		return $this->data()->div_height;
-	}
-
-	final public function avatar_only()
-	{
-		return true;
 	}
 
 	/**
@@ -592,7 +880,7 @@ final class BP_Links_Embed_Service_Fotoglif
  */
 final class BP_Links_Embed_Service_YouTube
 	extends BP_Links_Embed_Service
-		implements BP_Links_Embed_From_Url, BP_Links_Embed_From_Xml
+		implements BP_Links_Embed_From_Url, BP_Links_Embed_From_Xml, BP_Links_Embed_Has_Html
 {
 	// thumb constants
 	const YT_TH_DEFAULT = 0;
@@ -620,7 +908,7 @@ final class BP_Links_Embed_Service_YouTube
 	final public function from_xml( $xml )
 	{
 		// load xml string into a SimpleXML object
-		libxml_use_internal_errors();
+		libxml_use_internal_errors(true);
 		$sxml = simplexml_load_string( $xml );
 
 		if ( $sxml instanceof SimpleXMLElement ) {
@@ -797,7 +1085,7 @@ final class BP_Links_Embed_Service_YouTube
  */
 final class BP_Links_Embed_Service_Flickr
 	extends BP_Links_Embed_Service
-		implements BP_Links_Embed_From_Url, BP_Links_Embed_From_Json
+		implements BP_Links_Embed_From_Url, BP_Links_Embed_From_Json, BP_Links_Embed_Has_Html
 {
 	// Flickr API keys
 	const FLICKR_API_KEY = 'e5fe3652529c0f75332019c3605cd46e';
@@ -1041,7 +1329,7 @@ final class BP_Links_Embed_Service_Flickr
  */
 final class BP_Links_Embed_Service_MetaCafe
 	extends BP_Links_Embed_Service
-		implements BP_Links_Embed_From_Url, BP_Links_Embed_From_Xml
+		implements BP_Links_Embed_From_Url, BP_Links_Embed_From_Xml, BP_Links_Embed_Has_Html
 {
 
 	//
@@ -1064,7 +1352,7 @@ final class BP_Links_Embed_Service_MetaCafe
 	final public function from_xml( $xml )
 	{
 		// load xml string into a SimpleXML object
-		libxml_use_internal_errors();
+		libxml_use_internal_errors(true);
 		$sxml = simplexml_load_string( $xml );
 
 		if ( $sxml instanceof SimpleXMLElement ) {
