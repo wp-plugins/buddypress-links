@@ -1,19 +1,19 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Marshall Sorenson (MrMaz)
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Translation of the WordPress plugin BuddyPress Links 0.2.1 by Marshall Sorenson (MrMaz).
+# Copyright (C) 2010 Marshall Sorenson (MrMaz)
+# This file is distributed under the same license as the BuddyPress Links package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: BuddyPress Links 0.2.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/buddypress-links\n"
-"POT-Creation-Date: 2009-12-16 17:36+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2010-01-20 03:16+0000\n"
+"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: admin/category-edit.php:42
@@ -25,7 +25,7 @@ msgstr ""
 #: admin/category-edit.php:81 admin/category-edit.php:86
 #: admin/category-edit.php:102 admin/category-list.php:26
 #: admin/link-manager.php:18 bp-links-embed.php:147 bp-links-embed.php:151
-#: bp-links.php:469 bp-links.php:613 bp-links.php:643 bp-links.php:659
+#: bp-links.php:468 bp-links.php:611 bp-links.php:642 bp-links.php:658
 msgid "Please try again."
 msgstr ""
 
@@ -154,7 +154,7 @@ msgid "Priority"
 msgstr ""
 
 #: admin/category-list.php:100 admin/link-manager.php:33
-#: bp-links-widgets.php:13 bp-links.php:248 bp-links.php:359 bp-links.php:746
+#: bp-links-widgets.php:13 bp-links.php:248 bp-links.php:359 bp-links.php:745
 msgid "Links"
 msgstr ""
 
@@ -228,58 +228,66 @@ msgstr ""
 msgid "No links found."
 msgstr ""
 
-#: bp-links-ajax.php:33
+#: bp-links-ajax.php:42
 msgid "Vote recorded."
 msgstr ""
 
-#: bp-links-ajax.php:35
+#: bp-links-ajax.php:44
 msgid "You have already voted."
 msgstr ""
 
-#: bp-links-ajax.php:38
+#: bp-links-ajax.php:47
 msgid "There was a problem recording your vote. Please try again."
 msgstr ""
 
-#: bp-links-ajax.php:43
+#: bp-links-ajax.php:52
 msgid "You must be logged in to vote!"
 msgstr ""
 
-#: bp-links-ajax.php:77
-msgid "Failed to auto embed this URL."
+#: bp-links-ajax.php:101
+msgid "Auto-fill not available for this URL."
 msgstr ""
 
-#: bp-links-embed-classes.php:867
-#, php-format
-msgid "The URL you entered is not a valid %1$s link."
-msgstr ""
-
-#: bp-links-embed-classes.php:872
-#, php-format
-msgid "The code you entered is not valid %1$s embedding code."
-msgstr ""
-
-#: bp-links-embed-classes.php:877
+#: bp-links-embed-classes.php:349 bp-links-embed-classes.php:1019
 #, php-format
 msgid "Downloading content details from %1$s failed."
 msgstr ""
 
-#: bp-links-embed-services.php:108
+#: bp-links-embed-classes.php:349 links/single/forms/details.php:19
+msgid "URL"
+msgstr ""
+
+#: bp-links-embed-classes.php:1009
+#, php-format
+msgid "The URL you entered is not a valid %1$s link."
+msgstr ""
+
+#: bp-links-embed-classes.php:1014
+#, php-format
+msgid "The code you entered is not valid %1$s embedding code."
+msgstr ""
+
+#: bp-links-embed-services.php:122
+msgid "Web Page"
+msgstr ""
+
+#: bp-links-embed-services.php:403
 msgid "PicApp"
 msgstr ""
 
-#: bp-links-embed-services.php:363
+#: bp-links-embed-services.php:656
 msgid "Fotoglif"
 msgstr ""
 
-#: bp-links-embed-services.php:705
+#: bp-links-embed-services.php:993
 msgid "YouTube"
 msgstr ""
 
-#: bp-links-embed-services.php:929
+#: bp-links-embed-services.php:1217
 msgid "Flickr"
 msgstr ""
 
-#: bp-links-embed-services.php:1154
+#: bp-links-embed-services.php:1442
 msgid "MetaCafe"
 msgstr ""
 
@@ -287,7 +295,7 @@ msgstr ""
 msgid "Upload Failed! Error was:"
 msgstr ""
 
-#: bp-links-embed.php:147 bp-links.php:659
+#: bp-links-embed.php:147 bp-links.php:658
 msgid "There was an error saving link avatar."
 msgstr ""
 
@@ -299,20 +307,20 @@ msgstr ""
 msgid "The embedding code you entered was not recognized."
 msgstr ""
 
-#: bp-links-embed.php:225 bp-links-embed.php:263
-msgid "Rich Media Detected:"
-msgstr ""
-
-#: bp-links-embed.php:226
-msgid "Would you like to embed this content?"
-msgstr ""
-
-#: bp-links-embed.php:227
+#: bp-links-embed.php:220
 msgid "Clear"
 msgstr ""
 
-#: bp-links-embed.php:264
+#: bp-links-embed.php:327
+msgid "Rich Media Detected:"
+msgstr ""
+
+#: bp-links-embed.php:328
 msgid "Edit Name and Description"
+msgstr ""
+
+#: bp-links-embed.php:341
+msgid "Thumbs"
 msgstr ""
 
 #: bp-links-feed.php:22
@@ -455,7 +463,7 @@ msgstr ""
 msgid "Edit Details"
 msgstr ""
 
-#: bp-links-templatetags.php:823 bp-links.php:1359
+#: bp-links-templatetags.php:823 bp-links.php:1380
 #: links/single/forms/avatar.php:5
 msgid "Link Avatar"
 msgstr ""
@@ -593,136 +601,136 @@ msgstr ""
 msgid "Random Link"
 msgstr ""
 
-#: bp-links.php:455
+#: bp-links.php:454
 #, php-format
 msgid "%1$s created the link %2$s"
 msgstr ""
 
-#: bp-links.php:469
+#: bp-links.php:468
 msgid "There was an error saving link details."
 msgstr ""
 
-#: bp-links.php:509
+#: bp-links.php:508
 msgid "Wire message could not be posted."
 msgstr ""
 
-#: bp-links.php:511
+#: bp-links.php:510
 msgid "Wire message successfully posted."
 msgstr ""
 
-#: bp-links.php:526
+#: bp-links.php:525
 msgid "There was an error deleting the wire message."
 msgstr ""
 
-#: bp-links.php:528
+#: bp-links.php:527
 msgid "Wire message successfully deleted."
 msgstr ""
 
-#: bp-links.php:604
+#: bp-links.php:602
 msgid "Link details were successfully updated."
 msgstr ""
 
-#: bp-links.php:613
+#: bp-links.php:611
 msgid "There was an error updating link details."
 msgstr ""
 
-#: bp-links.php:641
+#: bp-links.php:640
 msgid "Your avatar was deleted successfully!"
 msgstr ""
 
-#: bp-links.php:643
+#: bp-links.php:642
 msgid "There was a problem deleting that avatar"
 msgstr ""
 
-#: bp-links.php:657
+#: bp-links.php:656
 msgid "The link avatar was uploaded successfully!"
 msgstr ""
 
-#: bp-links.php:722
+#: bp-links.php:721
 msgid "The link was deleted successfully"
 msgstr ""
 
-#: bp-links.php:725
+#: bp-links.php:724
 msgid "There was an error deleting the link, please try again."
 msgstr ""
 
-#: bp-links.php:747
+#: bp-links.php:746
 msgid "Yes"
 msgstr ""
 
-#: bp-links.php:748
+#: bp-links.php:747
 msgid "No"
 msgstr ""
 
-#: bp-links.php:753
+#: bp-links.php:752
 msgid "A member posts on the wire of a link you created"
 msgstr ""
 
-#: bp-links.php:766
+#: bp-links.php:765
 msgid "Please fill in all of the required fields"
 msgstr ""
 
-#: bp-links.php:782
+#: bp-links.php:781
 #, php-format
 msgid ""
 "Link URL must be %1$d characters or less, please make corrections and re-"
 "submit."
 msgstr ""
 
-#: bp-links.php:785
+#: bp-links.php:784
 msgid "The URL you entered is not valid."
 msgstr ""
 
-#: bp-links.php:802
+#: bp-links.php:801
 #, php-format
 msgid ""
 "Link Name must be %1$d characters or less, please make corrections and re-"
 "submit."
 msgstr ""
 
-#: bp-links.php:819
+#: bp-links.php:818
 #, php-format
 msgid ""
 "Link Description must be %1$d characters or less, please make corrections "
 "and re-submit."
 msgstr ""
 
-#: bp-links.php:911
+#: bp-links.php:917
 msgid "Created a link"
 msgstr ""
 
-#: bp-links.php:912
+#: bp-links.php:918
 msgid "New link wire post"
 msgstr ""
 
-#: bp-links.php:966
+#: bp-links.php:972
 msgid "Link Example Event"
 msgstr ""
 
-#: bp-links.php:966
+#: bp-links.php:972
 #, php-format
 msgid "%d number of example events happened for the link \"%s\""
 msgstr ""
 
-#: bp-links.php:969
+#: bp-links.php:975
 #, php-format
 msgid "%1$s triggered a notification for the link \"%2$s\""
 msgstr ""
 
-#: bp-links.php:1471
+#: bp-links.php:1501
 #, php-format
 msgid "%1$s wrote on the wire of the link %2$s:"
 msgstr ""
 
-#: bp-links.php:1607
+#: bp-links.php:1637
 msgid "up"
 msgstr ""
 
-#: bp-links.php:1607
+#: bp-links.php:1637
 msgid "down"
 msgstr ""
 
-#: bp-links.php:1610
+#: bp-links.php:1640
 #, php-format
 msgid "%1$s voted %2$s the link %3$s"
 msgstr ""
@@ -812,10 +820,6 @@ msgstr ""
 
 #: links/single/forms/delete.php:13
 msgid "I understand the consequences of deleting this link."
-msgstr ""
-
-#: links/single/forms/details.php:19
-msgid "URL"
 msgstr ""
 
 #: links/single/forms/details.php:46
