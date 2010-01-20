@@ -543,6 +543,9 @@ class BP_Links_Link {
 			$filter_sql = " AND ( name LIKE '%%{$filter}%%' OR description LIKE '%%{$filter}%%' )";
 		}
 
+		if ( !is_site_admin() )
+			$status_sql = $wpdb->prepare( " AND l.status = %d", self::STATUS_PUBLIC );
+
 		if ( 1 === preg_match('/^[a-z]$/', $letter ) )
 			$letter_sql = " AND l.name LIKE '{$letter}%%'";
 
@@ -552,8 +555,8 @@ class BP_Links_Link {
 		if ( $limit && $page )
 			$pag_sql = $wpdb->prepare( " LIMIT %d, %d", intval( ( $page - 1 ) * $limit), intval( $limit ) );
 
-		$paged_links = $wpdb->get_results( $wpdb->prepare( "SELECT l.id AS link_id, l.slug FROM {$bp->links->table_name_linkmeta} lm, {$bp->links->table_name} l WHERE l.id = lm.link_id AND l.status = %d{$filter_sql}{$letter_sql}{$category_sql} AND lm.meta_key = 'last_activity' ORDER BY lm.meta_value DESC {$pag_sql}", self::STATUS_PUBLIC ) );
-		$total_links = $wpdb->get_var( $wpdb->prepare( "SELECT count(*) FROM {$bp->links->table_name_linkmeta} lm, {$bp->links->table_name} l WHERE l.id = lm.link_id AND l.status = %d{$filter_sql}{$letter_sql}{$category_sql} AND lm.meta_key = 'last_activity'", self::STATUS_PUBLIC ) );
+		$paged_links = $wpdb->get_results( $wpdb->prepare( "SELECT l.id AS link_id, l.slug FROM {$bp->links->table_name_linkmeta} lm, {$bp->links->table_name} l WHERE l.id = lm.link_id {$status_sql}{$filter_sql}{$letter_sql}{$category_sql} AND lm.meta_key = 'last_activity' ORDER BY lm.meta_value DESC {$pag_sql}", self::STATUS_PUBLIC ) );
+		$total_links = $wpdb->get_var( $wpdb->prepare( "SELECT count(*) FROM {$bp->links->table_name_linkmeta} lm, {$bp->links->table_name} l WHERE l.id = lm.link_id{$status_sql}{$filter_sql}{$letter_sql}{$category_sql} AND lm.meta_key = 'last_activity'" ) );
 
 		return array( 'links' => $paged_links, 'total' => $total_links );
 	}
