@@ -312,7 +312,7 @@ function bp_links_auto_embed_panel_content( $embed_service = null ) {
 						<span id="thcurrent">%13$d</span>/<span id="thcount">%14$d</span> %15$s
 						<a href="#thnext" id="thnext">&gt;</a>
 						<div id="thnone">
-							<input type="checkbox" name="link-url-embed-thskip" id="link-url-embed-thskip" value="1"%16$s /> No Thumbnail
+							<input type="checkbox" name="link-url-embed-thskip" id="link-url-embed-thskip" value="1"%16$s /> %17$s
 						</div>
 					</div>
 				</div>
@@ -338,8 +338,9 @@ function bp_links_auto_embed_panel_content( $embed_service = null ) {
 			$image_selection_diplay,  // arg 12
 			$image_idx + 1, // arg 13
 			$image_selection_count, // arg 14
-			sprintf( __( 'Thumbs', 'buddypress-links' ) ), // arg 15
-			( is_null( $image_idx ) ) ? ' checked="checked"' : null // arg 6
+			__( 'Thumbs', 'buddypress-links' ), // arg 15
+			( is_null( $image_idx ) ) ? ' checked="checked"' : null, // arg 16
+			__( 'No Thumbnail', 'buddypress-links' ) // arg 17
 		);
 	}
 
