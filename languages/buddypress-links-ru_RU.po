@@ -1,0 +1,1018 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: BuddyPress Links v0.21\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-01-21 20:35+0200\n"
+"PO-Revision-Date: 2010-01-21 21:23+0200\n"
+"Last-Translator: slaFFik <slaffik@list.ru>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%100/10==1 ? 2 : n%10==1 ? 0 : (n+9)%10>3 ? 2 : 1;\n"
+"X-Poedit-Language: Russian\n"
+"X-Poedit-Country: RUSSIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;__ngettext_noop:1,2;_c\n"
+"X-Poedit-Basepath: C:\\Users\\slaFFik\\Загрузки\\temp\\buddypress-links\n"
+"X-Poedit-SearchPath-0: C:\\Users\\slaFFik\\Загрузки\\temp\\buddypress-links\n"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-ajax.php:42
+msgid "Vote recorded."
+msgstr "Голос учтен."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-ajax.php:44
+msgid "You have already voted."
+msgstr "Вы уже проголосовали."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-ajax.php:47
+msgid "There was a problem recording your vote. Please try again."
+msgstr "Произошла ошибка при сохранении вашего голоса. Пожалуйста, попробуйте еще раз."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-ajax.php:52
+msgid "You must be logged in to vote!"
+msgstr "Вы должны быть авторизованы для голосования!"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-ajax.php:101
+msgid "Auto-fill not available for this URL."
+msgstr "Автозаполнение недоступно для этой ссылки."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed-classes.php:349
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed-classes.php:1019
+#, php-format
+msgid "Downloading content details from %1$s failed."
+msgstr "Произошла ошибка при загрузке информации от %1$s."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed-classes.php:349
+msgid "URL"
+msgstr "Ссылка"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed-classes.php:1009
+#, php-format
+msgid "The URL you entered is not a valid %1$s link."
+msgstr "Вы ввели неправильную ссылку %1$s."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed-classes.php:1014
+#, php-format
+msgid "The code you entered is not valid %1$s embedding code."
+msgstr "Код, который вы ввели, не соответствует коду %1$s."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed-services.php:122
+msgid "Web Page"
+msgstr "Страница"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed-services.php:403
+msgid "PicApp"
+msgstr "PicApp"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed-services.php:656
+msgid "Fotoglif"
+msgstr "Fotoglif"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed-services.php:993
+msgid "YouTube"
+msgstr "YouTube"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed-services.php:1217
+msgid "Flickr"
+msgstr "Flickr"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed-services.php:1442
+msgid "MetaCafe"
+msgstr "MetaCafe"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed.php:105
+msgid "Upload Failed! Error was:"
+msgstr "Загрузка оборвалась! Ошибка:"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed.php:147
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:658
+msgid "There was an error saving link avatar."
+msgstr "Произошла ошибка при сохранении аватара ссылки."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed.php:147
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed.php:151
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:468
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:611
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:642
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:658
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:42
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:49
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:54
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:68
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:81
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:86
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:102
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:26
+msgid "Please try again."
+msgstr "Пожалуйста, попробуйте еще раз."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed.php:151
+msgid "Downloading image from remote website failed."
+msgstr "Произошла ошибка при загрузке рисунка с указанного сайта."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed.php:155
+msgid "The embedding code you entered was not recognized."
+msgstr "Код, который вы ввели, не был распознан."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed.php:220
+msgid "Clear"
+msgstr "Очистить"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed.php:327
+msgid "Rich Media Detected:"
+msgstr "Обнаруженно:"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed.php:328
+msgid "Edit Name and Description"
+msgstr "Название и Описание"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-embed.php:341
+msgid "Thumbs"
+msgstr "- рисунки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-feed.php:22
+msgid "Most Recent Links"
+msgstr "Последние ссылки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-feed.php:26
+msgid "Most Recent Links Feed"
+msgstr "Лента последних ссылок"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-notifications.php:15
+#, php-format
+msgid "New wire post on link: %1$s"
+msgstr "Новое сообщение в сети ссылки: %1$s"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-notifications.php:25
+#, php-format
+msgid ""
+"%s posted on the wire of the link \"%s\":\n"
+"\n"
+"\"%s\"\n"
+"\n"
+"To view the link wire: %s\n"
+"\n"
+"To view the link home: %s\n"
+"\n"
+"To view %s's profile page: %s\n"
+"\n"
+"---------------------\n"
+msgstr ""
+"%s - сообщение в сеть ссылки \"%s\":\n"
+"\n"
+"\"%s\"\n"
+"\n"
+"Посмотреть сеть ссылки: %s\n"
+"\n"
+"Посмотреть главную страницу ссылки: %s\n"
+"\n"
+"Посмотреть профиль %s: %s\n"
+"\n"
+"---------------------\n"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-notifications.php:38
+#, php-format
+msgid "To disable these notifications please log in and go to: %1$s"
+msgstr "Чтобы отключить это уведомление, авторизуйтесь и зайдите на страницу: %1$s"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:6
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:22
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:1900
+msgid "Recently Active"
+msgstr "Активные"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:7
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:25
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:1901
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-widgets.php:36
+msgid "Newest"
+msgstr "Новые"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:8
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:28
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:1897
+msgid "Most Popular"
+msgstr "Популярные"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:9
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:31
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:1898
+msgid "Most Votes"
+msgstr "Голосование"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:10
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:1899
+msgid "Vote Rating"
+msgstr "Рейтинговые"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:34
+msgid "Highest Votes"
+msgstr "Высшие оценки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:73
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:1902
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:1918
+msgid "All"
+msgstr "Все"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:437
+msgid "Public Link"
+msgstr "Открытая ссылка"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:439
+msgid "Friends Only Link"
+msgstr "Ссылка только для друзей"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:441
+msgid "Hidden Link"
+msgstr "Скрытая ссылка"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:443
+msgid "Link"
+msgstr "Ссылка"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:535
+msgid "not yet active"
+msgstr "пока нет активности"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:674
+#, php-format
+msgid "%1$d days ago"
+msgstr "%1$d дн. назад"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:674
+#, php-format
+msgid "%1$d day ago"
+msgstr "%1$d дн. назад"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:678
+#, php-format
+msgid "%1$d hours ago"
+msgstr "%1$d ч. назад"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:678
+#, php-format
+msgid "%1$d hour ago"
+msgstr "%1$d ч. назад"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:682
+#, php-format
+msgid "%1$d minutes ago"
+msgstr "%1$d мин. назад"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:682
+#, php-format
+msgid "%1$d minute ago"
+msgstr "%1$d мин. назад"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:686
+#, php-format
+msgid "%1$d seconds ago"
+msgstr "%1$d сек. назад"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:686
+#, php-format
+msgid "%1$d second ago"
+msgstr "%1$d сек. назад"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:749
+msgid "Filter links"
+msgstr "Поиск ссылки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:786
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:1336
+#, php-format
+msgid "Viewing link %1$d to %2$d (of %3$d links)"
+msgstr "Просмотр ссылок с %1$d по %2$d (из %3$d)"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:816
+msgid "Edit Details"
+msgstr "Изменить детали"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:823
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:1380
+msgid "Link Avatar"
+msgstr "Аватар ссылки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:827
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:346
+msgid "Delete Link"
+msgstr "Удалить ссылку"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:838
+msgid "This is a hidden link. Only the user who owns it can view it."
+msgstr "Это скрытая ссылка. Только владелец этой ссылки может ее просматривать."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:840
+msgid "This is a friends only link. Only the owner's friends can view it."
+msgstr "Эта ссылка только для друзей. Только друзья владельца смогут просматривать ее."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:842
+msgid "You do not have permission to access this link."
+msgstr "У вас недостаточно прав для просмотра этой ссылки."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:1490
+#, php-format
+msgid "active %1$s ago"
+msgstr "активность: %1$s назад"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:1799
+#, php-format
+msgid "Viewing category %1$d to %2$d (of %3$d categories)"
+msgstr "Просмотр рубрики с %1$d по %2$d (из %3$d)"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:1903
+msgid "Category"
+msgstr "Рубрика"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:1942
+msgid "Search anything..."
+msgstr "Что будем искать?"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:1943
+msgid "Search"
+msgstr "Поиск"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:2153
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-widgets.php:38
+msgid "Votes"
+msgstr "+"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:2237
+msgid "Comments"
+msgstr "коммент."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:2251
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:297
+msgid "Home"
+msgstr "Главная"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-templatetags.php:2257
+msgid "created"
+msgstr "- создано"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-widgets.php:13
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:248
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:359
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:745
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:100
+msgid "Links"
+msgstr "Ссылки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-widgets.php:13
+msgid "Your BuddyPress Links"
+msgstr "Ваши BuddyPress ссылки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-widgets.php:30
+msgid "Most Recent Links RSS Feed"
+msgstr "RSS лента последних ссылок"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-widgets.php:30
+msgid "[RSS]"
+msgstr "[RSS]"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-widgets.php:37
+msgid "Active"
+msgstr "Активные"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-widgets.php:39
+msgid "Rating"
+msgstr "Рейтинг"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-widgets.php:40
+msgid "Popular"
+msgstr "Популярные"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-widgets.php:51
+msgid "There are no links to display."
+msgstr "Пока что нет ссылок для отображения."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-widgets.php:76
+msgid "Max links to show:"
+msgstr "Отображать максимум ссылок:"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-widgets.php:82
+msgid "Avatar Size:"
+msgstr "Размер аватара:"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links-widgets.php:124
+msgid "No links matched the current filter."
+msgstr "Ни одна ссылка не соответствует текущему фильтру."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:129
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:130
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:131
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:132
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:133
+#, php-format
+msgid "Every %1$d minutes"
+msgstr "Каждые %1$d мин."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:212
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:213
+msgid "BP Links"
+msgstr "BP ссылки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:219
+msgid "Manage Links"
+msgstr "Управление ссылками"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:220
+msgid "Manage Categories"
+msgstr "Управление рубриками"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:253
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:260
+msgid "My Links"
+msgstr "Мои ссылки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:254
+msgid "Create a Link"
+msgstr "Создать ссылку"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:301
+msgid "Wire"
+msgstr "Сеть"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:306
+msgid "Admin"
+msgstr "Админ"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:343
+msgid "Admin Options"
+msgstr "Админ.Настройки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:367
+msgid "Random Link"
+msgstr "Случайная ссылка"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:454
+#, php-format
+msgid "%1$s created the link %2$s"
+msgstr "%1$s - создана ссылка: %2$s"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:468
+msgid "There was an error saving link details."
+msgstr "Произошла ошибка при сохранении деталей ссылки."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:508
+msgid "Wire message could not be posted."
+msgstr "Сетевое сообщение не может быть опубликовано."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:510
+msgid "Wire message successfully posted."
+msgstr "Сетевое сообщение успешно опубликовано."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:525
+msgid "There was an error deleting the wire message."
+msgstr "Произошла ошибка при удалении сетевого сообщения."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:527
+msgid "Wire message successfully deleted."
+msgstr "Сетевое сообщение успешно удалено."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:602
+msgid "Link details were successfully updated."
+msgstr "Детали ссылки успешно обновлены."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:611
+msgid "There was an error updating link details."
+msgstr "Произошла ошибка при обновлении деталей ссылки."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:640
+msgid "Your avatar was deleted successfully!"
+msgstr "Ваш аватар успешно удален!"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:642
+msgid "There was a problem deleting that avatar"
+msgstr "Произошла ошибка при удалении этого аватара"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:656
+msgid "The link avatar was uploaded successfully!"
+msgstr "Аватар ссылки был успешно загружен!"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:721
+msgid "The link was deleted successfully"
+msgstr "Ссылка была успешно удалена"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:724
+msgid "There was an error deleting the link, please try again."
+msgstr "Произошла ошибка при удалении ссылки. Пожалуйста, попробуйте еще раз."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:746
+msgid "Yes"
+msgstr "Да"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:747
+msgid "No"
+msgstr "Нет"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:752
+msgid "A member posts on the wire of a link you created"
+msgstr "Пользователь написал сообщение в сеть созданной вами ссылки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:765
+msgid "Please fill in all of the required fields"
+msgstr "Пожалуйста, заполните все обязательные поля"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:781
+#, php-format
+msgid "Link URL must be %1$d characters or less, please make corrections and re-submit."
+msgstr "URL ссылки должно содержать максимум %1$d символов, пожалуйста, внесите необходимые исправления."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:784
+msgid "The URL you entered is not valid."
+msgstr "Вы ввели неправильный URL ссылки."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:801
+#, php-format
+msgid "Link Name must be %1$d characters or less, please make corrections and re-submit."
+msgstr "Название ссылки должно содержать максимум %1$d символов, пожалуйста, внесите необходимые исправления."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:818
+#, php-format
+msgid "Link Description must be %1$d characters or less, please make corrections and re-submit."
+msgstr "Описание ссылки должно содержать максимум %1$d символов, пожалуйста, внесите необходимые исправления."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:917
+msgid "Created a link"
+msgstr "Создана ссылка"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:918
+msgid "New link wire post"
+msgstr "Новое сетевое сообщение ссылки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:972
+msgid "Link Example Event"
+msgstr "Примерное поведение ссылки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:972
+#, php-format
+msgid "%d number of example events happened for the link \"%s\""
+msgstr "%d - количество событий, случившихся с ссылкой \"%s\""
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:975
+#, php-format
+msgid "%1$s triggered a notification for the link \"%2$s\""
+msgstr "%1$s создало уведомление для ссылки \"%2$s\""
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:1501
+#, php-format
+msgid "%1$s wrote on the wire of the link %2$s:"
+msgstr "%1$s - сообщение в сети ссылки %2$s:"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:1637
+msgid "up"
+msgstr "плюс"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:1637
+msgid "down"
+msgstr "минус"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/bp-links.php:1640
+#, php-format
+msgid "%1$s voted %2$s the link %3$s"
+msgstr "%1$s - поставлен %2$s ссылке %3$s"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:42
+msgid "Link category slug from this name already exists."
+msgstr "Слаг такой рубрики ссылок уже существует."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:49
+#, php-format
+msgid "Link category name must be %1$d to %2$d characters in length."
+msgstr "Длина названия рубрики ссылки должна быть от %1$d до %2$d символов в длину."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:54
+msgid "Link category name is required."
+msgstr "Необходимо ввести название рубрики ссылок."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:68
+#, php-format
+msgid "Link category description must be %1$d to %2$d characters in length."
+msgstr "Длина описания ссылки должна быть от %1$d до %2$d символов в длину."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:81
+#, php-format
+msgid "Link category priority must be a number from %1$d to %2$d."
+msgstr "Приоритетность рубрики ссылок должна быть числом от %1$d до %2$d."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:86
+msgid "Link category priority is required."
+msgstr "Необходимо ввести приоритетность рубрики ссылок."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:95
+msgid "Link category saved!"
+msgstr "Рубрика ссылок сохранена!"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:96
+msgid "Return to list"
+msgstr "Вернуться к списку"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:97
+msgid "or"
+msgstr "или"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:98
+msgid "Create new category"
+msgstr "Создать новую рубрику"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:102
+msgid "There were errors when saving the link category."
+msgstr "Произошла ошибка при сохранении рубрики ссылки."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:131
+msgid "Edit BP Link Category"
+msgstr "Редактировать рубрику BP ссылки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:132
+msgid "Update Category"
+msgstr "Обновить рубрику"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:136
+msgid "New BP Link Category"
+msgstr "Новая рубрика BP ссылок"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:137
+msgid "Add Category"
+msgstr "Добавить рубрику"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:165
+msgid "Link Category Name"
+msgstr "Название рубрики ссылки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:169
+msgid "Description (optional)"
+msgstr "Описание (не обязательно)"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:173
+msgid "Priority (optional)"
+msgstr "Приоритет (не обязательно)"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-edit.php:174
+msgid "to"
+msgstr "до"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:23
+msgid "Categories deleted successfully"
+msgstr "Рубрики успешно удалены"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:26
+msgid "There were errors when deleting categories."
+msgstr "Произошла ошибка при удалении рубрик."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:31
+msgid "Unable to delete a category because it is assigned to one or more links"
+msgstr "Невозможно удалить рубрику, потому что она привязана к одной или более ссылок"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:48
+msgid "Manage BP Link Categories"
+msgstr "Управление рубриками BP ссылок"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:54
+msgid "Search Categories"
+msgstr "Поиск рубрик"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:65
+msgid "Delete"
+msgstr "Удалить"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:65
+msgid "Are you sure?"
+msgstr "Вы уверены?"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:74
+msgid "Categories matching:"
+msgstr "Соответствующие рубрики:"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:88
+msgid "Name"
+msgstr "Название"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:91
+msgid "Description"
+msgstr "Описание"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:94
+msgid "Slug"
+msgstr "Слаг"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:97
+msgid "Priority"
+msgstr "Приоритет"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:103
+msgid "Created"
+msgstr "Создано"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:106
+msgid "Updated"
+msgstr "Обновлено"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:127
+msgid "Edit"
+msgstr "Изменить"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:137
+msgid "No categories found."
+msgstr "Рубрики не найдены."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-list.php:149
+msgid "New Category"
+msgstr "Новая рубрика"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/category-manager.php:6
+msgid "You do not have sufficient permissions to edit link categories for this blog."
+msgstr "У вас недостаточно прав для редактирования рубрик ссылок этого блога."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/link-manager.php:18
+msgid "There were errors when deleting links."
+msgstr "Произошла ошибка при удалении ссылок."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/link-manager.php:21
+msgid "Links deleted successfully"
+msgstr "Ссылки успешно удалены"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/link-manager.php:37
+msgid "Search Links"
+msgstr "Поиск ссылок"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/link-manager.php:56
+msgid "Links matching:"
+msgstr "Соответствующие ссылки:"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/link-manager.php:72
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:10
+msgid "Details"
+msgstr "Детали"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/link-manager.php:78
+msgid "Type"
+msgstr "Тип"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/link-manager.php:81
+msgid "Wire Posts"
+msgstr "Сетевые сообщения"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/link-manager.php:84
+msgid "Owner"
+msgstr "Владелец"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/link-manager.php:90
+msgid "Last Active"
+msgstr "Активные"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/admin/link-manager.php:125
+msgid "No links found."
+msgstr "Ссылки не найдены."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/index.php:11
+#, php-format
+msgid "%1$s's Links"
+msgstr "%1$s: Ссылки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/link-loop.php:26
+msgid "You haven't added any links yet."
+msgstr "Вы добавили пока что ни одной ссылки."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/link-loop.php:26
+#, php-format
+msgid "%1$s hasn't added any links yet."
+msgstr "%1$s - не добавлено пока что ни одной ссылки."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/link-loop.php:32
+msgid "No matching links found."
+msgstr "Ни одной соответствующей вашему критерию ссылки не было найдено."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/directory/index.php:10
+msgid "Links Directory"
+msgstr "Каталог ссылок"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/directory/index.php:51
+msgid "Links Listing"
+msgstr "Список ссылок"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/directory/index.php:74
+msgid "Find Links"
+msgstr "Поиск ссылок"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/directory/links-loop.php:24
+msgid "There were no links found."
+msgstr "Ссылки не найдены."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/home.php:57
+msgid "Gallery"
+msgstr "Галерея"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/home.php:70
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/wire.php:30
+msgid "Link Wire"
+msgstr "Сеть ссылки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/home.php:70
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/wire.php:30
+#, php-format
+msgid "There are no wire posts for %1$s"
+msgstr "Нет сообщений в сети %1$s"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/home.php:87
+msgid "Sorry, the link does not exist."
+msgstr "Извините, ссылка не существует."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/menu.php:17
+msgid "Link Owner"
+msgstr "Владелец ссылки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/menu.php:29
+msgid "Cast Your Vote"
+msgstr "Оцените ссылку"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/avatar.php:12
+msgid "Delete Avatar"
+msgstr "Удалить аватар"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/avatar.php:21
+msgid "Upload an image to use as an avatar for this link. The image will be shown on the main link page, and in search results."
+msgstr "Загрузите рисунок для использования его в качестве аватара ссылки. Рисунок будет отображаться на главной странице ссылки и в результатах поиска."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/avatar.php:25
+msgid "Upload Image"
+msgstr " Загрузить рисунок "
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/avatar.php:32
+msgid "OR"
+msgstr "ИЛИ"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/avatar.php:35
+#, php-format
+msgid "Paste Image Embed Code (%1$s and %2$s are supported)"
+msgstr "Впишите код вставки рисунка (поддерживаются %1$s и %2$s)"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/avatar.php:39
+msgid "Embed Image"
+msgstr "Внедрить рисунок"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/avatar.php:48
+msgid "Crop Avatar"
+msgstr "Обрезать аватар"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/avatar.php:50
+msgid "Avatar to crop"
+msgstr "Аватар для обрезки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/avatar.php:53
+msgid "Avatar preview"
+msgstr "Предпросмотр аватары"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/avatar.php:56
+msgid "Crop Image"
+msgstr "Обрезать рисунок"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/delete.php:10
+msgid "WARNING: Deleting this link will completely remove ALL content associated with it. There is no way back, please be careful with this option."
+msgstr "ВНИМАНИЕ: Удаление этой ссылки удалит также всю связанную с ней информацию. Пути назад не будет, поэтому будьте осторожны с этим шагом."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/delete.php:13
+msgid "I understand the consequences of deleting this link."
+msgstr "Я понимаю все последствия удаления этой ссылки."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:46
+msgid "Edit Avatar Options"
+msgstr "Настроить аватар"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:52
+msgid "Current"
+msgstr "Текущий"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:62
+msgid "Customize"
+msgstr "Изменить"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:64
+msgid "After saving this link you will be directed to a page where you can customize the avatar."
+msgstr "После сохранения этой ссылки вы будете перенаправлены на страницу, где сможете настроить аватар."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:75
+msgid "Edit Advanced Settings"
+msgstr "Дополнительные настройки"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:80
+msgid "Comment Wire"
+msgstr "Сеть комментариев"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:81
+msgid "On"
+msgstr "Вкл."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:82
+msgid "Off"
+msgstr "Выкл."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:85
+msgid "Privacy Options"
+msgstr "Настройки приватности"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:89
+msgid "This is a public link"
+msgstr "Это открытая ссылка"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:92
+msgid "Any site member can see this link, and comment on the wire if enabled."
+msgstr "Любой пользователь сайта может просматривать эту ссылку и оставлять комментарии в ее сети, если это разрешено вами."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:93
+msgid "This link will be listed in the links directory and in search results."
+msgstr "Эта ссылка будет отображаться в каталоге ссылок и результатах поиска."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:94
+msgid "Link content and activity will be visible to any site member."
+msgstr "Содержимое ссылки и ее активность будет видна любому пользователю сайта."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:99
+msgid "This is a friends-only link"
+msgstr "Это ссылка только для друзей"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:102
+msgid "Only users who are in your friends list can see the link and comment on the wire if enabled."
+msgstr "Только те пользователи, которые находятся в списке ваших друзей, смогут просматривать и комментировать ссылку."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:103
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:113
+msgid "This link will NOT be listed in the links directory or in search results."
+msgstr "Эта ссылка НЕ будет отображаться в каталоге ссылок или результатах поиска."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:104
+msgid "Link content and activity will only be visible to your friends."
+msgstr "Содержимое ссылки и ее активность будет видна только вашим друзьям."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:109
+msgid "This is a hidden link"
+msgstr "Это скрытая ссылка"
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:112
+msgid "Only you can see the link."
+msgstr "Только вы можете просматривать ссылку."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:114
+msgid "Link content and activity will only be visible to you."
+msgstr "Содержимое ссылки и ее активность будет видна только вам."
+
+#: C:\Users\slaFFik\Çàãðóçêè\temp\buddypress-links/links/single/forms/details.php:125
+msgid "Save Link"
+msgstr "Сохранить ссылку"
+
+#~ msgid "The code you entered is not valid Fotoglif embedding code."
+#~ msgstr "Код, который вы ввели, не соответствует коду с Fotoglif."
+#~ msgid "A fatal error has occurred. Please try again in a moment."
+#~ msgstr "Произошла фатальная ошибка. Пожалуйста, попробуйте еще раз."
+#~ msgid "Link avatar"
+#~ msgstr "Аватар ссылки"
+#~ msgid "Link Details"
+#~ msgstr "Детали ссылки"
+#~ msgid "There was an error saving link settings."
+#~ msgstr "Произошла ошибка при сохранении настроек ссылки."
+#~ msgid "There was an error updating link settings."
+#~ msgstr "Произошла ошибка при обновлении настроек ссылки."
+#~ msgid "Link settings were successfully updated."
+#~ msgstr "Настройки ссылки были успешно обновлены."
+#~ msgid "The new link avatar was uploaded successfully!"
+#~ msgstr "Новый аватар ссылки был успешно загружен!"
+#~ msgid "Avatar Image"
+#~ msgstr "Аватар"
+#~ msgid "Link Category"
+#~ msgstr "Рубрика ссылки"
+#~ msgid "(required)"
+#~ msgstr "(обязательно)"
+#~ msgid "Link URL"
+#~ msgstr "URL ссылки"
+#~ msgid "Link Name"
+#~ msgstr "Имя ссылки"
+#~ msgid "Enable comment wire"
+#~ msgstr "Разрешить комментирование в сети"
+#~ msgid "Crop Link Avatar"
+#~ msgstr "Обрезать аватар ссылки"
+#~ msgid "To skip the avatar upload process, hit the \"Finish\" button."
+#~ msgstr ""
+#~ "Для пропуска процесса загрузки аватара, нажмите кнопку \"Закончить\"."
+#~ msgid "Previous Step"
+#~ msgstr "Предыдущий шаг"
+#~ msgid "Next Step"
+#~ msgstr "Следующий шаг"
+#~ msgid "Create Link and Continue"
+#~ msgstr "Создать ссылку и продолжить"
+#~ msgid "Finish"
+#~ msgstr "Закончить"
+#~ msgid "Random Links"
+#~ msgstr "Случайные ссылки"
+#~ msgid "Members:"
+#~ msgstr "Участники:"
+#~ msgid "Description:"
+#~ msgstr "Описание:"
+#~ msgid "Save Changes"
+#~ msgstr "Сохранить изменения"
+#~ msgid "Start Over"
+#~ msgstr "Начать заново"
+#~ msgid "This is a friends only link"
+#~ msgstr "Это ссылка только для друзей"
+
