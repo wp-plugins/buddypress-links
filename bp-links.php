@@ -23,7 +23,7 @@ function bp_links_install() {
 				`rel` varchar(25) default NULL,
 				`slug` varchar(255) NOT NULL,
 				`name` varchar(255) NOT NULL,
-				`description` text NOT NULL default '',
+				`description` text NOT NULL,
 				`status` tinyint(1) NOT NULL default '1',
 				`enable_wire` tinyint(1) NOT NULL default '1',
 				`vote_count` smallint NOT NULL default '0',
