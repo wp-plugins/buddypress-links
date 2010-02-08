@@ -37,11 +37,11 @@ function bp_links_admin_manage_links() {
 			<input id="post-query-submit" class="button" type="submit" value="<?php _e( 'Search Links', 'buddypress-links' ) ?>" />
 		</form>
 		
-		<?php if ( bp_has_site_links( 'type=recently-active&per_page=10' ) ) : ?>
+		<?php if ( bp_has_links( 'type=active&per_page=10' ) ) : ?>
 			<form id="bp-link-admin-list" method="post" action="">
 				<div class="tablenav">
 					<div class="tablenav-pages">
-						<?php bp_site_links_pagination_count() ?> <?php bp_site_links_pagination_links() ?>
+						<?php bp_links_pagination_count() ?> <?php bp_links_pagination_links() ?>
 					</div>
 					<div class="alignleft">
 						<input class="button-secondary delete" type="submit" name="links_admin_delete" value="<?php _e( 'Delete', 'buddypress-links' ) ?>" onclick="if ( !confirm('<?php _e( 'Are you sure?', 'buddypress-links' ) ?>') ) return false"/>
@@ -78,9 +78,6 @@ function bp_links_admin_manage_links() {
 									<?php _e( 'Type', 'buddypress-links' ) ?>
 							</th>
 							<th scope="col">
-									<?php _e( 'Wire Posts', 'buddypress-links' ) ?>
-							</th>
-							<th scope="col">
 									<?php _e( 'Owner', 'buddypress-links' ) ?>
 							</th>
 							<th scope="col">
@@ -95,24 +92,23 @@ function bp_links_admin_manage_links() {
 					</thead>
 					<tbody id="link-list" class="list:links link-list">
 					<?php $counter = 0 ?>
-					<?php while ( bp_site_links() ) : bp_the_site_link(); ?>
+					<?php while ( bp_links() ) : bp_the_link(); ?>
 						<tr<?php if ( 1 == $counter % 2 ) { ?> class="alternate"<?php }?>>
 							<th class="check-column" scope="row">
-								<input id="link_<?php bp_the_site_link_id() ?>" type="checkbox" value="<?php bp_the_site_link_id() ?>" name="alllinks[<?php bp_the_site_link_id() ?>]" />
+								<input id="link_<?php bp_link_id() ?>" type="checkbox" value="<?php bp_link_id() ?>" name="alllinks[<?php bp_link_id() ?>]" />
 							</th>
-							<td><?php bp_the_site_link_avatar_mini() ?></td>
-							<td><?php bp_the_site_link_id() ?></td>
+							<td><?php bp_link_avatar_mini() ?></td>
+							<td><?php bp_link_id() ?></td>
 							<td>
-								<a href="<?php bp_the_site_link_permalink() ?>"><?php bp_the_site_link_name() ?></a>
-								<?php bp_the_site_link_description_excerpt() ?>
+								<a href="<?php bp_link_permalink() ?>"><?php bp_link_name() ?></a>
+								<?php bp_link_description_excerpt() ?>
 							</td>
-							<td><?php bp_the_site_link_category_name() ?></td>
-							<td><?php bp_the_site_link_type() ?></td>
-							<td><a href="<?php bp_the_site_link_permalink() ?>/wire"><?php bp_the_site_link_wire_count() ?></a></td>
-							<td align="center"><?php bp_the_site_link_user_avatar_mini() ?>&nbsp;<?php bp_the_site_link_userlink() ?></td>
-							<td><?php bp_the_site_link_date_created() ?></td>
-							<td><?php bp_the_site_link_last_active() ?></td>
-							<td><a href="<?php bp_the_site_link_permalink() ?>/admin"><?php _e( 'Edit', 'buddypress-links') ?></a></td>
+							<td><?php bp_link_category_name() ?></td>
+							<td><?php bp_link_type() ?></td>
+							<td align="center"><?php bp_link_user_avatar_mini() ?>&nbsp;<?php bp_link_userlink() ?></td>
+							<td><?php bp_link_date_created() ?></td>
+							<td><?php bp_link_last_active() ?></td>
+							<td><a href="<?php bp_link_permalink() ?>/admin"><?php _e( 'Edit', 'buddypress-links') ?></a></td>
 						</tr>
 						<?php $counter++ ?>
 					<?php endwhile; ?>
@@ -127,7 +123,7 @@ function bp_links_admin_manage_links() {
 
 		<?php endif; ?>
 
-		<?php bp_the_site_link_hidden_fields() ?>
+		<?php bp_link_hidden_fields() ?>
 		</form>
 	</div>
 <?php 

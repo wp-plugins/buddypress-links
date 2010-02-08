@@ -976,13 +976,13 @@ final class BP_Links_Embed_Service_YouTube
 	final public function html()
 	{
 		return sprintf(
-			'<object width="425" height="344">' .
+			'<object width="640" height="385">' .
 			'<param name="movie" value="%1$s"></param>' .
 			'<param name="allowFullScreen" value="true"></param>' .
 			'<param name="allowscriptaccess" value="always"></param>' .
 			'<embed src="%1$s" type="application/x-shockwave-flash" ' .
 				'allowscriptaccess="always" allowfullscreen="true" ' .
-				'width="425" height="344"></embed>' .
+				'width="640" height="385"></embed>' .
 			'</object>',
 			esc_url( $this->yt_player_url() )
 		);
@@ -1063,7 +1063,7 @@ final class BP_Links_Embed_Service_YouTube
 
 	private function yt_player_url()
 	{
-		return sprintf( 'http://www.youtube.com/v/%s&hl=%s&fs=1', $this->data()->video_hash, get_locale() );
+		return sprintf( 'http://www.youtube.com/v/%s&hl=%s&fs=1&&autoplay=1', $this->data()->video_hash, get_locale() );
 	}
 
 	private function yt_thumb_url( $num = self::YT_TH_DEFAULT )

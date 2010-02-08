@@ -4,7 +4,7 @@
 function bp_links_register_widgets() {
 	add_action('widgets_init', create_function('', 'return register_widget("BP_Links_Widget");') );
 }
-add_action( 'plugins_loaded', 'bp_links_register_widgets' );
+add_action( 'bp_init', 'bp_links_register_widgets' );
 
 /*** LINKS WIDGET *****************/
 
@@ -43,7 +43,7 @@ class BP_Links_Widget extends WP_Widget {
 			<input type="hidden" name="links_widget_max" id="links_widget_max" value="<?php echo attribute_escape( $instance['max_links'] ); ?>" />
 			<input type="hidden" name="links_avatar_size" id="links_avatar_size" value="<?php echo attribute_escape( $instance['avatar_size'] ); ?>" />
 
-			<?php bp_the_site_link_list( array('avatar_size' => $instance['avatar_size'] ) ) ?>
+			<?php bp_link_list( array('avatar_size' => $instance['avatar_size'] ) ) ?>
 			
 		<?php else: ?>
 
@@ -117,7 +117,7 @@ function bp_links_ajax_widget_links_list() {
 	if ( bp_has_site_links( 'type=' . $type . '&per_page=' . $_POST['max_links'] . '&max=' . $_POST['max_links'] ) ) : ?>
 		<?php echo "0[[SPLIT]]"; ?>
 				
-		<?php bp_the_site_link_list( array('avatar_size' => $_POST['avatar_size'] ) ) ?>
+		<?php bp_link_list( array('avatar_size' => $_POST['avatar_size'] ) ) ?>
 		
 	<?php else: ?>
 

@@ -55,11 +55,11 @@ if ( isset( $_POST['categories_admin_delete']) && isset( $_POST['allcategories']
 		</p>
 	</form>
 
-	<?php if ( bp_has_site_link_categories( 'type=recently-active&per_page=10' ) ) : ?>
+	<?php if ( bp_has_links_categories( 'type=recently-active&per_page=10' ) ) : ?>
 		<form id="bp-category-admin-list" method="post" action="">
 			<div class="tablenav">
 				<div class="tablenav-pages">
-					<?php bp_site_link_categories_pagination_count() ?> <?php bp_site_link_categories_pagination_links() ?>
+					<?php bp_links_categories_pagination_count() ?> <?php bp_links_categories_pagination_links() ?>
 				</div>
 				<div class="alignleft">
 					<input class="button-secondary delete" type="submit" name="categories_admin_delete" value="<?php _e( 'Delete', 'buddypress-links' ) ?>" onclick="if ( !confirm('<?php _e( 'Are you sure?', 'buddypress-links' ) ?>') ) return false"/>
@@ -111,20 +111,20 @@ if ( isset( $_POST['categories_admin_delete']) && isset( $_POST['allcategories']
 				</thead>
 				<tbody id="category-list" class="list:categories category-list">
 				<?php $counter = 0 ?>
-				<?php while ( bp_site_link_categories() ) : bp_the_site_link_categories_category(); ?>
+				<?php while ( bp_links_categories() ) : bp_links_categories_category(); ?>
 					<tr<?php if ( 1 == $counter % 2 ) { ?> class="alternate"<?php }?>>
 						<th class="check-column" scope="row">
-							<input id="category_<?php bp_the_site_link_categories_category_id() ?>" type="checkbox" value="<?php bp_the_site_link_categories_category_id() ?>" name="allcategories[<?php bp_the_site_link_categories_category_id() ?>]" />
+							<input id="category_<?php bp_links_categories_category_id() ?>" type="checkbox" value="<?php bp_links_categories_category_id() ?>" name="allcategories[<?php bp_links_categories_category_id() ?>]" />
 						</th>
-						<td><?php bp_the_site_link_categories_category_id() ?></td>
-						<td><?php bp_the_site_link_categories_category_name() ?></td>
-						<td><?php bp_the_site_link_categories_category_description() ?></td>
-						<td><?php bp_the_site_link_categories_category_slug() ?></td>
-						<td><?php bp_the_site_link_categories_category_priority() ?></td>
-						<td><?php bp_the_site_link_categories_category_link_count() ?></td>
-						<td><?php bp_the_site_link_categories_category_date_created() ?></td>
-						<td><?php bp_the_site_link_categories_category_date_updated() ?></td>
-						<td><a href="?page=<?php echo BP_LINKS_PLUGIN_NAME ?>/admin/category-manager.php&category_id=<?php bp_the_site_link_categories_category_id() ?>"><?php _e( 'Edit', 'buddypress-links') ?></a></td>
+						<td><?php bp_links_categories_category_id() ?></td>
+						<td><?php bp_links_categories_category_name() ?></td>
+						<td><?php bp_links_categories_category_description() ?></td>
+						<td><?php bp_links_categories_category_slug() ?></td>
+						<td><?php bp_links_categories_category_priority() ?></td>
+						<td><?php bp_links_categories_category_link_count() ?></td>
+						<td><?php bp_links_categories_category_date_created() ?></td>
+						<td><?php bp_links_categories_category_date_updated() ?></td>
+						<td><a href="?page=<?php echo BP_LINKS_PLUGIN_NAME ?>/admin/category-manager.php&category_id=<?php bp_links_categories_category_id() ?>"><?php _e( 'Edit', 'buddypress-links') ?></a></td>
 					</tr>
 					<?php $counter++ ?>
 				<?php endwhile; ?>
@@ -139,7 +139,7 @@ if ( isset( $_POST['categories_admin_delete']) && isset( $_POST['allcategories']
 
 	<?php endif; ?>
 
-	<?php bp_the_site_link_categories_hidden_fields() ?>
+	<?php bp_links_categories_hidden_fields() ?>
 	</form>
 
 	<form action="admin.php" method="get">

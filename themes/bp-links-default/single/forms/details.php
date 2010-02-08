@@ -76,12 +76,6 @@
 
 		<div id="link-settings-fields"<?php if ( !bp_get_link_details_form_settings_fields_display() ): ?> style="display: none;"<?php endif; ?>>
 
-			<?php if ( function_exists('bp_wire_install') ) : ?>
-				<label for="link-enable-wire"><strong><?php _e('Comment Wire', 'buddypress-links') ?></strong></label>
-				<input type="radio" name="link-enable-wire" id="link-enable-wire-on" value="1"<?php if ( bp_get_link_details_form_enable_wire() === 1 ) { ?> checked="checked"<?php } ?> /> <?php _e('On', 'buddypress-links') ?>
-				<input type="radio" name="link-enable-wire" id="link-enable-wire-off" value="0"<?php if ( bp_get_link_details_form_enable_wire() === 0 ) { ?> checked="checked"<?php } ?> /> <?php _e('Off', 'buddypress-links') ?>
-			<?php endif; ?>
-
 			<label for="link-status"><?php _e( 'Privacy Options', 'buddypress-links' ); ?></label>
 
 			<label>
@@ -89,7 +83,7 @@
 				<?php _e( 'This is a public link', 'buddypress-links' ) ?>
 			</label>
 				<ul>
-					<li><?php _e( 'Any site member can see this link, and comment on the wire if enabled.', 'buddypress-links' ) ?></li>
+					<li><?php _e( 'Any site member can see this link, and comment on it.', 'buddypress-links' ) ?></li>
 					<li><?php _e( 'This link will be listed in the links directory and in search results.', 'buddypress-links' ) ?></li>
 					<li><?php _e( 'Link content and activity will be visible to any site member.', 'buddypress-links' ) ?></li>
 				</ul>
@@ -99,7 +93,7 @@
 				<?php _e( 'This is a friends-only link', 'buddypress-links' ) ?>
 			</label>
 				<ul>
-					<li><?php _e( 'Only users who are in your friends list can see the link and comment on the wire if enabled.', 'buddypress-links' ) ?></li>
+					<li><?php _e( 'Only users who are in your friends list can see the link and comment on it.', 'buddypress-links' ) ?></li>
 					<li><?php _e( 'This link will NOT be listed in the links directory or in search results.', 'buddypress-links' ) ?></li>
 					<li><?php _e( 'Link content and activity will only be visible to your friends.', 'buddypress-links' ) ?></li>
 				</ul>

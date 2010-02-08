@@ -14,15 +14,11 @@ require_once 'bp-links-embed-services.php';
 function bp_links_embed_upload_from_url( $url ) {
 
 	// build up our $files array.
-	//its the same format as returned by wp_handle_upload()
+	// its the same format as returned by wp_handle_upload()
 	$files['file'] = null;
 	$files['url'] = null;
 	$files['type'] = null;
 	$files['error'] = 'File upload failed!';
-
-	// TODO use WP function for this remote grab
-	// make sure we timeout before too long
-	ini_set( 'default_socket_timeout', 10 );
 
 	// get path from URL
 	$url_parts = parse_url( $url );
@@ -48,7 +44,15 @@ function bp_links_embed_upload_from_url( $url ) {
 	}
 
 	// grab remote file
-	$remote_file = file_get_contents( $url );
+	$response = wp_remote_get( $url );
+
+	// only use data from a successful request
+	if ( 200 == wp_remote_retrieve_response_code( $response ) ) {
+		$remote_file = wp_remote_retrieve_body( $response );
+	} else {
+		// assume any code besides 200 is an error
+		return $files;
+	}
 
 	// make sure we got it
 	if ( $remote_file ) {

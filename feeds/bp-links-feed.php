@@ -1,6 +1,6 @@
 <?php
 /**
- * RSS2 Feed Template for displaying the most recent links.
+ * RSS2 Feed Template for displaying the most recent sitewide links.
  *
  * @package BuddyPress-Links
  */
@@ -29,15 +29,15 @@ header('Status: 200 OK');
 	<language><?php echo get_option('rss_language'); ?></language>
 	<?php do_action('bp_directory_links_feed_head'); ?>
 	
-	<?php if ( bp_has_site_links( 'type=most-recent&max=50' ) ) : ?>
-		<?php while ( bp_site_links() ) : bp_the_site_link(); ?>
+	<?php if ( bp_has_links( 'type=newest&max=50' ) ) : ?>
+		<?php while ( bp_links() ) : bp_the_link(); ?>
 			<item>
-				<guid><?php bp_the_site_link_feed_item_guid() ?></guid>
-				<title><?php bp_the_site_link_feed_item_title() ?></title>
-				<link><?php bp_the_site_link_feed_item_link() ?></link>
-				<pubDate><?php echo date('D, d M Y H:i:s O', bp_get_the_site_link_feed_item_date() ); ?></pubDate>
+				<guid><?php bp_link_feed_item_guid() ?></guid>
+				<title><?php bp_link_feed_item_title() ?></title>
+				<link><?php bp_link_feed_item_link() ?></link>
+				<pubDate><?php echo date('D, d M Y H:i:s O', bp_get_link_feed_item_date() ); ?></pubDate>
 
-				<description><?php bp_the_site_link_feed_item_description() ?></description>
+				<description><?php bp_link_feed_item_description() ?></description>
 			<?php do_action('bp_directory_links_feed_item'); ?>
 			</item>
 		<?php endwhile; ?>

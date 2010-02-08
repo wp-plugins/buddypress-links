@@ -34,10 +34,6 @@ class BP_Links_Link {
 	const STATUS_FRIENDS = 2;
 	const STATUS_HIDDEN = 3;
 
-	// wire constants
-	const COMMENT_WIRE_DISABLED = 0;
-	const COMMENT_WIRE_ENABLED = 1;
-
 	// popularity constants
 	const POPULARITY_THRESH = 1;
 	const POPULARITY_DEFAULT = 16777213;
@@ -66,7 +62,6 @@ class BP_Links_Link {
 	var $name;
 	var $description;
 	var $status = self::STATUS_PUBLIC;
-	var $enable_wire = self::COMMENT_WIRE_ENABLED;
 	var $date_created;
 	var $date_updated;
 
@@ -129,7 +124,6 @@ class BP_Links_Link {
 			$this->name = $link->name;
 			$this->description = $link->description;
 			$this->status = $link->status;
-			$this->enable_wire = $link->enable_wire;
 			$this->vote_count = $link->vote_count;
 			$this->vote_total = $link->vote_total;
 			$this->popularity = $link->popularity;
@@ -160,7 +154,6 @@ class BP_Links_Link {
 		$this->name = apply_filters( 'bp_links_link_name_before_save', $this->name, $this->id );
 		$this->description = apply_filters( 'bp_links_link_description_before_save', $this->description, $this->id );
  		$this->status = apply_filters( 'bp_links_link_status_before_save', $this->status, $this->id );
-		$this->enable_wire = apply_filters( 'bp_links_link_enable_wire_before_save', $this->enable_wire, $this->id );
 
 		// handle embed service values
 		if ( $this->embed() instanceof BP_Links_Embed_Service ) {
@@ -212,7 +205,6 @@ class BP_Links_Link {
 					name = %s,
 					description = %s, 
 					status = %d,
-					enable_wire = %d, 
 					vote_count = %d,
 					vote_total = %d,
 					popularity = %d,
@@ -233,7 +225,6 @@ class BP_Links_Link {
 					$this->name,
 					$this->description, 
 					$this->status,
-					$this->enable_wire,
 					$this->vote_count,
 					$this->vote_total,
 					$this->popularity,
@@ -264,7 +255,6 @@ class BP_Links_Link {
 					name,
 					description,
 					status,
-					enable_wire,
 					vote_count,
 					vote_total,
 					popularity,
@@ -273,7 +263,7 @@ class BP_Links_Link {
 					embed_data,
 					date_created
 				) VALUES (
-					%d, %d, %s, MD5(%s), %s, %s, %s, %s, %s, %d, %d, %d, %d, %d, %s, %d, %s, NOW()
+					%d, %d, %s, MD5(%s), %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %d, %s, NOW()
 				)",
 					$this->user_id,
 					$this->category_id,
@@ -285,7 +275,6 @@ class BP_Links_Link {
 					$this->name,
 					$this->description,
 					$this->status,
-					$this->enable_wire,
 					$this->vote_count,
 					$this->vote_total,
 					$this->popularity,
@@ -332,11 +321,6 @@ class BP_Links_Link {
 		
 		// Delete linkmeta for the link
 		bp_links_delete_linkmeta( $this->id );
-		
-		// Delete the wire posts for this link if the wire is installed
-		if ( function_exists( 'bp_wire_install' ) ) {
-			BP_Wire_Post::delete_all_for_item( $this->id, $bp->links->table_name_wire );
-		}
 				
 		// Finally remove the link entry from the DB
 		if ( !$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->links->table_name} WHERE id = %d", $this->id ) ) )
@@ -435,12 +419,6 @@ class BP_Links_Link {
 		}
 	}
 
-	function get_wire_count() {
-		global $bp, $wpdb;
-
-		return $wpdb->get_var( $wpdb->prepare( "SELECT count(*) FROM {$bp->links->table_name_wire} WHERE item_id = %d", $this->id ) );
-	}
-
 	// Static Functions
 
 	/**
@@ -513,65 +491,45 @@ class BP_Links_Link {
 	//
 	// Methods for a links directory
 	//
-	
-	function search_links( $filter, $limit = null, $page = null, $sort_by = false, $order = false ) {
+
+	function get_active( $limit = null, $page = null, $user_id = false, $search_terms = false, $category_id = null ) {
 		global $wpdb, $bp;
-		
-		$filter = like_escape($filter);
-		
+
+		$status_sql = self::get_status_sql( $user_id, ' AND %s' );
+
 		if ( $limit && $page )
 			$pag_sql = $wpdb->prepare( " LIMIT %d, %d", intval( ( $page - 1 ) * $limit), intval( $limit ) );
-
-		if ( $sort_by && $order ) {
-			$sort_by = $wpdb->escape( $sort_by );
-			$order = $wpdb->escape( $order );
-			$order_sql = "ORDER BY $sort_by $order";
-		}
-		
-		$paged_links = $wpdb->get_results( $wpdb->prepare( "SELECT id as link_id FROM {$bp->links->table_name} WHERE status = %d AND ( name LIKE '%%$filter%%' OR description LIKE '%%$filter%%' ) {$order_sql} {$pag_sql}", self::STATUS_PUBLIC ) );
-		$total_links = $wpdb->get_var( $wpdb->prepare( "SELECT count(id) FROM {$bp->links->table_name} WHERE status = %d AND ( name LIKE '%%$filter%%' OR description LIKE '%%$filter%%' )", self::STATUS_PUBLIC ) );
-		
-		return array( 'links' => $paged_links, 'total' => $total_links );
-	}
-
-	function get_recently_active_filtered( $filter = null, $letter = null, $category_id = null, $limit = null, $page = null ) {
-		global $wpdb, $bp;
-
-		if ( $filter ) {
-			$filter = substr($filter, 0, 25);
-			$filter = like_escape($filter);
-			$filter_sql = " AND ( name LIKE '%%{$filter}%%' OR description LIKE '%%{$filter}%%' )";
-		}
-
-		if ( !is_site_admin() )
-			$status_sql = $wpdb->prepare( " AND l.status = %d", self::STATUS_PUBLIC );
-
-		if ( 1 === preg_match('/^[a-z]$/', $letter ) )
-			$letter_sql = " AND l.name LIKE '{$letter}%%'";
 
 		if ( is_numeric($category_id) && $category_id >= 1 )
-			$category_sql = $wpdb->prepare( " AND l.category_id = %d", $category_id );
-		
-		if ( $limit && $page )
-			$pag_sql = $wpdb->prepare( " LIMIT %d, %d", intval( ( $page - 1 ) * $limit), intval( $limit ) );
+			$category_sql = $wpdb->prepare( " AND l.category_id = %d", $category_id );			
+			
+		if ( $search_terms ) {
+			$search_terms = substr($search_terms, 0, 25);
+			$search_terms = like_escape($search_terms);
+			$filter_sql = " AND ( name LIKE '%%{$search_terms}%%' OR description LIKE '%%{$search_terms}%%' )";
+		}
 
-		$paged_links = $wpdb->get_results( $wpdb->prepare( "SELECT l.id AS link_id, l.slug FROM {$bp->links->table_name_linkmeta} lm, {$bp->links->table_name} l WHERE l.id = lm.link_id {$status_sql}{$filter_sql}{$letter_sql}{$category_sql} AND lm.meta_key = 'last_activity' ORDER BY lm.meta_value DESC {$pag_sql}", self::STATUS_PUBLIC ) );
-		$total_links = $wpdb->get_var( $wpdb->prepare( "SELECT count(*) FROM {$bp->links->table_name_linkmeta} lm, {$bp->links->table_name} l WHERE l.id = lm.link_id{$status_sql}{$filter_sql}{$letter_sql}{$category_sql} AND lm.meta_key = 'last_activity'" ) );
+		if ( $user_id ) {
+			$paged_links = $wpdb->get_results( $wpdb->prepare( "SELECT l.id as link_id FROM {$bp->links->table_name_linkmeta} lm INNER JOIN {$bp->links->table_name} l ON lm.link_id = l.id WHERE lm.meta_key = 'last_activity'{$status_sql}{$filter_sql} AND l.user_id = %d ORDER BY lm.meta_value DESC {$pag_sql}", $user_id ) );
+			$total_links = $wpdb->get_var( $wpdb->prepare( "SELECT count(l.id) FROM {$bp->links->table_name_linkmeta} lm INNER JOIN {$bp->links->table_name} l ON lm.link_id = l.id WHERE lm.meta_key = 'last_activity'{$status_sql}{$filter_sql} AND l.user_id = %d ORDER BY lm.meta_value DESC", $user_id ) );
+		} else {
+			$paged_links = $wpdb->get_results( $wpdb->prepare( "SELECT l.id AS link_id, l.slug FROM {$bp->links->table_name_linkmeta} lm, {$bp->links->table_name} l WHERE l.id = lm.link_id {$status_sql}{$filter_sql}{$category_sql} AND lm.meta_key = 'last_activity' ORDER BY lm.meta_value DESC {$pag_sql}" ) );
+			$total_links = $wpdb->get_var( $wpdb->prepare( "SELECT count(*) FROM {$bp->links->table_name_linkmeta} lm, {$bp->links->table_name} l WHERE l.id = lm.link_id{$status_sql}{$filter_sql}{$category_sql} AND lm.meta_key = 'last_activity'" ) );
+		}
 
 		return array( 'links' => $paged_links, 'total' => $total_links );
 	}
 	
-	function get_by_columns_filtered( $sort_columns = array(), $filter = null, $letter = null, $category_id = null, $limit = null, $page = null ) {
+	function get_by_columns_filtered( $sort_columns = array(), $limit = null, $page = null, $user_id = false, $search_terms = false, $category_id = null ) {
 		global $wpdb, $bp;
 
-		if ( $filter ) {
-			$filter = substr($filter, 0, 25);
-			$filter = like_escape($filter);
-			$filter_sql = " AND ( name LIKE '%%{$filter}%%' OR description LIKE '%%{$filter}%%' )";
+		$status_sql = self::get_status_sql( $user_id, ' AND %s' );
+		
+		if ( $search_terms ) {
+			$search_terms = substr($search_terms, 0, 25);
+			$search_terms = like_escape($search_terms);
+			$filter_sql = " AND ( name LIKE '%%{$search_terms}%%' OR description LIKE '%%{$search_terms}%%' )";
 		}
-
-		if ( 1 === preg_match('/^[a-z]$/', $letter ) )
-			$letter_sql = " AND name LIKE '{$letter}%%'";
 
 		if ( is_numeric($category_id) && $category_id >= 1 )
 			$category_sql = $wpdb->prepare( " AND category_id = %d", $category_id );
@@ -587,40 +545,45 @@ class BP_Links_Link {
 		if ( $limit && $page )
 			$pag_sql = $wpdb->prepare( " LIMIT %d, %d", intval( ( $page - 1 ) * $limit), intval( $limit ) );
 
-		$paged_links = $wpdb->get_results( $wpdb->prepare( "SELECT id AS link_id, slug FROM {$bp->links->table_name} WHERE status = %d{$filter_sql}{$letter_sql}{$category_sql}{$order_by_sql} {$pag_sql}", BP_Links_Link::STATUS_PUBLIC ) );
-		$total_links = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->links->table_name} WHERE status = %d{$filter_sql}{$letter_sql}{$category_sql}", BP_Links_Link::STATUS_PUBLIC ) );
+		if ( $user_id ) {
+			$paged_links = $wpdb->get_results( $wpdb->prepare( "SELECT id AS link_id FROM {$bp->links->table_name} WHERE user_id = %d{$status_sql}{$filter_sql}{$category_sql}{$order_by_sql} {$pag_sql}", $user_id ) );
+			$total_links = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->links->table_name} WHERE user_id = %d{$status_sql}{$category_sql}{$filter_sql}", $user_id ) );
+		} else {
+			$paged_links = $wpdb->get_results( $wpdb->prepare( "SELECT id AS link_id, slug FROM {$bp->links->table_name} WHERE status = %d{$filter_sql}{$category_sql}{$order_by_sql} {$pag_sql}", self::STATUS_PUBLIC ) );
+			$total_links = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->links->table_name} WHERE status = %d{$filter_sql}{$category_sql}", self::STATUS_PUBLIC ) );
+		}
 
 		return array( 'links' => $paged_links, 'total' => $total_links );
 	}
 
-	function get_most_popular_filtered( $filter = null, $letter = null, $category_id = null, $limit = null, $page = null ) {
+	function get_newest( $limit = null, $page = null, $user_id = false, $search_terms = false, $category_id = null ) {
+		$sort_columns = array( 'date_created' => 'DESC' );
+		return self::get_by_columns_filtered( $sort_columns, $limit, $page, $user_id, $search_terms, $category_id );
+	}
+	
+	function get_popular( $limit = null, $page = null, $user_id = false, $search_terms = false, $category_id = null ) {
 		$sort_columns = array( 'popularity' => 'ASC', 'date_created' => 'DESC' );
-		return self::get_by_columns_filtered( $sort_columns, $filter, $letter, $category_id, $limit, $page );
+		return self::get_by_columns_filtered( $sort_columns, $limit, $page, $user_id, $search_terms, $category_id );
 	}
 
-	function get_most_votes_filtered( $filter = null, $letter = null, $category_id = null, $limit = null, $page = null ) {
+	function get_most_votes( $limit = null, $page = null, $user_id = false, $search_terms = false, $category_id = null ) {
 		$sort_columns = array( 'vote_count' => 'DESC', 'date_created' => 'DESC' );
-		return self::get_by_columns_filtered( $sort_columns, $filter, $letter, $category_id, $limit, $page );
+		return self::get_by_columns_filtered( $sort_columns, $limit, $page, $user_id, $search_terms, $category_id );
 	}
 
-	function get_high_votes_filtered( $filter = null, $letter = null, $category_id = null, $limit = null, $page = null ) {
+	function get_high_votes( $limit = null, $page = null, $user_id = false, $search_terms = false, $category_id = null ) {
 		$sort_columns = array( 'vote_total' => 'DESC', 'date_created' => 'DESC' );
-		return self::get_by_columns_filtered( $sort_columns, $filter, $letter, $category_id, $limit, $page );
+		return self::get_by_columns_filtered( $sort_columns, $limit, $page, $user_id, $search_terms, $category_id );
 	}
 
-	function get_newest_filtered( $filter = null, $letter = null, $category_id = null, $limit = null, $page = null ) {
+	function get_search( $limit = null, $page = null, $user_id = false, $search_terms = false, $category_id = null ) {
 		$sort_columns = array( 'date_created' => 'DESC' );
-		return self::get_by_columns_filtered( $sort_columns, $filter, $letter, $category_id, $limit, $page );
+		return self::get_by_columns_filtered( $sort_columns, $limit, $page, $user_id, $search_terms, $category_id );
 	}
 
-	function get_search_filtered( $filter = null, $letter = null, $category_id = null, $limit = null, $page = null ) {
+	function get_all( $limit = null, $page = null, $user_id = false, $search_terms = false, $category_id = null ) {
 		$sort_columns = array( 'date_created' => 'DESC' );
-		return self::get_by_columns_filtered( $sort_columns, $filter, $letter, $category_id, $limit, $page );
-	}
-
-	function get_all_filtered( $filter = null, $letter = null, $category_id = null, $limit = null, $page = null ) {
-		$sort_columns = array( 'date_created' => 'DESC' );
-		return self::get_by_columns_filtered( $sort_columns, $filter, $letter, $category_id, $limit, $page );
+		return self::get_by_columns_filtered( $sort_columns, $limit, $page, $user_id, $search_terms, $category_id );
 	}
 
 	function get_random( $limit = null, $page = null ) {
@@ -628,9 +591,14 @@ class BP_Links_Link {
 		return self::get_by_columns_filtered( $sort_columns, null, null, null, $limit, $page );
 	}
 
-	//
-	// Methods for a user's profile links page
-	//
+	function get_total_link_count() {
+		global $wpdb, $bp;
+
+		if ( !is_site_admin() )
+			$hidden_sql = sprintf( "WHERE status = %s", self::STATUS_PUBLIC );
+
+		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->links->table_name} {$hidden_sql}" ) );
+	}
 
 	function get_total_link_count_for_user( $user_id = false ) {
 		global $bp, $wpdb;
@@ -640,14 +608,24 @@ class BP_Links_Link {
 
 		$status_sql = self::get_status_sql( $user_id, ' AND %s' );
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT count(*) FROM {$bp->links->table_name} WHERE user_id = %d{$status_sql}", $user_id ) );
+		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->links->table_name} WHERE user_id = %d{$status_sql}", $user_id ) );
+	}
+	
+	function get_activity_post_count( $show_hidden = false ) {
+		global $wpdb, $bp;
+
+		// Hide Hidden Items?
+		if ( !$show_hidden )
+			$hidden_sql = " AND a.hide_sitewide = 0";
+
+		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(a.id) FROM {$bp->activity->table_name} a WHERE a.component = '%s' AND a.item_id = '%d' AND a.type != 'activity_comment'{$hidden_sql}", $bp->links->id, $this->id ) );
 	}
 
-	function get_status_sql( $link_owner_user_id, $format_string = '%s' ){
+	function get_status_sql( $link_owner_user_id = false, $format_string = '%s' ){
 		global $bp;
 		
-		// if user is logged in and viewing their own links, then no limitations
-		if ( bp_is_home() ) {
+		// if user is the site admin or is logged in and viewing their own links, then no limitations
+		if ( is_site_admin() || bp_is_my_profile() ) {
 			// return an empty string
 			return '';
 		} else {
@@ -663,80 +641,6 @@ class BP_Links_Link {
 			// return the sql string
 			return sprintf( $format_string, sprintf( 'status IN (%s)', join( ',', $status_opts ) ) );
 		}
-	}
-	
-	function get_recently_active_for_user( $user_id, $limit = false, $page = false, $filter = false ) {
-		global $wpdb, $bp;
-
-		if ( $limit && $page ) {
-			$pag_sql = $wpdb->prepare( " LIMIT %d, %d", intval( ( $page - 1 ) * $limit), intval( $limit ) );
-		}
-
-		if ( $filter ) {
-			like_escape($filter);
-			$filter_sql = " AND ( name LIKE '%%{$filter}%%' OR description LIKE '%%{$filter}%%' )";
-		}
-
-		$status_sql = self::get_status_sql( $user_id, ' AND %s' );
-
-		$paged_links = $wpdb->get_results( $wpdb->prepare( "SELECT l.id as link_id FROM {$bp->links->table_name_linkmeta} lm INNER JOIN {$bp->links->table_name} l ON lm.link_id = l.id WHERE lm.meta_key = 'last_activity'{$status_sql}{$filter_sql} AND l.user_id = %d ORDER BY lm.meta_value DESC {$pag_sql}", $user_id ) );
-		$total_links = $wpdb->get_var( $wpdb->prepare( "SELECT count(l.id) FROM {$bp->links->table_name_linkmeta} lm INNER JOIN {$bp->links->table_name} l ON lm.link_id = l.id WHERE lm.meta_key = 'last_activity'{$status_sql}{$filter_sql} AND l.user_id = %d ORDER BY lm.meta_value DESC", $user_id ) );
-
-		return array( 'links' => $paged_links, 'total' => $total_links );
-	}
-
-	function get_by_columns_for_user( $user_id, $sort_columns = array(), $limit = false, $page = false, $filter = false ) {
-		global $wpdb, $bp;
-
-		if ( $limit && $page )
-			$pag_sql = $wpdb->prepare( " LIMIT %d, %d", intval( ( $page - 1 ) * $limit), intval( $limit ) );
-
-		if ( $filter ) {
-			like_escape($filter);
-			$filter_sql = " AND ( name LIKE '%%{$filter}%%' OR description LIKE '%%{$filter}%%' )";
-		}
-
-		if ( empty( $sort_columns ) ) {
-			$order_by_sql = '';
-		} else {
-			$order_by_sql_bits = array();
-			foreach ( $sort_columns as $column => $order ) {
-				$order_by_sql_bits[] = sprintf( '%s %s', $column, $order);
-			}
-			$order_by_sql = ' ORDER BY ' . join( ', ', $order_by_sql_bits);
-		}
-
-		$status_sql = self::get_status_sql( $user_id, ' AND %s' );
-
-		$paged_links = $wpdb->get_results( $wpdb->prepare( "SELECT id AS link_id FROM {$bp->links->table_name} WHERE user_id = %d{$status_sql}{$filter_sql}{$order_by_sql} {$pag_sql}", $user_id ) );
-		$total_links = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->links->table_name} WHERE user_id = %d{$status_sql}{$filter_sql}", $user_id ) );
-
-		return array( 'links' => $paged_links, 'total' => $total_links );
-	}
-
-	function get_newest_for_user( $user_id, $limit = false, $page = false, $filter = false ) {
-		$sort_columns = array( 'date_created' => 'DESC' );
-		return self::get_by_columns_for_user( $user_id, $sort_columns, $limit, $page, $filter );
-	}
-
-	function get_most_popular_for_user( $user_id, $limit = false, $page = false, $filter = false ) {
-		$sort_columns = array( 'popularity' => 'ASC',  'date_created' => 'DESC' );
-		return self::get_by_columns_for_user( $user_id, $sort_columns, $limit, $page, $filter );
-	}
-
-	function get_most_votes_for_user( $user_id, $limit = false, $page = false, $filter = false ) {
-		$sort_columns = array( 'vote_count' => 'DESC',  'date_created' => 'DESC' );
-		return self::get_by_columns_for_user( $user_id, $sort_columns, $limit, $page, $filter );
-	}
-
-	function get_high_votes_for_user( $user_id, $limit = false, $page = false, $filter = false ) {
-		$sort_columns = array( 'vote_total' => 'DESC',  'date_created' => 'DESC' );
-		return self::get_by_columns_for_user( $user_id, $sort_columns, $limit, $page, $filter );
-	}
-
-	function get_random_for_user( $user_id, $limit = false, $page = false, $filter = false ) {
-		$sort_columns = array( 'RAND()' => 'ASC' );
-		return self::get_by_columns_for_user( $user_id, $sort_columns, $limit, $page, $filter );
 	}
 }
 

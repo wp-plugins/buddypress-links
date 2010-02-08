@@ -1,40 +1,24 @@
 <?php
 
-function bp_links_header_tabs() {
-	global $bp, $create_link_step, $completed_to_step;
-?>
-	<li<?php if ( !isset($bp->action_variables[0]) || 'recently-active' == $bp->action_variables[0] ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->displayed_user->domain . $bp->links->slug ?>/my-links/recently-active"><?php _e( 'Recently Active', 'buddypress-links' ) ?></a></li>
-	<li<?php if ( 'newest' == $bp->action_variables[0] ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->displayed_user->domain . $bp->links->slug ?>/my-links/newest"><?php _e( 'Newest', 'buddypress-links' ) ?></a></li>
-	<li<?php if ( 'most-popular' == $bp->action_variables[0] ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->displayed_user->domain . $bp->links->slug ?>/my-links/most-popular"><?php _e( 'Most Popular', 'buddypress-links' ) ?></a></li>
-	<li<?php if ( 'most-votes' == $bp->action_variables[0] ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->displayed_user->domain . $bp->links->slug ?>/my-links/most-votes"><?php _e( 'Most Votes', 'buddypress-links' ) ?></a></li>
-	<li<?php if ( 'high-votes' == $bp->action_variables[0] ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->displayed_user->domain . $bp->links->slug ?>/my-links/high-votes"><?php _e( 'Vote Rating', 'buddypress-links' ) ?></a></li>
-<?php
-	do_action( 'bp_links_header_tabs' );
-}
+function bp_links_category_select_options( $selected_category_id = null, $element_id = 'category', $element_class = '' ) {
 
-function bp_links_filter_title() {
-	global $bp;
-	
-	$current_filter = $bp->action_variables[0];
-	
-	switch ( $current_filter ) {
-		case 'recently-active': default:
-			_e( 'Recently Active', 'buddypress-links' );
-			break;
-		case 'newest':
-			_e( 'Newest', 'buddypress-links' );
-			break;
-		case 'most-popular':
-			_e( 'Most Popular', 'buddypress-links' );
-			break;
-		case 'most-votes':
-			_e( 'Most Votes', 'buddypress-links' );
-			break;
-		case 'high-votes':
-			_e( 'Highest Votes', 'buddypress-links' );
-			break;
+	do_action( 'bp_before_links_category_select_options' );
+
+	// grab all categories
+	$categories = BP_Links_Category::get_all();
+
+	$class_string = ( empty( $element_class ) ) ? null : sprintf( ' class="%s"', $element_class );
+
+	foreach ( $categories as $category ) {
+		// populate
+		$category = new BP_Links_Category( $category->category_id );
+		// is this one selected?
+		$selected = ( $selected_category_id == $category->id ) ? ' selected="selected"' : null;
+		// output it
+		echo sprintf( '<option value="%d"%s />%s</option>', $category->id, $selected, $category->name ) . PHP_EOL;
 	}
-	do_action( 'bp_links_filter_title' );
+
+	do_action( 'bp_after_links_category_select_options' );
 }
 
 function bp_links_category_radio_options( $selected_category_id = 1, $element_name = 'category', $element_class = '' ) {
@@ -95,22 +79,11 @@ function bp_link_avatar_edit_form() {
 	bp_links_avatar_upload();
 }
 
-function bp_get_link_wire_see_all_link( $url = null ) {
-	global $bp;
-
-	if ( $bp->current_component == $bp->links->slug ) {
-		return apply_filters( 'bp_get_link_wire_see_all_link', $bp->root_domain . '/' . $bp->links->slug . '/' . $bp->current_item . '/' . $bp->wire->slug );
-	} else {
-		return $url;
-	}
-}
-add_filter( 'bp_get_wire_see_all_link', 'bp_get_link_wire_see_all_link' );
-
 /*****************************************************************************
  * User Links Template Class/Tags
  **/
 
-class BP_Links_User_Links_Template {
+class BP_Links_Template {
 	var $current_link = -1;
 	var $link_count;
 	var $links;
@@ -127,43 +100,54 @@ class BP_Links_User_Links_Template {
 	
 	var $sort_by;
 	var $order;
+
+	var $avatar_size;
 	
-	function bp_links_user_links_template( $user_id, $type, $per_page, $max, $slug, $filter ) {
+	function bp_links_template( $user_id, $type, $page, $per_page, $max, $slug, $search_terms, $category_id = null ) {
 		global $bp;
-		
-		if ( !$user_id )
-			$user_id = $bp->displayed_user->id;
 
 		$this->pag_page = isset( $_REQUEST['lpage'] ) ? intval( $_REQUEST['lpage'] ) : 1;
 		$this->pag_num = isset( $_REQUEST['num'] ) ? intval( $_REQUEST['num'] ) : $per_page;
-
+		
 		switch ( $type ) {
 
-			case 'newest':
-				$this->links = bp_links_get_newest_for_user( $user_id, $this->pag_num, $this->pag_page, $filter );
+			default:
+			case 'active':
+				$this->links = bp_links_get_active( $this->pag_num, $this->pag_page, $user_id, $search_terms, $category_id );
 				break;
 
-			case 'most-popular':
-				$this->links = bp_links_get_most_popular_for_user( $user_id, $this->pag_num, $this->pag_page, $filter );
+			case 'newest':
+				$this->links = bp_links_get_newest( $this->pag_num, $this->pag_page, $user_id, $search_terms, $category_id );
+				break;
+
+			case 'search':
+				$this->links = bp_links_get_search( $this->pag_num, $this->pag_page, $user_id, $search_terms, $category_id );
+				break;
+
+			case 'popular':
+				$this->links = bp_links_get_popular( $this->pag_num, $this->pag_page, $user_id, $search_terms, $category_id );
 				break;
 
 			case 'most-votes':
-				$this->links = bp_links_get_most_votes_for_user( $user_id, $this->pag_num, $this->pag_page, $filter );
+				$this->links = bp_links_get_most_votes( $this->pag_num, $this->pag_page, $user_id, $search_terms, $category_id );
 				break;
 
 			case 'high-votes':
-				$this->links = bp_links_get_high_votes_for_user( $user_id, $this->pag_num, $this->pag_page, $filter );
+				$this->links = bp_links_get_high_votes( $this->pag_num, $this->pag_page, $user_id, $search_terms, $category_id );
+				break;
+
+			case 'all':
+				$this->links = bp_links_get_all( $this->pag_num, $this->pag_page, $user_id, $search_terms, $category_id );
+				break;
+			
+			case 'random':
+				$this->links = bp_links_get_random( $this->pag_num, $this->pag_page );
 				break;
 
 			case 'single-link':
 				$link = new stdClass;
 				$link->link_id = BP_Links_Link::get_id_from_slug( $slug );
 				$this->links = array( $link );
-				break;
-
-			case 'active':
-			default:
-				$this->links = bp_links_get_recently_active_for_user( $user_id, $this->pag_num, $this->pag_page, $filter );
 				break;
 		}
 		
@@ -221,7 +205,7 @@ class BP_Links_User_Links_Template {
 		}
 	}
 	
-	function user_links() {
+	function links() {
 		if ( $this->current_link + 1 < $this->link_count ) {
 			return true;
 		} elseif ( $this->current_link + 1 == $this->link_count ) {
@@ -239,73 +223,91 @@ class BP_Links_User_Links_Template {
 
 		$this->in_the_loop = true;
 		$this->link = $this->next_link();
-		
-		// If this is a single link then instantiate link meta when creating the object.
-		if ( $this->single_link ) {
-			if ( !$link = wp_cache_get( 'bp_links_link_' . $this->link->link_id, 'bp' ) ) {
-				$link = new BP_Links_Link( $this->link->link_id, true );
-				wp_cache_set( 'bp_links_link_' . $this->link->link_id, $link, 'bp' );
-			}
-		} else {
-			if ( !$link = wp_cache_get( 'bp_links_link_nouserdata_' . $this->link->link_id, 'bp' ) ) {
-				$link = new BP_Links_Link( $this->link->link_id, false, false );
-				wp_cache_set( 'bp_links_link_nouserdata_' . $this->link->link_id, $link, 'bp' );
-			}
+
+		if ( !$link = wp_cache_get( 'bp_links_link_nouserdata_' . $this->link->link_id, 'bp' ) ) {
+			$link = new BP_Links_Link( $this->link->link_id, false, false );
+			wp_cache_set( 'bp_links_link_nouserdata_' . $this->link->link_id, $link, 'bp' );
 		}
 
 		$this->link = $link;
-		
+
 		if ( 0 == $this->current_link ) // loop has just started
 			do_action('loop_start');
+	}
+
+	function avatar_display_size() {
+
+		$args = func_get_args();
+
+		if ( count( $args ) == 1 ) {
+			if ( in_array( $args[0], array(50,60,70,80,90,100,110,120,130), true ) ) {
+				$this->avatar_size = $args[0];
+			} else {
+				$this->avatar_size = BP_LINKS_LIST_AVATAR_SIZE;
+			}
+		} else {
+			return $this->avatar_size;
+		}
 	}
 }
 
 
 function bp_has_links( $args = '' ) {
 	global $links_template, $bp;
-	
+
 	$defaults = array(
 		'type' => 'active',
-		'user_id' => false,
+		'page' => 1,
 		'per_page' => 10,
 		'max' => false,
+		'avatar_size' => false,
+
+		'user_id' => false,
 		'slug' => false,
-		'filter' => false
+		'search_terms' => false,
+		'category' => false
 	);
 
 	$r = wp_parse_args( $args, $defaults );
 	extract( $r, EXTR_SKIP );
-	
-	// The following code will auto set parameters based on the page being viewed.
-	// for example on example.com/members/marshall/links/my-links/most-popular/
-	// $type = 'most-popular'
-	//
-	if ( 'my-links' == $bp->current_action ) {
-		$order = $bp->action_variables[0];
-		if ( 'newest' == $order )
-			$type = 'newest';
-		else if ( 'most-popular' == $order )
-			$type = 'most-popular';
-		else if ( 'most-votes' == $order )
-			$type = 'most-votes';
-		else if ( 'high-votes' == $order )
-			$type = 'high-votes';
-	} else if ( $bp->links->current_link->slug ) {
-		$type = 'single-link';
-		$slug = $bp->links->current_link->slug;
+
+	if ( '' == $args ) {
+		// The following code will auto set parameters based on the page being viewed.
+		// for example on example.com/members/marshall/links/my-links/popular/
+		// $type = 'popular'
+		//
+		if ( 'my-links' == $bp->current_action ) {
+			$order = $bp->action_variables[0];
+			if ( 'active' == $order )
+				$type = 'active';
+			elseif ( 'all' == $order )
+				$type = 'all';
+			elseif ( 'newest' == $order )
+				$type = 'newest';
+			else if ( 'popular' == $order )
+				$type = 'popular';
+			else if ( 'most-votes' == $order )
+				$type = 'most-votes';
+			else if ( 'high-votes' == $order )
+				$type = 'high-votes';
+		} else if ( $bp->links->current_link->slug ) {
+			$type = 'single-link';
+			$slug = $bp->links->current_link->slug;
+		}
 	}
 	
-	if ( isset( $_REQUEST['link-filter-box'] ) )
-		$filter = $_REQUEST['link-filter-box'];
+	if ( isset( $_REQUEST['link-filter-box'] ) || isset( $_REQUEST['s'] ) )
+		$search_terms = ( isset( $_REQUEST['link-filter-box'] ) ) ? $_REQUEST['link-filter-box'] : $_REQUEST['s'];
 	
-	$links_template = new BP_Links_User_Links_Template( $user_id, $type, $per_page, $max, $slug, $filter );
+	$links_template = new BP_Links_Template( $user_id, $type, $page, $per_page, $max, $slug, $search_terms, $category );
+	$links_template->avatar_display_size( $avatar_size );
 	return apply_filters( 'bp_has_links', $links_template->has_links(), &$links_template );
 }
 
 
 function bp_links() {
 	global $links_template;
-	return $links_template->user_links();
+	return $links_template->links();
 }
 
 function bp_the_link() {
@@ -320,6 +322,10 @@ function bp_link_is_visible( $link = false ) {
 		$link =& $links_template->link;
 
 	return bp_links_is_link_visibile( $link, $bp->loggedin_user->id );
+}
+
+function bp_link_is_admin_page() {
+	return bp_links_is_link_admin_page();
 }
 
 function bp_link_id() {
@@ -479,6 +485,15 @@ function bp_link_avatar_mini() {
 		return bp_get_link_avatar( 'type=thumb&width=30&height=30' );
 	}
 
+function bp_link_avatar_display_size() {
+	echo bp_get_link_avatar_display_size();
+}
+	function bp_get_link_avatar_display_size() {
+		global $links_template;
+
+		return apply_filters( 'bp_get_link_avatar_display_size', $links_template->avatar_display_size() );
+	}
+
 function bp_link_user_avatar() {
 	echo bp_get_link_user_avatar();
 }
@@ -538,11 +553,8 @@ function bp_link_last_active( $deprecated = true, $deprecated2 = false ) {
 		}
 	}
 
-function bp_link_permalink( $deprecated = false, $deprecated2 = true ) {
-	if ( !$deprecated2 )
-		return bp_get_link_permalink();
-	else
-		echo bp_get_link_permalink();
+function bp_link_permalink( $link = false ) {
+	echo bp_get_link_permalink( $link );
 }
 	function bp_get_link_permalink( $link = false ) {
 		global $links_template, $bp;
@@ -551,14 +563,6 @@ function bp_link_permalink( $deprecated = false, $deprecated2 = true ) {
 			$link =& $links_template->link;
 
 		return apply_filters( 'bp_get_link_permalink', $bp->root_domain . '/' . $bp->links->slug . '/' . $link->slug );
-	}
-
-function bp_link_wire_permalink() {
-	echo bp_get_link_wire_permalink();
-}
-	function bp_get_link_wire_permalink( $link = false ) {
-		global $bp;
-		return apply_filters( 'bp_get_link_wire_permalink', bp_get_link_permalink( $link ) . '/' . $bp->wire->slug );
 	}
 
 function bp_link_userlink() {
@@ -597,16 +601,16 @@ function bp_link_description() {
 		return apply_filters( 'bp_get_link_description', stripslashes($link->description) );
 	}
 
-function bp_link_description_excerpt( $deprecated = false ) {
-	echo bp_get_link_description_excerpt();
+function bp_link_description_excerpt( $link = false, $length = 55 ) {
+	echo bp_get_link_description_excerpt( $link, $length );
 }
-	function bp_get_link_description_excerpt( $link = false ) {
+	function bp_get_link_description_excerpt( $link = false, $length = 55 ) {
 		global $links_template;
 
 		if ( !$link )
 			$link =& $links_template->link;
 
-		return apply_filters( 'bp_get_link_description_excerpt', bp_create_excerpt( $link->description, 20 ) );
+		return apply_filters( 'bp_get_link_description_excerpt', bp_create_excerpt( $link->description, $length ) );
 	}
 
 function bp_link_vote_count() {
@@ -689,18 +693,6 @@ function bp_link_time_elapsed_text() {
 		return apply_filters( 'bp_get_link_time_elapsed_text', sprintf( $ret_text, $ret_number ) );
 	}
 
-function bp_link_wire_count() {
-	echo bp_get_link_wire_count();
-}
-	function bp_get_link_wire_count( $link = false ) {
-		global $links_template;
-
-		if ( !$link )
-			$link =& $links_template->link;
-
-		return apply_filters( 'bp_get_link_wire_count', $link->get_wire_count() );
-	}
-
 function bp_link_play_button( $link = false ) {
 	echo bp_get_link_play_button( $link );
 }
@@ -718,12 +710,12 @@ function bp_link_play_button( $link = false ) {
 			$class = null;
 
 			if ( $link->embed()->avatar_play_video() === true )
-				$class = 'link-play-video';
+				$class = 'link-play link-play-video';
 			elseif ( $link->embed()->avatar_play_photo() === true )
-				$class = 'link-play-photo';
+				$class = 'link-play link-play-photo';
 
 			if ( $class )
-				$button_html = sprintf( '<a href="%s" class="%s"></a>', bp_get_link_permalink( $link ), $class );
+				$button_html = sprintf( '<a href="%s" id="link-play-%d" class="%s"></a>', bp_get_link_permalink( $link ), bp_get_link_id( $link ), $class );
 		}
 
 		return apply_filters( 'bp_get_link_play_button', $button_html );
@@ -741,22 +733,6 @@ function bp_link_is_mod() {
 	
 	return $bp->is_item_mod;
 }
-		
-function bp_link_search_form() {
-	global $links_template, $bp;
-
-	$action = $bp->displayed_user->domain . $bp->links->slug . '/my-links/search/';
-	$label = __( 'Filter links', 'buddypress-links' );
-	$name = 'link-filter-box';
-?>
-	<form action="<?php echo $action ?>" id="link-search-form" method="post">
-		<label for="<?php echo $name ?>" id="<?php echo $name ?>-label"><?php echo $label ?></label>
-		<input type="search" name="<?php echo $name ?>" id="<?php echo $name ?>" value="<?php echo $value ?>"<?php echo $disabled ?> />
-	
-		<?php wp_nonce_field( 'link-filter-box', '_wpnonce_link_filter' ) ?>
-	</form>
-<?php
-}
 
 function bp_link_show_no_links_message() {
 	global $bp;
@@ -767,17 +743,17 @@ function bp_link_show_no_links_message() {
 	return false;
 }
 
-function bp_link_pagination() {
-	echo bp_get_link_pagination();
+function bp_links_pagination_links() {
+	echo bp_get_links_pagination_links();
 }
 
-function bp_get_link_pagination() {
+function bp_get_links_pagination_links() {
 	global $links_template;
 	
-	return apply_filters( 'bp_get_link_pagination', $links_template->pag_links );
+	return apply_filters( 'bp_get_links_pagination_links', $links_template->pag_links );
 }
 
-function bp_link_pagination_count() {
+function bp_links_pagination_count() {
 	global $bp, $links_template;
 
 	$from_num = intval( ( $links_template->pag_page - 1 ) * $links_template->pag_num ) + 1;
@@ -787,22 +763,31 @@ function bp_link_pagination_count() {
 	<span class="ajax-loader"></span><?php 
 }
 
-function bp_total_link_count() {
-	echo bp_get_total_link_count();
+function bp_links_total_link_count() {
+	echo bp_get_links_total_link_count();
 }
-	function bp_get_total_link_count() {
-		global $links_template;
-		return apply_filters( 'bp_get_total_link_count', $links_template->total_link_count );
+	function bp_get_links_total_link_count() {
+		return apply_filters( 'bp_get_links_total_link_count', bp_links_total_links() );
 	}
 
-function bp_link_is_wire_enabled( $link = false ) {
-	global $links_template;
-
-	if ( $link )
-		return (bool) $link->enable_wire;
-	else
-		return (bool) $links_template->link->enable_wire;
+function bp_link_total_link_count_for_user( $user_id = false ) {
+	echo bp_get_link_total_link_count_for_user( $user_id );
 }
+	function bp_get_link_total_link_count_for_user( $user_id = false ) {
+		return apply_filters( 'bp_get_link_total_link_count_for_user', bp_links_total_links_for_user( $user_id ) );
+	}
+
+function bp_link_activity_post_count( $link = false ) {
+	echo bp_get_link_activity_post_count( $link );
+}
+	function bp_get_link_activity_post_count( $link = false ) {
+		global $links_template;
+
+		if ( !$link )
+			$link = $links_template->link;
+
+		return apply_filters( 'bp_get_link_activity_post_count', $link->get_activity_post_count() );
+	}
 
 function bp_link_admin_tabs( $link = false ) {
 	global $bp, $links_template;
@@ -846,6 +831,17 @@ function bp_link_status_message( $link = false ) {
 /***************************************************************************
  * Link Creation Process Template Tags
  **/
+
+function bp_links_creation_tabs() {
+	global $bp;
+	
+	$href = sprintf( '%s/%s/create/', $bp->root_domain, $bp->links->slug );
+?>
+	<li class="current"<a href="<?php echo $href ?>"><?php _e( 'Create', 'buddypress-links' ) ?></a></li>
+	<li><a href="<?php echo $href ?>"><?php _e( 'Start Over', 'buddypress-links' ) ?></a></li>
+<?php
+	do_action( 'bp_links_creation_tabs' );
+}
 
 function bp_link_details_form_action() {
 	echo bp_get_link_details_form_action();
@@ -1009,23 +1005,6 @@ function bp_link_details_form_description() {
 		return apply_filters( 'bp_get_link_details_form_description', $link_description );
 	}
 
-function bp_link_details_form_enable_wire() {
-	echo bp_get_link_details_form_enable_wire();
-}
-	function bp_get_link_details_form_enable_wire() {
-		global $bp;
-
-		$link_enable_wire = 1;
-
-		if ( isset( $_POST['link-enable-wire'] ) && $_POST['link-enable-wire'] == 0 ) {
-			$link_enable_wire = 0;
-		} elseif ( isset( $bp->links->current_link->enable_wire ) ) {
-			$link_enable_wire = $bp->links->current_link->enable_wire;
-		}
-
-		return (int) apply_filters( 'bp_get_link_details_form_enable_wire', $link_enable_wire );
-	}
-
 function bp_link_details_form_status() {
 	echo bp_get_link_details_form_status();
 }
@@ -1121,526 +1100,56 @@ function bp_link_avatar_form_embed_html_display() {
  * Site Links Template Tags
  **/
 
-class BP_Links_Site_Links_Template {
-	var $current_link = -1;
-	var $link_count;
-	var $links;
-	var $link;
-	
-	var $in_the_loop;
-	
-	var $pag_page;
-	var $pag_num;
-	var $pag_links;
-	var $total_link_count;
-	
-	function bp_links_site_links_template( $type, $per_page, $max ) {
-		global $bp;
-
-		$this->pag_page = isset( $_REQUEST['lpage'] ) ? intval( $_REQUEST['lpage'] ) : 1;
-		$this->pag_num = isset( $_REQUEST['num'] ) ? intval( $_REQUEST['num'] ) : $per_page;
-				
-		if ( isset( $_REQUEST['s'] ) )
-			$filter = $_REQUEST['s'];
-
-		if ( isset( $_REQUEST['letter'] ) )
-			$letter = $_REQUEST['letter'];
-
-		if ( isset( $_REQUEST['category_id'] ) )
-			$category_id = $_REQUEST['category_id'];
-		else if ( isset( $_COOKIE['bp_directory_links_category_id'] ) )
-			$category_id = $_COOKIE['bp_directory_links_category_id'];
-
-		switch ( $type ) {
-			case 'random':
-				$this->links = BP_Links_Link::get_random( $this->pag_num, $this->pag_page );
-				break;
-
-			case 'all':
-				$this->links = BP_Links_Link::get_all_filtered( $filter, $letter, $category_id, $this->pag_num, $this->pag_page );
-				break;
-
-			case 'search':
-				$this->links = BP_Links_Link::get_search_filtered( $filter, $letter, $category_id, $this->pag_num, $this->pag_page );
-				break;
-
-			case 'newest':
-				$this->links = BP_Links_Link::get_newest_filtered( $filter, $letter, $category_id, $this->pag_num, $this->pag_page );
-				break;
-
-			case 'most-popular':
-				$this->links = BP_Links_Link::get_most_popular_filtered( $filter, $letter, $category_id, $this->pag_num, $this->pag_page );
-				break;
-
-			case 'most-votes':
-				$this->links = BP_Links_Link::get_most_votes_filtered( $filter, $letter, $category_id, $this->pag_num, $this->pag_page );
-				break;
-
-			case 'high-votes':
-				$this->links = BP_Links_Link::get_high_votes_filtered( $filter, $letter, $category_id, $this->pag_num, $this->pag_page );
-				break;
-
-			case 'recently-active':
-			default:
-				$this->links = BP_Links_Link::get_recently_active_filtered( $filter, $letter, $category_id, $this->pag_num, $this->pag_page );
-				break;
-		}
-		
-		if ( !$max || $max >= (int)$this->links['total'] )
-			$this->total_link_count = (int)$this->links['total'];
-		else
-			$this->total_link_count = (int)$max;
-
-		$this->links = $this->links['links'];
-		
-		if ( $max ) {
-			if ( $max >= count($this->links) )
-				$this->link_count = count($this->links);
-			else
-				$this->link_count = (int)$max;
-		} else {
-			$this->link_count = count($this->links);
-		}
-
-		if ( (int) $this->total_link_count && (int) $this->pag_num ) {
-			$this->pag_links = paginate_links( array(
-				'base' => add_query_arg( 'lpage', '%#%' ),
-				'format' => '',
-				'total' => ceil( (int) $this->total_link_count / (int) $this->pag_num ),
-				'current' => (int) $this->pag_page,
-				'prev_text' => '&laquo;',
-				'next_text' => '&raquo;',
-				'mid_size' => 1
-			));
-		}
-	}
-	
-	function has_links() {
-		if ( $this->link_count )
-			return true;
-		
-		return false;
-	}
-	
-	function next_link() {
-		$this->current_link++;
-		$this->link = $this->links[$this->current_link];
-		
-		return $this->link;
-	}
-	
-	function rewind_links() {
-		$this->current_link = -1;
-		if ( $this->link_count > 0 ) {
-			$this->link = $this->links[0];
-		}
-	}
-	
-	function links() {
-		if ( $this->current_link + 1 < $this->link_count ) {
-			return true;
-		} elseif ( $this->current_link + 1 == $this->link_count ) {
-			do_action('loop_end');
-			// Do some cleaning up after the loop
-			$this->rewind_links();
-		}
-
-		$this->in_the_loop = false;
-		return false;
-	}
-	
-	function the_link() {
-		global $link;
-
-		$this->in_the_loop = true;
-		$this->link = $this->next_link();
-		
-		if ( !$link = wp_cache_get( 'bp_links_link_nouserdata_' . $this->link->link_id, 'bp' ) ) {
-			$link = new BP_Links_Link( $this->link->link_id, false, false );
-			wp_cache_set( 'bp_links_link_nouserdata_' . $this->link->link_id, $link, 'bp' );
-		}
-		
-		$this->link = $link;
-		
-		if ( 0 == $this->current_link ) // loop has just started
-			do_action('loop_start');
-	}
-}
-
-
-function bp_rewind_site_links() {
-	global $site_links_template;
-	
-	$site_links_template->rewind_links();
-}
-
-function bp_has_site_links( $args = '' ) {
-	global $bp, $site_links_template;
-
-	$defaults = array(
-		'type' => 'recently-active',
-		'per_page' => 10,
-		'max' => false
-	);
-
-	$r = wp_parse_args( $args, $defaults );
-	extract( $r, EXTR_SKIP );
-	
-	// The following code will auto set parameters based on the page being viewed in the directory.
-	// for example on example.com/links/most-popular/
-	// $type = 'most-popular'
-	//
-	if ( BP_LINKS_SLUG == $bp->current_component ) {
-		$order = $bp->current_action;
-		if ( 'all' == $order )
-			$type = 'all';
-		else if ( 'newest' == $order )
-			$type = 'newest';
-		else if ( 'recently-active' == $order )
-			$type = 'recently-active';
-		else if ( 'most-votes' == $order )
-			$type = 'most-votes';
-		else if ( 'high-votes' == $order )
-			$type = 'high-votes';
-		else // default
-			$type = 'most-popular';
-	}
-	
-	if ( $max ) {
-		if ( $per_page > $max )
-			$per_page = $max;
-	}
-		
-	$site_links_template = new BP_Links_Site_Links_Template( $type, $per_page, $max );
-	return apply_filters( 'bp_has_site_links', $site_links_template->has_links(), &$site_links_template );
-}
-
-function bp_site_links() {
-	global $site_links_template;
-	
-	return $site_links_template->links();
-}
-
-function bp_the_site_link() {
-	global $site_links_template;
-	
-	return $site_links_template->the_link();
-}
-
-function bp_site_links_pagination_count() {
-	global $bp, $site_links_template;
-	
-	$from_num = intval( ( $site_links_template->pag_page - 1 ) * $site_links_template->pag_num ) + 1;
-	$to_num = ( $from_num + ( $site_links_template->pag_num - 1 ) > $site_links_template->total_link_count ) ? $site_links_template->total_link_count : $from_num + ( $site_links_template->pag_num - 1) ;
-
-	echo sprintf( __( 'Viewing link %1$d to %2$d (of %3$d links)', 'buddypress-links' ), $from_num, $to_num, $site_links_template->total_link_count ); ?> &nbsp;
-	<span class="ajax-loader"></span><?php 
-}
-
-function bp_site_links_pagination_links() {
-	echo bp_get_site_links_pagination_links();
-}
-	function bp_get_site_links_pagination_links() {
-		global $site_links_template;
-		
-		return apply_filters( 'bp_get_site_links_pagination_links', $site_links_template->pag_links );
-	}
-
-function bp_the_site_link_id() {
-	echo bp_get_the_site_link_id();
-}
-	function bp_get_the_site_link_id() {
-		global $site_links_template;
-		
-		return apply_filters( 'bp_get_the_site_link_id', $site_links_template->link->id );
-	}
-
-function bp_the_site_link_name() {
-	echo bp_get_the_site_link_name();
-}
-	function bp_get_the_site_link_name() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_name', bp_get_link_name( $site_links_template->link ) );
-	}
-
-function bp_the_site_link_url() {
-	echo bp_get_the_site_link_url();
-}
-	function bp_get_the_site_link_url() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_url', bp_get_link_url( $site_links_template->link ) );
-	}
-
-function bp_the_site_link_url_domain() {
-	echo bp_get_the_site_link_url_domain();
-}
-	function bp_get_the_site_link_url_domain() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_url_domain', bp_get_link_url_domain( $site_links_template->link ) );
-	}
-
-function bp_the_site_link_category_name() {
-	echo bp_get_the_site_link_category_name();
-}
-	function bp_get_the_site_link_category_name() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_category_name', bp_get_link_category_name( $site_links_template->link ) );
-	}
-
-function bp_the_site_link_avatar() {
-	echo bp_get_the_site_link_avatar();
-}
-	function bp_get_the_site_link_avatar() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_the_site_link_avatar', bp_get_link_avatar( array(), $site_links_template->link ) );
-	}
-
-function bp_the_site_link_avatar_thumb() {
-	echo bp_get_the_site_link_avatar_thumb();
-}
-	function bp_get_the_site_link_avatar_thumb() {
-		global $site_links_template;
-		
-		return apply_filters( 'bp_get_the_site_link_avatar_thumb', bp_get_link_avatar_thumb( $site_links_template->link ) );
-	}
-
-function bp_the_site_link_avatar_mini() {
-	echo bp_get_the_site_link_avatar_mini();
-}
-	function bp_get_the_site_link_avatar_mini() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_avatar_mini', bp_get_link_avatar_mini( $site_links_template->link ) );
-	}
-
-function bp_the_site_link_user_avatar() {
-	echo bp_get_the_site_link_user_avatar();
-}
-	function bp_get_the_site_link_user_avatar() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_the_site_link_user_avatar', bp_get_link_user_avatar( array(), $site_links_template->link ) );
-	}
-
-function bp_the_site_link_user_avatar_thumb() {
-	echo bp_get_the_site_link_user_avatar_thumb();
-}
-	function bp_get_the_site_link_user_avatar_thumb() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_user_avatar_thumb', bp_get_link_user_avatar_thumb( $site_links_template->link ) );
-	}
-
-function bp_the_site_link_user_avatar_mini() {
-	echo bp_get_the_site_link_user_avatar_mini();
-}
-	function bp_get_the_site_link_user_avatar_mini() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_user_avatar_mini', bp_get_link_user_avatar_mini( $site_links_template->link ) );
-	}
-
-function bp_the_site_link_permalink() {
-	echo bp_get_the_site_link_permalink();
-}
-	function bp_get_the_site_link_permalink() {
-		global $site_links_template;
-		
-		return apply_filters( 'bp_get_the_site_link_permalink', bp_get_link_permalink( $site_links_template->link ) );
-	}
-
-function bp_the_site_link_wire_permalink() {
-	echo bp_get_the_site_link_wire_permalink();
-}
-	function bp_get_the_site_link_wire_permalink() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_wire_permalink', bp_get_link_wire_permalink( $site_links_template->link ) );
-	}
-
-function bp_the_site_link_userlink() {
-	echo bp_get_the_site_link_userlink();
-}
-	function bp_get_the_site_link_userlink() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_userlink', bp_get_link_userlink( $site_links_template->link ) );
-	}
-
-function bp_the_site_link_time_elapsed_text() {
-	echo bp_get_the_site_link_time_elapsed_text();
-}
-	function bp_get_the_site_link_time_elapsed_text() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_time_elapsed_text', bp_get_link_time_elapsed_text( $site_links_template->link ) );
-	}
-
-function bp_the_site_link_last_active() {
-	echo bp_get_the_site_link_last_active();
-}
-	function bp_get_the_site_link_last_active() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_last_active', sprintf( __( 'active %1$s ago', 'buddypress-links' ), bp_get_link_last_active( $site_links_template->link ) ) );
-	}
-
-/* TODO useful on directory page?
-function bp_the_site_link_join_button() {
-	global $site_links_template;
-	
-	echo bp_link_join_button( $site_links_template->link );
-}
-*/
-	
-function bp_the_site_link_description() {
-	echo bp_get_the_site_link_description();
-}
-	function bp_get_the_site_link_description() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_description', bp_get_link_description( $site_links_template->link ) );
-	}
-
-function bp_the_site_link_description_excerpt() {
-	echo bp_get_the_site_link_description_excerpt();
-}
-	function bp_get_the_site_link_description_excerpt() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_description_excerpt', bp_create_excerpt( bp_get_link_description( $site_links_template->link, false ), 35 ) );
-	}
-
-function bp_the_site_link_vote_total() {
-	echo bp_get_the_site_link_vote_total();
-}
-	function bp_get_the_site_link_vote_total() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_vote_total', bp_get_link_vote_total( $site_links_template->link ) );
-	}
-
-function bp_the_site_link_vote_count() {
-	echo bp_get_the_site_link_vote_count();
-}
-	function bp_get_the_site_link_vote_count() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_vote_count', bp_get_link_vote_count( $site_links_template->link ) );
-	}
-
-function bp_the_site_link_date_created() {
-	echo bp_get_the_site_link_date_created();
-}
-	function bp_get_the_site_link_date_created() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_date_created', bp_core_time_since( $site_links_template->link->date_created ) );
-	}
-
-function bp_the_site_link_type() {
-	echo bp_get_the_site_link_type();
-}
-	function bp_get_the_site_link_type() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_type', bp_get_link_type( $site_links_template->link ) );
-	}
-
-function bp_the_site_link_wire_count() {
-	echo bp_get_the_site_link_wire_count();
-}
-	function bp_get_the_site_link_wire_count() {
-		global $site_links_template;
-		return apply_filters( 'bp_get_the_site_link_wire_count', bp_get_link_wire_count( $site_links_template->link ) );
-	}
-
-function bp_the_site_link_play_button() {
-	echo bp_get_the_site_link_play_button();
-}
-	function bp_get_the_site_link_play_button() {
-		global $site_links_template;
-		return apply_filters( 'bp_get_the_site_link_play_button', bp_get_link_play_button( $site_links_template->link ) );
-	}
-
-function bp_the_site_link_is_wire_enabled( $link = false ) {
-	global $site_links_template;
-
-	if ( $link )
-		return (bool) $link->enable_wire;
-	else
-		return (bool) $site_links_template->link->enable_wire;
-}
-
-function bp_the_site_link_hidden_fields() {
+function bp_link_hidden_fields() {
 	if ( isset( $_REQUEST['s'] ) ) {
 		echo '<input type="hidden" id="search_terms" value="' . attribute_escape( $_REQUEST['s'] ) . '" name="search_terms" />';
 	}
-	
-	if ( isset( $_REQUEST['letter'] ) ) {
-		echo '<input type="hidden" id="selected_letter" value="' . attribute_escape( $_REQUEST['letter'] ) . '" name="selected_letter" />';
-	}
-	
+
 	if ( isset( $_REQUEST['links_search'] ) ) {
 		echo '<input type="hidden" id="search_terms" value="' . attribute_escape( $_REQUEST['links_search'] ) . '" name="search_terms" />';
 	}
 }
 
-function bp_the_site_link_feed_item_guid() {
-	echo bp_get_the_site_link_feed_item_guid();
+function bp_link_feed_item_guid() {
+	echo bp_get_link_feed_item_guid();
 }
-	function bp_get_the_site_link_feed_item_guid() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_feed_item_guid', bp_get_the_site_link_permalink() );
+	function bp_get_link_feed_item_guid() {
+		return apply_filters( 'bp_get_link_feed_item_guid', bp_get_link_permalink() );
 	}
 
-function bp_the_site_link_feed_item_title() {
-	echo bp_get_the_site_link_feed_item_title();
+function bp_link_feed_item_title() {
+	echo bp_get_link_feed_item_title();
 }
-	function bp_get_the_site_link_feed_item_title() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_feed_item_title', bp_get_link_name( $site_links_template->link ) );
+	function bp_get_link_feed_item_title() {
+		return apply_filters( 'bp_get_link_feed_item_title', bp_get_link_name() );
 	}
 
-function bp_the_site_link_feed_item_link() {
-	echo bp_get_the_site_link_feed_item_link();
+function bp_link_feed_item_link() {
+	echo bp_get_link_feed_item_link();
 }
-	function bp_get_the_site_link_feed_item_link() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_feed_item_link', bp_get_link_permalink( $site_links_template->link ) );
+	function bp_get_link_feed_item_link() {
+		return apply_filters( 'bp_get_link_feed_item_link', bp_get_link_permalink() );
 	}
 
-function bp_the_site_link_feed_item_date() {
-	echo bp_get_the_site_link_feed_item_date();
+function bp_link_feed_item_date() {
+	echo bp_get_link_feed_item_date();
 }
-	function bp_get_the_site_link_feed_item_date() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_feed_item_date', $site_links_template->link->date_created );
+	function bp_get_link_feed_item_date() {
+		return apply_filters( 'bp_get_link_feed_item_date', bp_get_link_date_created() );
 	}
 
-function bp_the_site_link_feed_item_description() {
-	echo bp_get_the_site_link_feed_item_description();
+function bp_link_feed_item_description() {
+	echo bp_get_link_feed_item_description();
 }
-	function bp_get_the_site_link_feed_item_description() {
-		global $site_links_template;
-
-		return apply_filters( 'bp_get_the_site_link_feed_item_description', bp_get_link_description( $site_links_template->link ) );
+	function bp_get_link_feed_item_description() {
+		return apply_filters( 'bp_get_link_feed_item_description', bp_get_link_description() );
 	}
 
 /********************************************************************************
- * Site Links Categories Template Tags
+ * Links Categories Template Tags
  **/
 
-class BP_Links_Site_Categories_Template {
+class BP_Links_Categories_Template {
 	var $current_category = -1;
 	var $category_count;
 	var $categories;
@@ -1653,7 +1162,7 @@ class BP_Links_Site_Categories_Template {
 	var $pag_links;
 	var $total_category_count;
 
-	function bp_links_site_categories_template( $type, $per_page, $max ) {
+	function bp_links_categories_template( $type, $per_page, $max ) {
 		global $bp;
 
 		$this->pag_page = isset( $_REQUEST['lcpage'] ) ? intval( $_REQUEST['lcpage'] ) : 1;
@@ -1750,14 +1259,14 @@ class BP_Links_Site_Categories_Template {
 	}
 }
 
-function bp_rewind_site_link_categories() {
-	global $site_link_categories_template;
+function bp_rewind_links_categories() {
+	global $links_categories_template;
 
-	$site_link_categories_template->rewind_categories();
+	$links_categories_template->rewind_categories();
 }
 
-function bp_has_site_link_categories( $args = '' ) {
-	global $bp, $site_link_categories_template;
+function bp_has_links_categories( $args = '' ) {
+	global $bp, $links_categories_template;
 
 	$defaults = array(
 		'type' => 'all',
@@ -1773,115 +1282,114 @@ function bp_has_site_link_categories( $args = '' ) {
 			$per_page = $max;
 	}
 
-	$site_link_categories_template = new BP_Links_Site_Categories_Template( $type, $per_page, $max );
-	return apply_filters( 'bp_has_site_link_categories', $site_link_categories_template->has_categories(), &$site_link_categories_template );
+	$links_categories_template = new BP_Links_Categories_Template( $type, $per_page, $max );
+	return apply_filters( 'bp_has_links_categories', $links_categories_template->has_categories(), &$links_categories_template );
 }
 
-function bp_site_link_categories() {
-	global $site_link_categories_template;
+function bp_links_categories() {
+	global $links_categories_template;
 
-	return $site_link_categories_template->categories();
+	return $links_categories_template->categories();
 }
 
-function bp_the_site_link_categories_category() {
-	global $site_link_categories_template;
+function bp_links_categories_category() {
+	global $links_categories_template;
 
-	return $site_link_categories_template->the_category();
+	return $links_categories_template->the_category();
 }
 
-function bp_site_link_categories_pagination_count() {
-	global $bp, $site_link_categories_template;
+function bp_links_categories_pagination_count() {
+	global $bp, $links_categories_template;
 
-	// TODO, this is not displaying properly
-	$from_num = intval( ( $site_link_categories_template->pag_page - 1 ) * $site_link_categories_template->pag_num ) + 1;
-	$to_num = ( $from_num + ( $site_link_categories_template->pag_num - 1 ) > $site_link_categories_template->total_link_count ) ? $site_link_categories_template->total_link_count : $from_num + ( $site_link_categories_template->pag_num - 1) ;
+	$from_num = intval( ( $links_categories_template->pag_page - 1 ) * $links_categories_template->pag_num ) + 1;
+	$to_num = ( $from_num + ( $links_categories_template->pag_num - 1 ) > $links_categories_template->total_category_count ) ? $links_categories_template->total_category_count : $from_num + ( $links_categories_template->pag_num - 1) ;
 
-	echo sprintf( __( 'Viewing category %1$d to %2$d (of %3$d categories)', 'buddypress-links' ), $from_num, $to_num, $site_link_categories_template->total_category_count ); ?> &nbsp;
+	echo sprintf( __( 'Viewing category %1$d to %2$d (of %3$d categories)', 'buddypress-links' ), $from_num, $to_num, $links_categories_template->total_category_count ); ?> &nbsp;
 	<span class="ajax-loader"></span><?php
 }
 
-function bp_site_link_categories_pagination_links() {
-	echo bp_get_site_link_categories_pagination_links();
+function bp_links_categories_pagination_links() {
+	echo bp_get_links_categories_pagination_links();
 }
-	function bp_get_site_link_categories_pagination_links() {
-		global $site_link_categories_template;
+	function bp_get_links_categories_pagination_links() {
+		global $links_categories_template;
 
-		return apply_filters( 'bp_get_site_link_categories_pagination_links', $site_link_categories_template->pag_links );
+		return apply_filters( 'bp_get_links_categories_pagination_links', $links_categories_template->pag_links );
 	}
 
-function bp_the_site_link_categories_category_id() {
-	echo bp_get_the_site_link_categories_category_id();
+function bp_links_categories_category_id() {
+	echo bp_get_links_categories_category_id();
 }
-	function bp_get_the_site_link_categories_category_id() {
-		global $site_link_categories_template;
+	function bp_get_links_categories_category_id() {
+		global $links_categories_template;
 
-		return apply_filters( 'bp_get_the_site_link_categories_category_id', $site_link_categories_template->category->id );
+		return apply_filters( 'bp_get_links_categories_category_id', $links_categories_template->category->id );
 	}
 
-function bp_the_site_link_categories_category_name() {
-	echo bp_get_the_site_link_categories_category_name();
+function bp_links_categories_category_name() {
+	echo bp_get_links_categories_category_name();
 }
-	function bp_get_the_site_link_categories_category_name() {
-		global $site_link_categories_template;
+	function bp_get_links_categories_category_name() {
+		global $links_categories_template;
 
-		return apply_filters( 'bp_get_the_site_link_categories_category_name', $site_link_categories_template->category->name );
+		return apply_filters( 'bp_get_links_categories_category_name', $links_categories_template->category->name );
 	}
 
-function bp_the_site_link_categories_category_description() {
-	echo bp_get_the_site_link_categories_category_description();
+function bp_links_categories_category_description() {
+	echo bp_get_links_categories_category_description();
 }
-	function bp_get_the_site_link_categories_category_description() {
-		global $site_link_categories_template;
+	function bp_get_links_categories_category_description() {
+		global $links_categories_template;
 
-		return apply_filters( 'bp_get_the_site_link_categories_category_description', $site_link_categories_template->category->description );
+		return apply_filters( 'bp_get_links_categories_category_description', $links_categories_template->category->description );
 	}
 
-function bp_the_site_link_categories_category_slug() {
-	echo bp_get_the_site_link_categories_category_slug();
+function bp_links_categories_category_slug() {
+	echo bp_get_links_categories_category_slug();
 }
-	function bp_get_the_site_link_categories_category_slug() {
-		global $site_link_categories_template;
+	function bp_get_links_categories_category_slug() {
+		global $links_categories_template;
 
-		return apply_filters( 'bp_get_the_site_link_categories_category_slug', $site_link_categories_template->category->slug );
+		return apply_filters( 'bp_get_links_categories_category_slug', $links_categories_template->category->slug );
 	}
 
-function bp_the_site_link_categories_category_priority() {
-	echo bp_get_the_site_link_categories_category_priority();
+function bp_links_categories_category_priority() {
+	echo bp_get_links_categories_category_priority();
 }
-	function bp_get_the_site_link_categories_category_priority() {
-		global $site_link_categories_template;
+	function bp_get_links_categories_category_priority() {
+		global $links_categories_template;
 
-		return apply_filters( 'bp_get_the_site_link_categories_category_priority', $site_link_categories_template->category->priority );
+		return apply_filters( 'bp_get_links_categories_category_priority', $links_categories_template->category->priority );
 	}
 
-function bp_the_site_link_categories_category_link_count() {
-	echo bp_get_the_site_link_categories_category_link_count();
+function bp_links_categories_category_link_count() {
+	echo bp_get_links_categories_category_link_count();
 }
-	function bp_get_the_site_link_categories_category_link_count() {
-		global $site_link_categories_template;
+	function bp_get_links_categories_category_link_count() {
+		global $links_categories_template;
 
-		return apply_filters( 'bp_get_the_site_link_categories_category_link_count', BP_Links_Category::get_link_count( $site_link_categories_template->category->id ) );
+		return apply_filters( 'bp_get_links_categories_category_link_count', BP_Links_Category::get_link_count( $links_categories_template->category->id ) );
 	}
 
-function bp_the_site_link_categories_category_date_created() {
-	echo bp_get_the_site_link_categories_category_date_created();
+function bp_links_categories_category_date_created() {
+	echo bp_get_links_categories_category_date_created();
 }
-	function bp_get_the_site_link_categories_category_date_created() {
-		global $site_link_categories_template;
+	function bp_get_links_categories_category_date_created() {
+		global $links_categories_template;
 
-		return apply_filters( 'bp_get_the_site_link_categories_category_date_created', date( get_option( 'date_format' ), $site_link_categories_template->category->date_created ) );
+		return apply_filters( 'bp_get_links_categories_category_date_created', date( get_option( 'date_format' ), $links_categories_template->category->date_created ) );
 	}
 
-function bp_the_site_link_categories_category_date_updated() {
-	echo bp_get_the_site_link_categories_category_date_updated();
+function bp_links_categories_category_date_updated() {
+	echo bp_get_links_categories_category_date_updated();
 }
-	function bp_get_the_site_link_categories_category_date_updated() {
-		global $site_link_categories_template;
+	function bp_get_links_categories_category_date_updated() {
+		global $links_categories_template;
 
-		return apply_filters( 'bp_get_the_site_link_categories_category_date_updated', date( get_option( 'date_format' ), $site_link_categories_template->category->date_updated ) );
+		return apply_filters( 'bp_get_links_categories_category_date_updated', date( get_option( 'date_format' ), $links_categories_template->category->date_updated ) );
 	}
 
-function bp_the_site_link_categories_hidden_fields() {
+function bp_links_categories_hidden_fields() {
 	if ( isset( $_REQUEST['s'] ) ) {
 		echo '<input type="hidden" id="search_terms" value="' . attribute_escape( $_REQUEST['s'] ) . '" name="search_terms" />';
 	}
@@ -1890,51 +1398,6 @@ function bp_the_site_link_categories_hidden_fields() {
 /*******************************
  * Links Directory Template Tags
  **/
-
-function bp_directory_links_filter_tabs() {
-	global $bp;
-?>
-	<li<?php if ( !isset($bp->current_action) || 'most-popular' == $bp->current_action ) : ?> class="current"<?php endif; ?>><a href="<?php echo site_url('/') . $bp->links->slug ?>/most-popular"><?php _e( 'Most Popular', 'buddypress-links' ) ?></a></li>
-	<li<?php if ( 'most-votes' == $bp->current_action ) : ?> class="current"<?php endif; ?>><a href="<?php echo site_url('/') . $bp->links->slug ?>/most-votes"><?php _e( 'Most Votes', 'buddypress-links' ) ?></a></li>
-	<li<?php if ( 'high-votes' == $bp->current_action ) : ?> class="current"<?php endif; ?>><a href="<?php echo site_url('/') . $bp->links->slug ?>/high-votes"><?php _e( 'Vote Rating', 'buddypress-links' ) ?></a></li>
-	<li<?php if ( 'recently-active' == $bp->current_action ) : ?> class="current"<?php endif; ?>><a href="<?php echo site_url('/') . $bp->links->slug ?>/recently-active"><?php _e( 'Recently Active', 'buddypress-links' ) ?></a></li>
-	<li<?php if ( 'newest' == $bp->current_action ) : ?> class="current"<?php endif; ?>><a href="<?php echo site_url('/') . $bp->links->slug ?>/newest"><?php _e( 'Newest', 'buddypress-links' ) ?></a></li>
-	<li<?php if ( 'all' == $bp->current_action ) : ?> class="current"<?php endif; ?>><a href="<?php echo site_url('/') . $bp->links->slug ?>/all"><?php _e( 'All', 'buddypress-links' ) ?></a></li>
-	<li><div id="filter-cat"><?php _e( 'Category', 'buddypress-links' ) ?>: <?php bp_directory_links_filter_category($_COOKIE['bp_directory_links_category_id'], 'category_id') ?></div></li>
-<?php
-	do_action( 'bp_directory_links_filter_tabs' );
-}
-
-function bp_directory_links_filter_category( $selected_category_id = 1, $element_id = 'category', $element_class = '' ) {
-
-	do_action( 'bp_before_directory_links_filter_category' );
-
-	// grab all categories
-	$categories = BP_Links_Category::get_all();
-
-	$class_string = ( empty( $element_class ) ) ? null : sprintf( ' class="%s"', $element_class );
-
-	echo sprintf( '<select id="%1$s"%2$s>', $element_id, $class_string );
-	echo sprintf( '<option value="">%1$s</option>', __( 'All', 'buddypress-links' ) );
-
-	foreach ( $categories as $category ) {
-		// populate
-		$category = new BP_Links_Category( $category->category_id );
-		// is this one selected?
-		$selected = ( $selected_category_id == $category->id ) ? ' selected="selected"' : null;
-		// output it
-		echo sprintf( '<option value="%d"%s />%s</option>', $category->id, $selected, $category->name );
-	}
-
-	// close tag
-	echo '</select>';
-
-	// print newline
-	echo PHP_EOL;
-
-	do_action( 'bp_after_directory_links_filter_category' );
-
-}
 
 function bp_directory_links_search_form() {
 	global $bp; ?>
@@ -1945,320 +1408,163 @@ function bp_directory_links_search_form() {
 <?php
 }
 
+
+/***
+ * Links RSS Feed Template Tags
+ */
+
+// TODO need to handle 'all links' AND 'my links'
 function bp_directory_links_feed_link() {
 	echo bp_get_directory_links_feed_link();
 }
 	function bp_get_directory_links_feed_link() {
 		global $bp;
-
+		/*
+		if ( !empty( $_POST['scope'] ) && $_POST['scope'] == 'mylinks' )
+			return $bp->loggedin_user->domain . BP_LINKS_SLUG . '/my-links/feed/';
+		else
+		*/
 		return apply_filters( 'bp_get_directory_links_feed_link', site_url( $bp->links->slug . '/feed' ) );
 	}
+
+function bp_link_activity_feed_link() {
+	echo bp_get_link_activity_feed_link();
+}
+	function bp_get_link_activity_feed_link() {
+		global $bp;
+
+		return apply_filters( 'bp_get_link_activity_feed_link', bp_get_link_permalink( $bp->links->current_link ) . '/feed/' );
+	}
+
+
+/***
+ * Links Vote Panel Template Tags
+ */
+
+function bp_link_vote_panel( $show_count = true ) {
+	echo bp_get_link_vote_panel( $show_count );
+}
+	function bp_get_link_vote_panel( $show_count = true ) {
+
+		$show_count = apply_filters( 'bp_get_link_vote_panel_show_count', $show_count );
+
+		return sprintf('
+			<div class="link-vote-panel" id="link-vote-panel-%2$d">
+				%1$s%3$s
+				%4$s
+			%5$s</div>',
+			apply_filters( 'bp_before_link_vote_panel_content', '' ), // arg 1
+			bp_get_link_id(), // arg 2
+			bp_get_link_vote_panel_clickers(), // arg 3
+			( $show_count ) ? bp_get_link_vote_panel_count() : null, // arg 4
+			apply_filters( 'bp_after_link_vote_panel_content', '' )	// arg 5
+		);
+	}
+
+function bp_link_vote_panel_clickers() {
+	echo bp_get_link_vote_panel_clickers();
+}
+	function bp_get_link_vote_panel_clickers() {
+
+		$html = '
+			<div class="clickers">
+				<a href="#vu" id="vote-up-%1$d" class="vote up"></a>
+				<div id="vote-total-%1$d" class="vote-total">%2$+d</div>
+				<a href="#vd" id="vote-down-%1$d" class="vote down"></a>
+			</div>';
+		$html_filtered = apply_filters( 'bp_get_link_vote_panel_clickers', $html );
+
+		return sprintf(
+			$html_filtered,
+			bp_get_link_id(), // arg 1
+			bp_get_link_vote_total() // arg 2
+		);
+	}
+
+function bp_link_vote_panel_count() {
+	echo bp_get_link_vote_panel_count();
+}
+	function bp_get_link_vote_panel_count() {
+
+		$html = '<div class="vote-count"><span id="vote-count-%1$d">%2$d</span> %3$s</div>';
+		$html_filtered = apply_filters( 'bp_get_link_vote_panel_count', $html );
+
+		return sprintf(
+			$html_filtered,
+			bp_get_link_id(), // arg 1
+			bp_get_link_vote_count(), // arg 2
+			__('Votes', 'buddypress-links') // arg 3
+		);
+	}
+	
+function bp_link_vote_panel_form() {
+	printf( '<form action="%s/" method="post" id="link-vote-form">', site_url() );
+	wp_nonce_field( 'link_vote', '_wpnonce-link-vote' );
+	echo '</form>' . PHP_EOL;
+}
 
 /*********************************
  * Links List Template Helper Tags
  **/
 
-function bp_link_list_parse_args( $args ) {
-
-	$defaults = array(
-		'the_site' => false,
-		'avatar_size' => BP_LINKS_LIST_AVATAR_SIZE
-	);
-
-	return wp_parse_args( $args, $defaults );
+function bp_link_list_item_class() {
+	echo bp_get_link_list_item_class();
 }
-
-function bp_link_list( $args = array() ) {
-
-	bp_link_list_open();
-
-	while ( bp_links() ) {
-		bp_the_link();
-
-		// set item_id
-		$args['item_id'] = bp_get_link_id();
-
-		bp_link_list_item_open( $args );
-		bp_link_list_item_left( $args );
-		bp_link_list_item_right( $args );
-		bp_link_list_item_footer( $args );
-		bp_link_list_item_close();
+	function bp_get_link_list_item_class() {
+		return apply_filters( 'bp_get_link_list_item_class', 'avmax-' . bp_get_link_avatar_display_size() );
 	}
 
-	bp_link_list_close();
+function bp_link_list_item_avatar() {
+	echo bp_get_link_list_item_avatar();
 }
-
-function bp_the_site_link_list( $args = array() ) {
-
-	bp_link_list_open();
-
-	while ( bp_site_links() ) {
-		bp_the_site_link();
-
-		// force 'the_site' to true
-		$args['the_site'] = true;
-
-		// set item_id
-		$args['item_id'] = bp_get_the_site_link_id();
-
-		bp_link_list_item_open( $args );
-		bp_link_list_item_left( $args );
-		bp_link_list_item_right( $args );
-		bp_link_list_item_footer( $args );
-		bp_link_list_item_close();
-	}
-
-	bp_link_list_close();
-}
-
-function bp_link_list_open() {
-	do_action( 'bp_before_my_links_list' );
-	echo '<ul id="link-list" class="item-list">' . PHP_EOL;
-	do_action( 'bp_before_my_links_list_content' );
-}
-
-function bp_link_list_close() {
-	do_action( 'bp_after_my_links_list_content' );
-	echo '</ul>' . PHP_EOL;
-	do_action( 'bp_after_my_links_list' );
-
-	// IMPORTANT: this form is required for the AJAX voting to work!
-	bp_link_list_vote_form();
-}
-
-function bp_link_list_vote_form() {
-	bp_link_list_vote_form_open();
-	bp_link_list_vote_form_close();
-}
-
-function bp_link_list_vote_form_open() {
-	echo sprintf( '<form action="%s/" method="post" id="link-vote-form">', site_url() ) . PHP_EOL;
-}
-
-function bp_link_list_vote_form_close() {
-	wp_nonce_field( 'link_vote', '_wpnonce-link-vote' ) . PHP_EOL;
-	echo '</form>' . PHP_EOL;
-}
-
-function bp_link_list_item_open( $args = '' ) {
-
-	extract( bp_link_list_parse_args( $args ) );
-
-	switch ( (integer) $avatar_size ) {
-		case 50:
-		case 60:
-		case 70:
-		case 80:
-		case 90:
-		case 100:
-		case 110:
-		case 120:
-		case 130:
-			$avmax_class = 'avmax-' . $avatar_size;
-			break;
-		default:
-			$avmax_class = 'avmax-' . BP_LINKS_LIST_AVATAR_SIZE;
-	}
-
-	do_action( 'bp_before_my_links_list_item' );
-	printf( '<li class="%s">%s', $avmax_class, PHP_EOL );
-	do_action( 'bp_before_my_links_list_item_content' );
-}
-
-function bp_link_list_item_close() {
-	do_action( 'bp_after_my_links_list_item_content' );
-	echo '</li>' . PHP_EOL;
-	do_action( 'bp_after_my_links_list_item' );
-}
-
-function bp_link_list_item_left( $args = array() ) {
-
-	extract( bp_link_list_parse_args( $args ) );
-
-	switch ( (integer) $avatar_size ) {
-		case 50:
-			$thumb_html = ( $the_site ) ? bp_get_the_site_link_avatar_thumb() : bp_get_link_avatar_thumb();
-			break;
-		default:
-			$thumb_html = ( $the_site ) ? bp_get_the_site_link_avatar() : bp_get_link_avatar();
-	}
-
-	printf('
-		%1$s<div class="link-list-left">%2$s
-			%5$s<a href="%3$s">%4$s</a>%6$s
-		%7$s</div>%8$s',
-		apply_filters( 'bp_before_my_links_list_item_left', '', $args ), // arg 1
-		apply_filters( 'bp_before_my_links_list_item_left_content', '', $args ), // arg 2
-		( $the_site ) ? bp_get_the_site_link_permalink() : bp_get_link_permalink(), // arg 3
-		$thumb_html, // arg 4
-		( $the_site ) ? bp_get_the_site_link_play_button() : bp_get_link_play_button(), // arg 5
-		apply_filters( 'bp_after_my_links_list_item_avatar', '', $args ), // arg 6
-		apply_filters( 'bp_after_my_links_list_item_left_content', '', $args ), // arg 7
-		apply_filters( 'bp_after_my_links_list_item_left', '', $args ) // arg 8
-	);
-}
-
-function bp_link_list_item_right( $args = array() ) {
-
-	extract( bp_link_list_parse_args( $args ) );
-	
-	printf('
-		%1$s<div class="link-list-right">%2$s
-			%3$s%4$s
-		%5$s</div>%6$s',
-		apply_filters( 'bp_before_my_links_list_item_right', '', $args ), // arg 1
-		apply_filters( 'bp_before_my_links_list_item_right_content', '', $args ), // arg 2
-		bp_get_link_list_item_title( $args ), // arg 3
-		bp_get_link_list_item_description( $args ), // arg 4
-		apply_filters( 'bp_after_my_links_list_item_right_content', '', $args ), // arg 5
-		apply_filters( 'bp_after_my_links_list_item_right', '', $args ) // arg 6
-	);
-}
-
-function bp_link_list_item_footer( $args = array() ) {
-
-	printf('
-		%1$s<div class="link-list-footer">%2$s
-			<div class="link-list-footer-left">
-				%3$s
-			</div>
-			<div class="link-list-footer-right">
-				%4$s
-			</div>
-		%5$s</div>%6$s',
-		apply_filters( 'bp_before_my_links_list_item_footer', '', $args ), // arg 1
-		apply_filters( 'bp_before_my_links_list_item_footer_content', '', $args ), // arg 2
-		bp_get_link_list_item_vote_panel( $args ), // arg 3
-		bp_get_link_list_item_xtrabar( $args ), // arg 4
-		apply_filters( 'bp_after_my_links_list_item_footer_content', '', $args ), // arg 5
-		apply_filters( 'bp_after_my_links_list_item_footer', '', $args ) // arg 6
-	);
-}
-
-function bp_link_list_item_vote_panel( $args = array() ) {
-	echo bp_get_link_list_item_vote_panel( $args );
-}
-function bp_get_link_list_item_vote_panel( $args = array() ) {
-
-	extract( bp_link_list_parse_args( $args ) );
-
-	if ( (integer) $avatar_size >= 0 ) {
-		$vote_count_html =
-			sprintf(
-				'<div class="vote-count">
-					<span id="vote-count-%1$d">%2$d</span> %3$s
-				</div>',
-				( $the_site ) ? bp_get_the_site_link_id() : bp_get_link_id(), // arg 1
-				( $the_site ) ? bp_get_the_site_link_vote_count() : bp_get_link_vote_count(), // arg 2
-				__('Votes', 'buddypress-links') // arg 3
-			);
-	} else {
-		$vote_count_html = null;
-	}
-
-	return sprintf('
-		%1$s<div class="link-vote-panel" id="link-vote-panel-%3$d">
-			%2$s<div class="clickers">
-				<a href="#vu" id="vote-up-%3$d" class="vote up"></a>
-				<div id="vote-total-%3$d" class="vote-total">%4$+d</div>
-				<a href="#vd" id="vote-down-%3$d"  class="vote down"></a>
-			</div>
-			%5$s
-		%6$s</div>%7$s',
-		apply_filters( 'bp_before_my_links_list_item_vote_panel', '', $args ), // arg 1
-		apply_filters( 'bp_before_my_links_list_item_vote_panel_content', '', $args ), // arg 2
-		( $the_site ) ? bp_get_the_site_link_id() : bp_get_link_id(), // arg 3
-		( $the_site ) ? bp_get_the_site_link_vote_total() : bp_get_link_vote_total(), // arg 4
-		$vote_count_html, // arg 5
-		apply_filters( 'bp_after_my_links_list_item_vote_panel_content', '', $args ),	// arg 6
-		apply_filters( 'bp_after_my_links_list_item_vote_panel', '', $args )	// arg 7
-	);
-}
-
-function bp_get_link_list_item_title( $args = array() ) {
-
-	extract( bp_link_list_parse_args( $args ) );
-
-	return sprintf(
-		'%1$s<h4>%2$s%3$s: <a href="%4$s" target="_blank">%5$s</a>%6$s</h4>%7$s',
-		apply_filters( 'bp_before_my_links_list_item_title', '', $args ), // arg 1
-		apply_filters( 'bp_before_my_links_list_item_title_content', '', $args ), // arg 2
-		( $the_site ) ? bp_get_the_site_link_category_name() : bp_get_link_category_name(), // arg 3
-		( $the_site ) ? bp_get_the_site_link_url() : bp_get_link_url(), // arg 4
-		( $the_site ) ? bp_get_the_site_link_name() : bp_get_link_name(), // arg 5
-		apply_filters( 'bp_after_my_links_list_item_title_content', '', $args ), // arg 6
-		apply_filters( 'bp_after_my_links_list_item_title', '', $args ) // arg 7
-	);
-}
-
-function bp_get_link_list_item_description( $args = array() ) {
-
-	extract( bp_link_list_parse_args( $args ) );
-
-	return sprintf('
-		%1$s<p class="desc">%2$s
-			<span class="domain">%3$s --</span>%4$s
-			%5$s
-		%6$s</p>%7$s',
-		apply_filters( 'bp_before_my_links_list_item_description', '', $args ), // arg 1
-		apply_filters( 'bp_before_my_links_list_item_description_content', '', $args ), // arg 2
-		( $the_site ) ? bp_get_the_site_link_url_domain() : bp_get_link_url_domain(), // arg 3
-		apply_filters( 'bp_after_my_links_list_item_description_domain', '', $args ), // arg 4
-		( $the_site ) ? bp_get_the_site_link_description() : bp_get_link_description(), // arg 5
-		apply_filters( 'bp_after_my_links_list_item_description_content', '', $args ), // arg 6
-		apply_filters( 'bp_after_my_links_list_item_description', '', $args ) // arg 7
-	);
-}
-
-// get_the_site_
-function bp_get_link_list_item_xtrabar( $args = array() ) {
-
-	extract( bp_link_list_parse_args( $args ) );
-	
-	// determine if wire is enabled
-	if ( function_exists('bp_wire_install') ) {
-		if ( $the_site ) {
-			$wire_enabled = bp_the_site_link_is_wire_enabled();
-		} else {
-			$wire_enabled = bp_link_is_wire_enabled();
+	function bp_get_link_list_item_avatar() {
+		switch ( bp_get_link_avatar_display_size() ) {
+			case 50:
+				return bp_get_link_avatar_thumb();
+			default:
+				return bp_get_link_avatar();
 		}
-	} else {
-		// wire component not enabled
-		$wire_enabled = false;
 	}
 
-	// build comment link
-	if ( $wire_enabled ) {
-		$wire_link = sprintf('
-			%1$s<a href="%2$s" class="comments">%3$d&nbsp;%4$s</a>%5$s',
-			apply_filters( 'bp_before_my_links_list_item_xtrabar_comments', '', $args ), // arg 1
-			( $the_site ) ? bp_get_the_site_link_wire_permalink() : bp_get_link_wire_permalink(), // arg 2
-			( $the_site ) ? bp_get_the_site_link_wire_count() : bp_get_link_wire_count(), // arg 3
-			__( 'Comments', 'buddypress-links' ), // arg 4
-			apply_filters( 'bp_after_my_links_list_item_xtrabar_comments', '', $args ) // arg 5
-		);
-	}
-
-	return sprintf('
-		%1$s<div class="xtrabar">%2$s
-			%3$s<a href="%4$s" class="home">%5$s</a>%6$s%7$s
-			%8$s<div class="owner">%9$s&nbsp;%10$s %11$s %12$s</div>%13$s
-		%14$s</div>%15$s',
-		apply_filters( 'bp_before_my_links_list_item_xtrabar_content', '', $args ), // arg 1
-		apply_filters( 'bp_before_my_links_list_item_xtrabar', '', $args ), // arg 2
-		apply_filters( 'bp_before_my_links_list_item_xtrabar_home', '', $args ), // arg 3
-		( $the_site ) ? bp_get_the_site_link_permalink() : bp_get_link_permalink(), // arg 4
-		__( 'Home', 'buddypress-links' ), // arg 5
-		apply_filters( 'bp_after_my_links_list_item_xtrabar_home', '', $args ), // arg 6
-		( $wire_enabled ) ? $wire_link : null, // arg 7
-		apply_filters( 'bp_before_my_links_list_item_xtrabar_userlink', '', $args ), // arg 8
-		( $the_site ) ? bp_get_the_site_link_user_avatar_mini() : bp_get_link_user_avatar_mini(), // arg 9
-		( $the_site ) ? bp_get_the_site_link_userlink() : bp_get_link_userlink(), // arg 10
-		__( 'created', 'buddypress-links' ), // arg 11
-		( $the_site ) ? bp_get_the_site_link_time_elapsed_text() : bp_get_link_time_elapsed_text(), // arg 12
-		apply_filters( 'bp_after_my_links_list_item_xtrabar_userlink', '', $args ), // arg 13
-		apply_filters( 'bp_after_my_links_list_item_xtrabar', '', $args ), // arg 14
-		apply_filters( 'bp_after_my_links_list_item_xtrabar_content', '', $args ) // arg 15
-	);
+function bp_link_list_item_url_target() {
+	echo bp_get_link_list_item_url_target();
 }
+	function bp_get_link_list_item_url_target() {
+		return apply_filters( 'bp_get_link_list_item_url_target', '_blank' );
+	}
+
+function bp_link_list_item_url_rel() {
+	echo bp_get_link_list_item_url_rel();
+}
+	function bp_get_link_list_item_url_rel() {
+		$rel = apply_filters( 'bp_get_link_list_item_url_rel', '' );
+
+		if ( !empty( $rel ) ) {
+			return sprintf( ' rel="%s"', $rel );
+		}
+
+		return null;
+	}
+
+function bp_link_list_item_xtrabar_home() {
+	echo bp_get_link_list_item_xtrabar_home();
+}
+	function bp_get_link_list_item_xtrabar_home() {
+		return apply_filters( 'bp_get_link_list_item_xtrabar_home', __( 'Home', 'buddypress-links' ) );
+	}
+
+function bp_link_list_item_xtrabar_comments() {
+	echo bp_get_link_list_item_xtrabar_comments();
+}
+	function bp_get_link_list_item_xtrabar_comments() {
+		return apply_filters( 'bp_get_link_list_item_xtrabar_comments', __( 'Comments', 'buddypress-links' ) );
+	}
+	
+function bp_link_list_item_xtrabar_userlink_created() {
+	echo bp_get_link_list_item_xtrabar_userlink_created();
+}
+	function bp_get_link_list_item_xtrabar_userlink_created() {
+		return apply_filters( 'bp_get_link_list_item_xtrabar_userlink_created', sprintf( '%s %s', __( 'created', 'buddypress-links' ), bp_get_link_time_elapsed_text() ) );
+	}
+
 ?>

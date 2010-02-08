@@ -6,11 +6,21 @@ Description: BuddyPress Links is a link sharing component for BuddyPress.
 Author: Marshall Sorenson (MrMaz)
 Author URI: http://buddypress.org/developers/mrmaz/
 License: GNU GENERAL PUBLIC LICENSE 3.0 http://www.gnu.org/licenses/gpl.txt
-Version: 0.2.1
+Version: 0.3-bleeding
 Text Domain: buddypress-links
 Site Wide Only: false
 */
-	
+
+/*** Make sure BuddyPress is loaded ********************************
+if ( !function_exists( 'bp_core_install' ) ) {
+	require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+	if ( is_plugin_active( 'buddypress/bp-loader.php' ) )
+		require_once ( WP_PLUGIN_DIR . '/buddypress/bp-loader.php' );
+	else
+		deactivate_plugins( __FILE__, true );
+}
+/*******************************************************************/
+
 //
 // You can override the following constants in
 // wp-config.php if you feel the need to.
@@ -57,17 +67,45 @@ if ( !defined( 'BP_LINKS_MAX_CHARACTERS_DESCRIPTION' ) )
 if ( !defined( 'BP_LINKS_EMBED_FOTOGLIF_PUBID' ) )
 	define( 'BP_LINKS_EMBED_FOTOGLIF_PUBID', 'ncnz5fx9z1h9' );
 
+/**
+ * Handle plugin loading
+ */
+function bp_links_autoloader() {
 
-/////////
-// Important Internal Constants
-// *** DO NOT MODIFY THESE ***
-define ( 'BP_LINKS_IS_INSTALLED', 1 );
-define ( 'BP_LINKS_VERSION', '0.2.1' );
-define ( 'BP_LINKS_DB_VERSION', '3' );
-define ( 'BP_LINKS_PLUGIN_NAME', 'buddypress-links' );
-define ( 'BP_LINKS_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . BP_LINKS_PLUGIN_NAME );
-/////////
+	// Define the active theme for this install
+	if ( !defined( 'BP_LINKS_THEME' ) ) {
+		if ( 'bp-default' == get_blog_option( BP_ROOT_BLOG, 'stylesheet' ) ) {
+			define ( 'BP_LINKS_THEME', 'bp-links-default' );
+		} else {
+			define ( 'BP_LINKS_THEME', 'bp-links-custom' );
+		}
+	}
 
-// lets do it
-require_once 'bp-links.php';
+	/////////
+	// Important Internal Constants
+	// *** DO NOT MODIFY THESE ***
+	define ( 'BP_LINKS_VERSION', '0.3' );
+	define ( 'BP_LINKS_DB_VERSION', '4' );
+	define ( 'BP_LINKS_PLUGIN_NAME', 'buddypress-links' );
+	define ( 'BP_LINKS_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . BP_LINKS_PLUGIN_NAME );
+	define ( 'BP_LINKS_PLUGIN_URL', WP_PLUGIN_URL . '/' . BP_LINKS_PLUGIN_NAME );
+	define ( 'BP_LINKS_THEMES_DIR', BP_LINKS_PLUGIN_DIR . '/themes' );
+	define ( 'BP_LINKS_THEMES_URL', BP_LINKS_PLUGIN_URL . '/themes' );
+	define ( 'BP_LINKS_THEME_DIR', BP_LINKS_THEMES_DIR . '/' . BP_LINKS_THEME );
+	define ( 'BP_LINKS_THEME_URL', BP_LINKS_THEMES_URL . '/' . BP_LINKS_THEME );
+	/////////
+
+	// ignition, start
+	require_once 'bp-links.php';
+}
+
+//
+// Hook into BuddyPress!
+//
+if ( defined( 'BP_VERSION' ) ) {
+	bp_links_autoloader();
+} else {
+	add_action( 'bp_init', 'bp_links_autoloader' );
+}
+
 ?>
