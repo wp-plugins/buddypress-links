@@ -2,11 +2,11 @@
 Contributors: MrMaz
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8591311
 Tags: wpmu, buddypress, social, networking, links, rich media, embed, youtube, flickr, metacafe
-Requires at least: PHP 5.2, WordPress MU 2.8.4, BuddyPress 1.1
-Tested up to: PHP 5.2.x, WordPress MU 2.8.4, BuddyPress 1.1.3
+Requires at least: PHP 5.2, WordPress MU 2.9.1, BuddyPress 1.2.x
+Tested up to: PHP 5.2.x, WordPress 2.9.1, BuddyPress 1.2.x
 Stable tag: 0.2.1
 
-BuddyPress Links is a drop in link and rich media sharing component for BuddyPress 1.1.x
+BuddyPress Links is a drop in link and rich media sharing component for BuddyPress 1.2.x
 
 == Description ==
 
