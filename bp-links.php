@@ -134,6 +134,30 @@ function bp_links_filter_template( $located_template, $template_names ) {
 add_filter( 'bp_located_template', 'bp_links_filter_template', 10, 2 );
 
 /**
+ * Define the active theme and stylesheet paths
+ */
+function bp_links_setup_theme() {
+	
+	if ( !defined( 'BP_LINKS_THEME' ) ) {
+
+		if ( false != BP_LINKS_CUSTOM_THEME ) {
+			define( 'BP_LINKS_THEME', BP_LINKS_CUSTOM_THEME );
+		} else {
+			switch ( basename( TEMPLATEPATH ) ) {
+				case 'bp-classic':
+					die('Only the BuddyPress 1.2 default theme is supported!');
+				case 'bp-default':
+				default:
+					define( 'BP_LINKS_THEME', BP_LINKS_DEFAULT_THEME );
+			}
+		}
+
+		define( 'BP_LINKS_THEME_DIR', BP_LINKS_THEMES_DIR . '/' . BP_LINKS_THEME );
+		define( 'BP_LINKS_THEME_URL', BP_LINKS_THEMES_URL . '/' . BP_LINKS_THEME );
+	}
+}
+
+/**
  * Check if template exists in style path, then check custom plugin location
  *
  * @param array $template_names
@@ -145,6 +169,8 @@ function bp_links_locate_theme_template( $template_names, $load = false ) {
 	if ( !is_array( $template_names ) )
 		return '';
 
+	bp_links_setup_theme();
+	
 	$located = '';
 	foreach($template_names as $template_name) {
 
@@ -182,6 +208,8 @@ function bp_links_locate_theme_template( $template_names, $load = false ) {
  */
 function bp_links_locate_template( $template_names, $load = false ) {
 
+	bp_links_setup_theme();
+	
 	if ( !is_array( $template_names ) )
 		return '';
 
@@ -200,6 +228,7 @@ function bp_links_locate_template( $template_names, $load = false ) {
  * @param string $template
  */
 function bp_links_load_template( $template ) {
+	bp_links_setup_theme();
 	bp_core_load_template( BP_LINKS_THEME . '/' . $template );
 }
 
