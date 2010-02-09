@@ -450,7 +450,7 @@ add_action( 'bp_nav_items', 'bp_links_header_nav_setup', 99);
 function bp_links_activity_type_tabs_setup() {
 	global $bp;
 
-	if ( is_user_logged_in() && bp_get_total_group_count_for_user( bp_loggedin_user_id() ) ) {
+	if ( is_user_logged_in() && bp_links_total_links_for_user( bp_loggedin_user_id() ) ) {
 		echo sprintf(
 			'<li id="activity-links"><a href="%s" title="%s">%s</a></li>',
 			site_url( BP_ACTIVITY_SLUG . '/#links/' ),
