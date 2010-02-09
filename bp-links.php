@@ -981,7 +981,7 @@ function bp_links_action_directory_feed() {
 	include_once( 'feeds/bp-links-feed.php' );
 	die();
 }
-add_action( 'bp_init', 'bp_links_action_directory_feed' );
+add_action( 'bp_init', 'bp_links_action_directory_feed', 6 );
 
 /********************************************************************************
  * Activity & Notification Functions
