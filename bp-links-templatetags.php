@@ -1,84 +1,5 @@
 <?php
 
-function bp_links_category_select_options( $selected_category_id = null, $element_id = 'category', $element_class = '' ) {
-
-	do_action( 'bp_before_links_category_select_options' );
-
-	// grab all categories
-	$categories = BP_Links_Category::get_all();
-
-	$class_string = ( empty( $element_class ) ) ? null : sprintf( ' class="%s"', $element_class );
-
-	foreach ( $categories as $category ) {
-		// populate
-		$category = new BP_Links_Category( $category->category_id );
-		// is this one selected?
-		$selected = ( $selected_category_id == $category->id ) ? ' selected="selected"' : null;
-		// output it
-		echo sprintf( '<option value="%d"%s />%s</option>', $category->id, $selected, $category->name ) . PHP_EOL;
-	}
-
-	do_action( 'bp_after_links_category_select_options' );
-}
-
-function bp_links_category_radio_options( $selected_category_id = 1, $element_name = 'category', $element_class = '' ) {
-
-	do_action( 'bp_before_links_category_radio_options' );
-	
-	// grab all categories
-	$categories = BP_Links_Category::get_all();
-
-	foreach ( $categories as $category ) {
-		// populate
-		$category = new BP_Links_Category( $category->category_id );
-		// is this one selected?
-		$selected = ( $selected_category_id == $category->id ) ? ' checked="checked"' : null;
-		// has class string?
-		$class_string = ( empty( $element_class ) ) ? null : sprintf( ' class="%s"', $element_class );
-		// output it
-		echo sprintf( '<input type="radio" name="%s" value="%d"%s%s />%s ', $element_name, $category->id, $class_string, $selected, $category->name );
-	}
-	// print newline
-	echo PHP_EOL;
-
-	do_action( 'bp_after_links_category_radio_options' );
-
-}
-
-function bp_links_category_radio_options_with_all( $selected_category_id = 1, $element_name = 'category', $element_class = '' ) {
-
-	do_action( 'bp_before_links_category_radio_options_with_all' );
-
-	// is this one selected?
-	$selected = ( empty( $selected_category_id ) ) ? ' checked="checked"' : null;
-	// has class string?
-	$class_string = ( empty( $element_class ) ) ? null : sprintf( ' class="%s"', $element_class );
-	// output it
-	echo sprintf( '<input type="radio" name="%s" value=""%s%s />%s ', $element_name, $class_string, $selected, __( 'All', 'buddypress-links' ) );
-
-	do_action( 'bp_after_links_category_radio_options_with_all' );
-
-	bp_links_category_radio_options();
-}
-
-function bp_get_link_has_avatar() {
-	global $bp;
-	return bp_links_check_avatar( $bp->links->current_link->id );
-}
-
-function bp_link_avatar_delete_link() {
-	echo bp_get_link_avatar_delete_link();
-}
-	function bp_get_link_avatar_delete_link() {
-		global $bp;
-
-		return apply_filters( 'bp_get_link_avatar_delete_link', wp_nonce_url( bp_get_link_permalink( $bp->links->current_link ) . '/admin/link-avatar/delete', 'bp_link_avatar_delete' ) );
-	}
-
-function bp_link_avatar_edit_form() {
-	bp_links_avatar_upload();
-}
-
 /*****************************************************************************
  * User Links Template Class/Tags
  **/
@@ -450,6 +371,13 @@ function bp_link_type() {
 		}
 
 		return apply_filters( 'bp_get_link_type', $type );
+	}
+
+function bp_link_has_avatar() {
+	echo ( bp_get_link_has_avatar() ) ? 1 : 0;
+}
+	function bp_get_link_has_avatar() {
+		return bp_links_check_avatar( bp_get_link_id() );
 	}
 
 function bp_link_avatar( $args = '', $link = null ) {
@@ -832,17 +760,6 @@ function bp_link_status_message( $link = false ) {
  * Link Creation Process Template Tags
  **/
 
-function bp_links_creation_tabs() {
-	global $bp;
-	
-	$href = sprintf( '%s/%s/create/', $bp->root_domain, $bp->links->slug );
-?>
-	<li class="current"<a href="<?php echo $href ?>"><?php _e( 'Create', 'buddypress-links' ) ?></a></li>
-	<li><a href="<?php echo $href ?>"><?php _e( 'Start Over', 'buddypress-links' ) ?></a></li>
-<?php
-	do_action( 'bp_links_creation_tabs' );
-}
-
 function bp_link_details_form_action() {
 	echo bp_get_link_details_form_action();
 }
@@ -1074,6 +991,15 @@ function bp_link_avatar_form_avatar() {
 		return apply_filters( 'bp_get_link_avatar_form_avatar', bp_get_link_avatar( 'size=full', bp_links_current_link() ) );
 	}
 
+function bp_link_avatar_form_delete_link() {
+	echo bp_get_link_avatar_form_delete_link();
+}
+	function bp_get_link_avatar_form_delete_link() {
+		global $bp;
+
+		return apply_filters( 'bp_get_link_avatar_delete_link', wp_nonce_url( bp_get_link_permalink( $bp->links->current_link ) . '/admin/link-avatar/delete', 'bp_link_avatar_delete' ) );
+	}
+
 function bp_link_avatar_form_embed_html() {
 	echo bp_get_link_avatar_form_embed_html();
 }
@@ -1094,11 +1020,6 @@ function bp_link_avatar_form_embed_html_display() {
 			return 1;
 		}
 	}
-
-
-/********************************************************************************
- * Site Links Template Tags
- **/
 
 function bp_link_hidden_fields() {
 	if ( isset( $_REQUEST['s'] ) ) {
@@ -1394,20 +1315,67 @@ function bp_links_categories_hidden_fields() {
 		echo '<input type="hidden" id="search_terms" value="' . attribute_escape( $_REQUEST['s'] ) . '" name="search_terms" />';
 	}
 }
-	
-/*******************************
- * Links Directory Template Tags
- **/
 
-function bp_directory_links_search_form() {
-	global $bp; ?>
-	<form action="" method="get" id="search-links-form">
-		<label><input type="text" name="s" id="links_search" value="<?php if ( isset( $_GET['s'] ) ) { echo attribute_escape( $_GET['s'] ); } else { _e( 'Search anything...', 'buddypress-links' ); } ?>"  onfocus="if (this.value == '<?php _e( 'Search anything...', 'buddypress-links' ) ?>') {this.value = '';}" onblur="if (this.value == '') {this.value = '<?php _e( 'Search anything...', 'buddypress-links' ) ?>';}" /></label>
-		<input type="submit" id="links_search_submit" name="links_search_submit" value="<?php _e( 'Search', 'buddypress-links' ) ?>" />
-	</form>
-<?php
+function bp_links_category_select_options( $selected_category_id = null, $element_id = 'category', $element_class = '' ) {
+
+	do_action( 'bp_before_links_category_select_options' );
+
+	// grab all categories
+	$categories = BP_Links_Category::get_all();
+
+	$class_string = ( empty( $element_class ) ) ? null : sprintf( ' class="%s"', $element_class );
+
+	foreach ( $categories as $category ) {
+		// populate
+		$category = new BP_Links_Category( $category->category_id );
+		// is this one selected?
+		$selected = ( $selected_category_id == $category->id ) ? ' selected="selected"' : null;
+		// output it
+		echo sprintf( '<option value="%d"%s />%s</option>', $category->id, $selected, $category->name ) . PHP_EOL;
+	}
+
+	do_action( 'bp_after_links_category_select_options' );
 }
 
+function bp_links_category_radio_options( $selected_category_id = 1, $element_name = 'category', $element_class = '' ) {
+
+	do_action( 'bp_before_links_category_radio_options' );
+
+	// grab all categories
+	$categories = BP_Links_Category::get_all();
+
+	foreach ( $categories as $category ) {
+		// populate
+		$category = new BP_Links_Category( $category->category_id );
+		// is this one selected?
+		$selected = ( $selected_category_id == $category->id ) ? ' checked="checked"' : null;
+		// has class string?
+		$class_string = ( empty( $element_class ) ) ? null : sprintf( ' class="%s"', $element_class );
+		// output it
+		echo sprintf( '<input type="radio" name="%s" value="%d"%s%s />%s ', $element_name, $category->id, $class_string, $selected, $category->name );
+	}
+	// print newline
+	echo PHP_EOL;
+
+	do_action( 'bp_after_links_category_radio_options' );
+
+}
+
+function bp_links_category_radio_options_with_all( $selected_category_id = 1, $element_name = 'category', $element_class = '' ) {
+
+	do_action( 'bp_before_links_category_radio_options_with_all' );
+
+	// is this one selected?
+	$selected = ( empty( $selected_category_id ) ) ? ' checked="checked"' : null;
+	// has class string?
+	$class_string = ( empty( $element_class ) ) ? null : sprintf( ' class="%s"', $element_class );
+	// output it
+	echo sprintf( '<input type="radio" name="%s" value=""%s%s />%s ', $element_name, $class_string, $selected, __( 'All', 'buddypress-links' ) );
+
+	do_action( 'bp_after_links_category_radio_options_with_all' );
+
+	bp_links_category_radio_options();
+}
 
 /***
  * Links RSS Feed Template Tags
@@ -1435,6 +1403,31 @@ function bp_link_activity_feed_link() {
 
 		return apply_filters( 'bp_get_link_activity_feed_link', bp_get_link_permalink( $bp->links->current_link ) . '/feed/' );
 	}
+
+
+/*******************************
+ * Links Profile Template Tags
+ **/
+
+function bp_links_notification_settings() {
+	global $current_user; ?>
+	<table class="notification-settings" id="links-notification-settings">
+		<tr>
+			<th class="icon"></th>
+			<th class="title"><?php _e( 'Links', 'buddypress-links' ) ?></th>
+			<th class="yes"><?php _e( 'Yes', 'buddypress-links' ) ?></th>
+			<th class="no"><?php _e( 'No', 'buddypress-links' )?></th>
+		</tr>
+		<tr>
+			<td></td>
+			<td><?php _e( 'A member posts a comment on a link you created', 'buddypress-links' ) ?></td>
+			<td class="yes"><input type="radio" name="notifications[notification_links_activity_post]" value="yes" <?php if ( !get_usermeta( $current_user->id, 'notification_links_activity_post') || 'yes' == get_usermeta( $current_user->id, 'notification_links_activity_post') ) { ?>checked="checked" <?php } ?>/></td>
+			<td class="no"><input type="radio" name="notifications[notification_links_activity_post]" value="no" <?php if ( 'no' == get_usermeta( $current_user->id, 'notification_links_activity_post') ) { ?>checked="checked" <?php } ?>/></td>
+		</tr>
+		<?php do_action( 'bp_links_notification_settings' ); ?>
+	</table>
+<?php
+}
 
 
 /***

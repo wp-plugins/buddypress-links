@@ -7,7 +7,7 @@
 
 			<div class="item-list-tabs no-ajax" id="link-create-tabs">
 				<ul>
-					<?php bp_links_creation_tabs() ?>
+					<?php bp_links_dtheme_creation_tabs() ?>
 				</ul>
 			</div>
 

@@ -9,7 +9,7 @@
 
 		<?php if ( bp_get_link_has_avatar() ) : ?>
 			<div class="generic-button" id="delete-link-avatar-button">
-				<a class="edit" href="<?php bp_link_avatar_delete_link() ?>" title="<?php _e( 'Delete Avatar', 'buddypress-links' ) ?>"><?php _e( 'Delete Avatar', 'buddypress-links' ) ?></a>
+				<a class="edit" href="<?php bp_link_avatar_form_delete_link() ?>" title="<?php _e( 'Delete Avatar', 'buddypress-links' ) ?>"><?php _e( 'Delete Avatar', 'buddypress-links' ) ?></a>
 			</div>
 		<?php endif; ?>
 	</div>

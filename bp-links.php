@@ -7,6 +7,7 @@ require ( BP_LINKS_PLUGIN_DIR . '/bp-links-templatetags.php' );
 // TODO the widget is broken right now
 //require ( BP_LINKS_PLUGIN_DIR . '/bp-links-widgets.php' );
 require ( BP_LINKS_PLUGIN_DIR . '/bp-links-filters.php' );
+require ( BP_LINKS_PLUGIN_DIR . '/bp-links-dtheme.php' );
 
 function bp_links_install() {
 	global $wpdb, $bp;
@@ -156,6 +157,7 @@ function bp_links_setup_theme() {
 		define( 'BP_LINKS_THEME_URL', BP_LINKS_THEMES_URL . '/' . BP_LINKS_THEME );
 	}
 }
+add_filter( 'wp', 'bp_links_setup_theme' );
 
 /**
  * Check if template exists in style path, then check custom plugin location
@@ -166,10 +168,10 @@ function bp_links_setup_theme() {
  */
 function bp_links_locate_theme_template( $template_names, $load = false ) {
 
+	bp_links_setup_theme();
+	
 	if ( !is_array( $template_names ) )
 		return '';
-
-	bp_links_setup_theme();
 	
 	$located = '';
 	foreach($template_names as $template_name) {
@@ -437,39 +439,6 @@ function bp_links_setup_adminbar_menu() {
 }
 add_action( 'bp_adminbar_menus', 'bp_links_setup_adminbar_menu', 20 );
 
-function bp_links_header_nav_setup() {
-	global $bp;
-
-	$selected = ( bp_is_page( BP_LINKS_SLUG ) ) ? ' class="selected"' : '';
-	$title = __( 'Links', 'buddypress-links' );
-	
-	echo sprintf('<li%s><a href="%s/%s" title="%s">%s</a></li>', $selected, get_option('home'), BP_LINKS_SLUG, $title, $title );
-}
-add_action( 'bp_nav_items', 'bp_links_header_nav_setup', 99);
-
-function bp_links_activity_type_tabs_setup() {
-	global $bp;
-
-	if ( is_user_logged_in() && bp_links_total_links_for_user( bp_loggedin_user_id() ) ) {
-		echo sprintf(
-			'<li id="activity-links"><a href="%s" title="%s">%s</a></li>',
-			site_url( BP_ACTIVITY_SLUG . '/#links/' ),
-			__( 'The activity of links I created.', 'buddypress-links' ),
-			sprintf(
-				__( 'My Links (%s)', 'buddypress-links' ),
-				bp_links_total_links_for_user( bp_loggedin_user_id() )
-			)
-		);
-	}
-}
-add_action( 'bp_before_activity_type_tab_mentions', 'bp_links_activity_type_tabs_setup' );
-
-function bp_links_activity_filter_options_setup() {
-	echo sprintf( '<option value="created_link">%s</option>', __( 'Show Created Link', 'buddypress-links' ) );
-	echo sprintf( '<option value="voted_on_link">%s</option>', __( 'Show Voted on Link', 'buddypress-links' ) );
-}
-add_action( 'bp_activity_filter_options', 'bp_links_activity_filter_options_setup' );
-
 function bp_links_adminbar_random_menu_setup() {
 	global $bp;
 	echo sprintf( '<li><a href="%s/%s/?random-link">%s</a></li>', $bp->root_domain, $bp->links->slug, __( 'Random Link', 'buddypress-links' ) );
@@ -487,29 +456,6 @@ function bp_links_add_meta() {
 	}
 }
 add_action( 'wp_head', 'bp_links_add_meta' );
-
-function bp_links_add_js() {
-	global $bp;
-
-	if ( $bp->current_component == $bp->links->slug ) {
-		// load global ajax scripts
-		wp_enqueue_script( 'bp-links-ajax', BP_LINKS_THEME_URL . '/_inc/global.js', array('jquery') );
-		// load color box JS if single item
-		wp_enqueue_script( 'bp-links-ajax-colorbox', BP_LINKS_THEME_URL . '/_inc/jquery.colorbox-min.js', array('jquery') );
-		// load create forms ajax scripts if necessary
-		if ( $bp->current_action == 'create' || bp_links_is_link_admin_page() ) {
-			wp_enqueue_script( 'bp-links-ajax-forms', BP_LINKS_THEME_URL . '/_inc/forms.js', array('jquery') );
-		}
-	}
-}
-add_action( 'wp', 'bp_links_add_js', 1);
-
-function bp_links_add_css() {
-	if ( $bp->current_component == $bp->links->slug ) {
-		wp_enqueue_style( 'bp-links-screen', BP_LINKS_THEME_URL . '/style.css' );
-	}
-}
-add_action( 'wp_print_styles', 'bp_links_add_css' );
 
 
 /********************************************************************************
@@ -740,27 +686,6 @@ function bp_links_screen_link_admin_delete_link() {
 	bp_links_load_template( 'single/home' );
 }
 add_action( 'wp', 'bp_links_screen_link_admin_delete_link', 4 );
-
-function bp_links_screen_notification_settings() {
-	global $current_user; ?>
-	<table class="notification-settings" id="links-notification-settings">
-		<tr>
-			<th class="icon"></th>
-			<th class="title"><?php _e( 'Links', 'buddypress-links' ) ?></th>
-			<th class="yes"><?php _e( 'Yes', 'buddypress-links' ) ?></th>
-			<th class="no"><?php _e( 'No', 'buddypress-links' )?></th>
-		</tr>
-		<tr>
-			<td></td>
-			<td><?php _e( 'A member posts a comment on a link you created', 'buddypress-links' ) ?></td>
-			<td class="yes"><input type="radio" name="notifications[notification_links_activity_post]" value="yes" <?php if ( !get_usermeta( $current_user->id, 'notification_links_activity_post') || 'yes' == get_usermeta( $current_user->id, 'notification_links_activity_post') ) { ?>checked="checked" <?php } ?>/></td>
-			<td class="no"><input type="radio" name="notifications[notification_links_activity_post]" value="no" <?php if ( 'no' == get_usermeta( $current_user->id, 'notification_links_activity_post') ) { ?>checked="checked" <?php } ?>/></td>
-		</tr>
-		<?php do_action( 'bp_links_screen_notification_settings' ); ?>
-	</table>
-<?php	
-}
-add_action( 'bp_notification_settings', 'bp_links_screen_notification_settings' );
 
 function bp_links_validate_create_form_input() {
 	

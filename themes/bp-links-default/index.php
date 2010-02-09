@@ -9,7 +9,7 @@
 			<?php do_action( 'bp_before_directory_links_content' ) ?>
 
 			<div id="link-dir-search" class="dir-search">
-				<?php bp_directory_links_search_form() ?>
+				<?php bp_links_dtheme_search_form() ?>
 			</div><!-- #link-dir-search -->
 
 			<div class="item-list-tabs">
