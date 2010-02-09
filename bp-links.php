@@ -249,7 +249,7 @@ function bp_links_load_textdomain() {
 		}
 	}
 }
-add_action ( 'bp_init', 'bp_links_load_textdomain', 1 );
+add_action ( 'bp_init', 'bp_links_load_textdomain', 2 );
 
 function bp_links_setup_globals() {
 	global $bp, $wpdb;
@@ -270,8 +270,8 @@ function bp_links_setup_globals() {
 	$bp->links->forbidden_names = apply_filters( 'bp_links_forbidden_names', array( 'links', 'my-links', 'link-finder', 'create', 'delete', 'add', 'admin', 'popular', 'most-votes', 'high-votes', 'active', 'newest', 'all', 'submit', 'feed' ) );
 
 }
-add_action( 'bp_init', 'bp_links_setup_globals', 3 );
-add_action( 'admin_menu', 'bp_links_setup_globals', 6 );
+add_action( 'bp_init', 'bp_links_setup_globals', 4 );
+add_action( 'admin_menu', 'bp_links_setup_globals', 4 );
 
 function bp_links_setup_root_component() {
 	/* Register 'links' as a root component */
@@ -399,8 +399,8 @@ function bp_links_setup_nav() {
 	
 	do_action( 'bp_links_setup_nav', $bp->links->current_link->user_has_access );
 }
-add_action( 'bp_init', 'bp_links_setup_nav', 4 );
-add_action( 'admin_menu', 'bp_links_setup_nav', 6 );
+add_action( 'bp_init', 'bp_links_setup_nav', 8 );
+add_action( 'admin_menu', 'bp_links_setup_nav', 8 );
 
 function bp_links_directory_links_setup() {
 	global $bp;
@@ -953,7 +953,7 @@ function bp_links_action_link_feed() {
 	include_once( 'feeds/bp-links-link-feed.php' );
 	die;
 }
-add_action( 'wp', 'bp_links_action_link_feed', 3 );
+add_action( 'bp_init', 'bp_links_action_link_feed', 6 );
 
 function bp_links_action_my_links_feed() {
 	global $bp, $wp_query;
@@ -967,7 +967,7 @@ function bp_links_action_my_links_feed() {
 	include_once( 'feeds/bp-links-mylinks-feed.php' );
 	die;
 }
-add_action( 'wp', 'bp_links_action_my_links_feed', 3 );
+add_action( 'bp_init', 'bp_links_action_my_links_feed', 6 );
 
 function bp_links_action_directory_feed() {
 	global $bp, $wp_query;
