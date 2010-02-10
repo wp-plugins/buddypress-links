@@ -84,12 +84,23 @@ function bp_links_autoloader() {
 	require_once 'bp-links.php';
 }
 
+/**
+ * Set up root component
+ */
+function bp_links_setup_root_component() {
+	// Register 'links' as a root component
+	if ( function_exists( 'bp_core_add_root_component' ) )
+		bp_core_add_root_component( BP_LINKS_SLUG );
+}
+
 //
 // Hook into BuddyPress!
 //
 if ( defined( 'BP_VERSION' ) ) {
+	bp_links_setup_root_component();
 	bp_links_autoloader();
 } else {
+	add_action( 'plugins_loaded', 'bp_links_setup_root_component', 2 );
 	add_action( 'bp_init', 'bp_links_autoloader' );
 }
 

@@ -275,12 +275,6 @@ function bp_links_setup_globals() {
 add_action( 'bp_init', 'bp_links_setup_globals', 4 );
 add_action( 'admin_menu', 'bp_links_setup_globals', 4 );
 
-function bp_links_setup_root_component() {
-	/* Register 'links' as a root component */
-	bp_core_add_root_component( BP_LINKS_SLUG );
-}
-add_action( 'bp_init', 'bp_links_setup_root_component', 2 );
-
 function bp_links_check_installed() {
 	global $wpdb, $bp;
 
