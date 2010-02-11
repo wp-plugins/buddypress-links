@@ -32,7 +32,7 @@
 				<?php do_action( 'bp_before_links_list_item_description_domain' ) ?>
 				<span class="domain"><?php bp_link_url_domain() ?> --</span>
 				<?php do_action( 'bp_before_links_list_item_description_text' ) ?>
-				<?php bp_link_description() ?>
+				<?php bp_link_description() ?> <a href="<?php bp_link_permalink() ?>"><?php bp_link_continue() ?></a>
 				<?php do_action( 'bp_after_links_list_item_description_text' ) ?>
 			</p>
 			<?php do_action( 'bp_after_links_list_item_description_content' ) ?>
@@ -54,9 +54,6 @@
 				<?php do_action( 'bp_before_links_list_item_xtrabar' ) ?>
 				<div class="xtrabar">
 					<?php do_action( 'bp_before_links_list_item_xtrabar_content' ) ?>
-					<?php do_action( 'bp_before_links_list_item_xtrabar_home' ) ?>
-					<a href="<?php bp_link_permalink() ?>" class="home"><?php bp_link_list_item_xtrabar_home() ?></a>
-					<?php do_action( 'bp_after_links_list_item_xtrabar_home' ) ?>
 					<?php do_action( 'bp_before_links_list_item_xtrabar_comments' ) ?>
 					<a href="<?php bp_link_permalink() ?>" class="comments"><?php bp_link_activity_post_count() ?>&nbsp;<?php bp_link_list_item_xtrabar_comments() ?></a>
 					<?php do_action( 'bp_after_links_list_item_xtrabar_comments' ) ?>

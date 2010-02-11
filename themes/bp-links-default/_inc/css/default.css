@@ -191,15 +191,11 @@ ul#link-list li.avmax-130 div.link-list-footer-left {
 ul#link-list li div.xtrabar {
 	/* no styles yet */
 }
-	ul#link-list li div.xtrabar a.home,
 	ul#link-list li div.xtrabar a.comments {
 		display: block;
 		float: left;
 		padding-left: 2em;
 		margin-right: 0.5em;
-	}
-	ul#link-list li div.xtrabar a.home {
-		background: url(../images/icons/star.png) 5% no-repeat;
 	}
 	ul#link-list li div.xtrabar a.comments {
 		background: url(../images/icons/comments.png) 5% no-repeat;
