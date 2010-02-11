@@ -189,29 +189,44 @@ add_filter( 'bp_dtheme_ajax_querystring', 'bp_links_dtheme_ajax_querystring_cont
 function bp_links_dtheme_ajax_querystring_activity_filter( $query_string, $object, $filter, $scope, $page, $search_terms, $extras ) {
 	global $bp;
 
-	if ( 'activity' != $object )
-		return $query_string;
+	$do_filter = false;
 
-	if ( $bp->links->id != $bp->current_component ) {
-		if ( $bp->activity->id != $bp->current_component && 'links' != $scope ) {
-			return $query_string;
+	// only filter activity. ignore profile activity.
+	if ( $bp->activity->id == $object && !bp_is_my_profile() ) {
+		
+		if ( empty( $bp->current_component ) || $bp->activity->id == $bp->current_component ) {
+			// filter under 'activity' component with 'links' scope
+			if ( $bp->links->id == $scope ) {
+				$do_filter = 1;
+			}
+		} elseif ( $bp->links->id == $bp->current_component ) {
+			// filter 'links' component home pages
+			if ( $bp->is_single_item ) {
+				$do_filter = 2;
+			}
 		}
 	}
 
-	// parse query string
-	$args = array();
-	parse_str( $query_string, $args );
+	if ( $do_filter ) {
+		
+		// parse query string
+		$args = array();
+		parse_str( $query_string, $args );
 
-	// override with links object
-	$args['object'] = $bp->links->id;
+		// override with links object
+		$args['object'] = $bp->links->id;
 
-	// set primary id to current link id if applicable
-	if ( $bp->links->current_link ) {
-		$args['primary_id'] = $bp->links->current_link->id;
+		// set primary id to current link id if applicable
+		if ( $bp->links->current_link ) {
+			$args['primary_id'] = $bp->links->current_link->id;
+		}
+
+		// return modified query string
+		return http_build_query( $args );
 	}
 
-	// return modified query string
-	return http_build_query( $args );
+	// no filtering
+	return $query_string;
 }
 add_filter( 'bp_dtheme_ajax_querystring', 'bp_links_dtheme_ajax_querystring_activity_filter', 1, 7 );
 
