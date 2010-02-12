@@ -96,7 +96,7 @@ function bp_links_init() {
 	///////////////////////////////
 
 	// ignition, start
-	require_once 'bp-links.php';
+	require_once 'bp-links-core.php';
 }
 
 /**
