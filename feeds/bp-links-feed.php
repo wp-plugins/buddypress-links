@@ -19,7 +19,7 @@ header('Status: 200 OK');
 >
 
 <channel>
-	<title><?php echo get_site_option( 'site_name' ); ?> - <?php _e( 'Most Recent Links', 'buddypress-links' ) ?></title>
+	<title><?php echo bp_site_name() ?> - <?php _e( 'Most Recent Links', 'buddypress-links' ) ?></title>
 	<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
 	<atom:link href="<?php echo site_url() . '/' . $bp->links->slug ?>" rel="alternate" type="text/html" />
 	<link><?php echo site_url() . '/' . $bp->links->slug ?></link>
