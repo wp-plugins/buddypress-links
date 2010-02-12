@@ -399,8 +399,8 @@ function bp_link_avatar( $args = '', $link = null ) {
 		return apply_filters( 'bp_get_link_avatar', bp_links_fetch_avatar( $new_args, $link ) );
 	}
 
-function bp_link_avatar_thumb( $link = false ) {
-	echo bp_get_link_avatar_thumb( $link );
+function bp_link_avatar_thumb() {
+	echo bp_get_link_avatar_thumb();
 }
 	function bp_get_link_avatar_thumb( $link = false ) {
 		return bp_get_link_avatar( 'type=thumb', $link );
@@ -460,10 +460,7 @@ function bp_link_user_avatar_mini() {
 		return bp_get_link_user_avatar( 'type=thumb&width=20&height=20', $link );
 	}
 	
-function bp_link_last_active( $deprecated = true, $deprecated2 = false ) {
-	if ( !$deprecated )
-		return bp_get_link_last_active();
-	else
+function bp_link_last_active() {
 		echo bp_get_link_last_active();
 }
 	function bp_get_link_last_active( $link = false ) {
@@ -481,8 +478,8 @@ function bp_link_last_active( $deprecated = true, $deprecated2 = false ) {
 		}
 	}
 
-function bp_link_permalink( $link = false ) {
-	echo bp_get_link_permalink( $link );
+function bp_link_permalink() {
+	echo bp_get_link_permalink();
 }
 	function bp_get_link_permalink( $link = false ) {
 		global $links_template, $bp;
@@ -529,8 +526,8 @@ function bp_link_description() {
 		return apply_filters( 'bp_get_link_description', stripslashes($link->description) );
 	}
 
-function bp_link_description_excerpt( $link = false, $length = 55 ) {
-	echo bp_get_link_description_excerpt( $link, $length );
+function bp_link_description_excerpt( $length = 55 ) {
+	echo bp_get_link_description_excerpt( $length );
 }
 	function bp_get_link_description_excerpt( $link = false, $length = 55 ) {
 		global $links_template;
@@ -541,8 +538,8 @@ function bp_link_description_excerpt( $link = false, $length = 55 ) {
 		return apply_filters( 'bp_get_link_description_excerpt', bp_create_excerpt( $link->description, $length ) );
 	}
 
-function bp_link_continue( $link = false ) {
-	echo bp_get_link_continue( $link );
+function bp_link_continue() {
+	echo bp_get_link_continue();
 }
 	function bp_get_link_continue( $link = false ) {
 		return apply_filters( 'bp_get_link_continue', __( 'more...', 'buddypress-links' ) );
@@ -584,7 +581,7 @@ function bp_link_popularity() {
 		return apply_filters( 'bp_get_link_popularity', $link->popularity );
 	}
 
-function bp_link_date_created( $deprecated = false ) {
+function bp_link_date_created() {
 	echo bp_get_link_date_created();
 }
 	function bp_get_link_date_created( $link = false ) {
@@ -628,8 +625,8 @@ function bp_link_time_elapsed_text() {
 		return apply_filters( 'bp_get_link_time_elapsed_text', sprintf( $ret_text, $ret_number ) );
 	}
 
-function bp_link_play_button( $link = false ) {
-	echo bp_get_link_play_button( $link );
+function bp_link_play_button() {
+	echo bp_get_link_play_button();
 }
 	function bp_get_link_play_button( $link = false ) {
 
@@ -681,22 +678,23 @@ function bp_link_show_no_links_message() {
 function bp_links_pagination_links() {
 	echo bp_get_links_pagination_links();
 }
+	function bp_get_links_pagination_links() {
+		global $links_template;
 
-function bp_get_links_pagination_links() {
-	global $links_template;
-	
-	return apply_filters( 'bp_get_links_pagination_links', $links_template->pag_links );
-}
+		return apply_filters( 'bp_get_links_pagination_links', $links_template->pag_links );
+	}
 
 function bp_links_pagination_count() {
-	global $bp, $links_template;
-
-	$from_num = intval( ( $links_template->pag_page - 1 ) * $links_template->pag_num ) + 1;
-	$to_num = ( $from_num + ( $links_template->pag_num - 1 ) > $links_template->total_link_count ) ? $links_template->total_link_count : $from_num + ( $links_template->pag_num - 1) ;
-
-	echo sprintf( __( 'Viewing link %1$d to %2$d (of %3$d links)', 'buddypress-links' ), $from_num, $to_num, $links_template->total_link_count ); ?> &nbsp;
-	<span class="ajax-loader"></span><?php 
+	echo bp_get_links_pagination_count();
 }
+	function bp_get_links_pagination_count() {
+		global $bp, $links_template;
+
+		$from_num = intval( ( $links_template->pag_page - 1 ) * $links_template->pag_num ) + 1;
+		$to_num = ( $from_num + ( $links_template->pag_num - 1 ) > $links_template->total_link_count ) ? $links_template->total_link_count : $from_num + ( $links_template->pag_num - 1) ;
+
+		return sprintf( __( 'Viewing link %1$d to %2$d (of %3$d links)', 'buddypress-links' ), $from_num, $to_num, $links_template->total_link_count ) . '&nbsp<span class="ajax-loader"></span>';
+	}
 
 function bp_links_total_link_count() {
 	echo bp_get_links_total_link_count();
@@ -705,15 +703,15 @@ function bp_links_total_link_count() {
 		return apply_filters( 'bp_get_links_total_link_count', bp_links_total_links() );
 	}
 
-function bp_link_total_link_count_for_user( $user_id = false ) {
-	echo bp_get_link_total_link_count_for_user( $user_id );
+function bp_link_total_link_count_for_user() {
+	echo bp_get_link_total_link_count_for_user();
 }
 	function bp_get_link_total_link_count_for_user( $user_id = false ) {
 		return apply_filters( 'bp_get_link_total_link_count_for_user', bp_links_total_links_for_user( $user_id ) );
 	}
 
-function bp_link_activity_post_count( $link = false ) {
-	echo bp_get_link_activity_post_count( $link );
+function bp_link_activity_post_count() {
+	echo bp_get_link_activity_post_count();
 }
 	function bp_get_link_activity_post_count( $link = false ) {
 		global $links_template;
@@ -724,11 +722,10 @@ function bp_link_activity_post_count( $link = false ) {
 		return apply_filters( 'bp_get_link_activity_post_count', $link->get_activity_post_count() );
 	}
 
-function bp_link_admin_tabs( $link = false ) {
+function bp_link_admin_tabs() {
 	global $bp, $links_template;
 
-	if ( !$link )
-		$link = ( $links_template->link ) ? $links_template->link : $bp->links->current_link;
+	$link = ( $links_template->link ) ? $links_template->link : $bp->links->current_link;
 	
 	$current_tab = $bp->action_variables[0];
 ?>
@@ -742,7 +739,7 @@ function bp_link_admin_tabs( $link = false ) {
 	?>
 	<li<?php if ( 'link-avatar' == $current_tab ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->root_domain . '/' . $bp->links->slug ?>/<?php echo $link->slug ?>/admin/link-avatar"><?php _e( 'Link Avatar', 'buddypress-links' ) ?></a></li>
 
-	<?php do_action( 'bp_links_admin_tabs', $current_tab, $link->slug ) ?>
+	<?php do_action( 'bp_link_admin_tabs', $current_tab, $link->slug ) ?>
 	
 	<li<?php if ( 'delete-link' == $current_tab ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->root_domain . '/' . $bp->links->slug ?>/<?php echo $link->slug ?>/admin/delete-link"><?php _e( 'Delete Link', 'buddypress-links' ) ?></a></li>
 <?php
@@ -1472,6 +1469,7 @@ function bp_link_vote_panel_clickers() {
 				<div id="vote-total-%1$d" class="vote-total">%2$+d</div>
 				<a href="#vd" id="vote-down-%1$d" class="vote down"></a>
 			</div>';
+
 		$html_filtered = apply_filters( 'bp_get_link_vote_panel_clickers', $html );
 
 		return sprintf(
@@ -1487,6 +1485,7 @@ function bp_link_vote_panel_count() {
 	function bp_get_link_vote_panel_count() {
 
 		$html = '<div class="vote-count"><span id="vote-count-%1$d">%2$d</span> %3$s</div>';
+		
 		$html_filtered = apply_filters( 'bp_get_link_vote_panel_count', $html );
 
 		return sprintf(
