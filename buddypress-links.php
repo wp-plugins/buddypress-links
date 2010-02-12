@@ -65,7 +65,7 @@ if ( !defined( 'BP_LINKS_EMBED_FOTOGLIF_PUBID' ) )
 /**
  * Handle plugin loading
  */
-function bp_links_autoloader() {
+function bp_links_init() {
 
 	/////////
 	// Important Internal Constants
@@ -78,6 +78,9 @@ function bp_links_autoloader() {
 	define( 'BP_LINKS_THEMES_DIR', BP_LINKS_PLUGIN_DIR . '/themes' );
 	define( 'BP_LINKS_THEMES_URL', BP_LINKS_PLUGIN_URL . '/themes' );
 	define( 'BP_LINKS_DEFAULT_THEME', 'bp-links-default' );
+	define( 'BP_LINKS_ACTIVITY_ACTION_CREATE', 'bp_link_create' );
+	define( 'BP_LINKS_ACTIVITY_ACTION_VOTE', 'bp_link_vote' );
+	define( 'BP_LINKS_ACTIVITY_ACTION_COMMENT', 'bp_link_comment' );
 	/////////
 
 	// ignition, start
@@ -89,19 +92,44 @@ function bp_links_autoloader() {
  */
 function bp_links_setup_root_component() {
 	// Register 'links' as a root component
-	if ( function_exists( 'bp_core_add_root_component' ) )
-		bp_core_add_root_component( BP_LINKS_SLUG );
+	bp_core_add_root_component( BP_LINKS_SLUG );
 }
+
+/**
+ * Set up globals
+ */
+function bp_links_setup_globals() {
+	global $bp, $wpdb;
+
+	/* For internal identification NEVER, EVER, CHANGE THIS */
+	$bp->links->id = 'links';
+
+	$bp->links->table_name = $wpdb->base_prefix . 'bp_links';
+	$bp->links->table_name_categories = $wpdb->base_prefix . 'bp_links_categories';
+	$bp->links->table_name_votes = $wpdb->base_prefix . 'bp_links_votes';
+	$bp->links->table_name_linkmeta = $wpdb->base_prefix . 'bp_links_linkmeta';
+	$bp->links->format_notification_function = 'bp_links_format_notifications';
+	$bp->links->slug = BP_LINKS_SLUG;
+
+	/* Register this in the active components array */
+	$bp->active_components[$bp->links->slug] = $bp->links->id;
+
+	$bp->links->forbidden_names = apply_filters( 'bp_links_forbidden_names', array( 'links', 'my-links', 'link-finder', 'create', 'delete', 'add', 'admin', 'popular', 'most-votes', 'high-votes', 'active', 'newest', 'all', 'submit', 'feed' ) );
+
+}
+add_action( 'admin_menu', 'bp_links_setup_globals', 2 );
 
 //
 // Hook into BuddyPress!
 //
 if ( defined( 'BP_VERSION' ) ) {
 	bp_links_setup_root_component();
-	bp_links_autoloader();
+	bp_links_setup_globals();
+	bp_links_init();
 } else {
-	add_action( 'plugins_loaded', 'bp_links_setup_root_component', 2 );
-	add_action( 'bp_init', 'bp_links_autoloader' );
+	add_action( 'bp_setup_root_components', 'bp_links_setup_root_component' );
+	add_action( 'bp_setup_globals', 'bp_links_setup_globals' );
+	add_action( 'bp_init', 'bp_links_init' );
 }
 
 ?>

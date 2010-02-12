@@ -126,7 +126,7 @@ function bp_links_embed_download_avatar( $url ) {
 	}
 
 	/* Set the url value for the image */
-	$bp->avatar_admin->image->url = str_replace( WP_CONTENT_DIR, WP_CONTENT_URL, $bp->avatar_admin->image->dir );
+	$bp->avatar_admin->image->url = str_replace( BP_AVATAR_UPLOAD_PATH, BP_AVATAR_URL, $bp->avatar_admin->image->dir );
 
 	return true;
 }

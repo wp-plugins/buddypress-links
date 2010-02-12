@@ -1,5 +1,3 @@
-<?php /* Querystring is set via AJAX in _inc/ajax.php - bp_dtheme_content_filter() */ ?>
-
 <?php do_action( 'bp_before_links_loop' ) ?>
 
 <?php if ( bp_has_links( bp_dtheme_ajax_querystring( 'links' ) ) ) : ?>

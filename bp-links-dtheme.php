@@ -19,12 +19,12 @@ function bp_links_add_js() {
 
 	if ( $bp->current_component == $bp->links->slug ) {
 		// load global ajax scripts
-		wp_enqueue_script( 'bp-links-ajax', BP_LINKS_THEME_URL . '/_inc/global.js', array('jquery') );
+		wp_enqueue_script( 'bp-links-ajax', BP_LINKS_THEME_URL_INC . '/global.js', array('jquery') );
 		// load color box JS if single item
-		wp_enqueue_script( 'bp-links-ajax-colorbox', BP_LINKS_THEME_URL . '/_inc/jquery.colorbox-min.js', array('jquery') );
+		wp_enqueue_script( 'bp-links-ajax-colorbox', BP_LINKS_THEME_URL_INC . '/jquery.colorbox-min.js', array('jquery') );
 		// load create forms ajax scripts if necessary
 		if ( $bp->current_action == 'create' || bp_links_is_link_admin_page() ) {
-			wp_enqueue_script( 'bp-links-ajax-forms', BP_LINKS_THEME_URL . '/_inc/forms.js', array('jquery') );
+			wp_enqueue_script( 'bp-links-ajax-forms', BP_LINKS_THEME_URL_INC . '/forms.js', array('jquery') );
 		}
 	}
 }
@@ -75,14 +75,19 @@ function bp_links_dtheme_activity_type_tabs_setup() {
 add_action( 'bp_before_activity_type_tab_mentions', 'bp_links_dtheme_activity_type_tabs_setup' );
 
 function bp_links_dtheme_activity_filter_options_setup() {
+	global $bp;
 
 	if ( !bp_links_is_default_theme() )
 		return false;
-	
-	echo sprintf( '<option value="created_link">%s</option>', __( 'Show Created Link', 'buddypress-links' ) );
-	echo sprintf( '<option value="voted_on_link">%s</option>', __( 'Show Voted on Link', 'buddypress-links' ) );
+
+	if ( !$bp->is_single_item ) {
+		echo sprintf( '<option value="%s">%s</option>', BP_LINKS_ACTIVITY_ACTION_CREATE, __( 'Show Link Created', 'buddypress-links' ) );
+	}
+	echo sprintf( '<option value="%s">%s</option>', BP_LINKS_ACTIVITY_ACTION_COMMENT, __( 'Show Link Comments', 'buddypress-links' ) );
+	echo sprintf( '<option value="%s">%s</option>', BP_LINKS_ACTIVITY_ACTION_VOTE, __( 'Show Link Votes', 'buddypress-links' ) );
 }
 add_action( 'bp_activity_filter_options', 'bp_links_dtheme_activity_filter_options_setup' );
+add_action( 'bp_link_activity_filter_options', 'bp_links_dtheme_activity_filter_options_setup' );
 
 function bp_links_dtheme_screen_notification_settings() {
 
@@ -216,6 +221,13 @@ function bp_links_dtheme_ajax_querystring_activity_filter( $query_string, $objec
 		// override with links object
 		$args['object'] = $bp->links->id;
 
+		// force comments type on initial link home page load
+		if ( 2 === $do_filter ) {
+			if ( empty( $args['action'] ) ) {
+				$args['action'] = BP_LINKS_ACTIVITY_ACTION_COMMENT;
+			}
+		}
+
 		// set primary id to current link id if applicable
 		if ( $bp->links->current_link ) {
 			$args['primary_id'] = $bp->links->current_link->id;
@@ -258,7 +270,7 @@ add_filter( 'bp_dtheme_activity_feed_url', 'bp_links_dtheme_activity_feed_url', 
 function bp_links_dtheme_activity_custom_update( $object, $item_id, $content ) {
 	// object MUST be links
 	if ( 'links' == $object ) {
-		return bp_links_post_update( array( 'link_id' => $item_id, 'content' => $content ) );
+		return bp_links_post_update( array( 'type' => BP_LINKS_ACTIVITY_ACTION_COMMENT, 'link_id' => $item_id, 'content' => $content ) );
 	} else {
 		return false;
 	}

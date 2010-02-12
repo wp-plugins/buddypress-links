@@ -79,7 +79,6 @@ function bp_links_ajax_link_auto_embed_url() {
 		bp_links_ajax_response_string( -1, esc_html( $e->getMessage() ) );
 	} catch ( Exception $e ) {
 		// fall through to generic error for all other exceptions
-		// TODO log these or what?
 		// TODO comment out this debug line before tagging a version
 //		bp_links_ajax_response_string( -1, esc_html( $e->getMessage() ) );
 	}

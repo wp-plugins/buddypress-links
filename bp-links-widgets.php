@@ -13,9 +13,9 @@ class BP_Links_Widget extends WP_Widget {
 		parent::WP_Widget( false, __( 'Links', 'buddypress-links' ), array( 'description' => __( 'Your BuddyPress Links', 'buddypress-links' ) ) );
 
 		if ( is_active_widget( false, false, $this->id_base ) ) {
-			wp_enqueue_script( 'bp-links-ajax', get_stylesheet_directory_uri() . '/links/_inc/js/ajax.js' );
-			wp_enqueue_script( 'bp-links-widget-link-list', get_stylesheet_directory_uri() . '/links/_inc/js/widgets.js', array('jquery', 'jquery-livequery-pack') );
-			wp_enqueue_style( 'bp-links-widget-members', get_stylesheet_directory_uri() . '/links/_inc/css/widgets.css' );
+			wp_enqueue_script( 'bp-links-ajax', BP_LINKS_THEME_URL_INC . '/global.js' );
+			wp_enqueue_script( 'bp-links-widget-link-list', BP_LINKS_THEME_URL_INC . '/widgets.js', array('jquery', 'jquery-livequery-pack') );
+			wp_enqueue_style( 'bp-links-widget-members', BP_LINKS_THEME_URL_INC . '/css/widgets.css' );
 		}
 	}
 

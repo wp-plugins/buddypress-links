@@ -154,7 +154,10 @@ function bp_links_setup_theme() {
 		}
 
 		define( 'BP_LINKS_THEME_DIR', BP_LINKS_THEMES_DIR . '/' . BP_LINKS_THEME );
+		define( 'BP_LINKS_THEME_DIR_INC', BP_LINKS_THEME_DIR . '/_inc' );
+
 		define( 'BP_LINKS_THEME_URL', BP_LINKS_THEMES_URL . '/' . BP_LINKS_THEME );
+		define( 'BP_LINKS_THEME_URL_INC', BP_LINKS_THEME_URL . '/_inc' );
 	}
 }
 add_filter( 'wp', 'bp_links_setup_theme' );
@@ -253,28 +256,6 @@ function bp_links_load_textdomain() {
 }
 add_action ( 'bp_init', 'bp_links_load_textdomain', 2 );
 
-function bp_links_setup_globals() {
-	global $bp, $wpdb;
-	
-	/* For internal identification NEVER, EVER, CHANGE THIS */
-	$bp->links->id = 'links';
-
-	$bp->links->table_name = $wpdb->base_prefix . 'bp_links';
-	$bp->links->table_name_categories = $wpdb->base_prefix . 'bp_links_categories';
-	$bp->links->table_name_votes = $wpdb->base_prefix . 'bp_links_votes';
-	$bp->links->table_name_linkmeta = $wpdb->base_prefix . 'bp_links_linkmeta';
-	$bp->links->format_notification_function = 'bp_links_format_notifications';
-	$bp->links->slug = BP_LINKS_SLUG;
-
-	/* Register this in the active components array */
-	$bp->active_components[$bp->links->slug] = $bp->links->id;
-
-	$bp->links->forbidden_names = apply_filters( 'bp_links_forbidden_names', array( 'links', 'my-links', 'link-finder', 'create', 'delete', 'add', 'admin', 'popular', 'most-votes', 'high-votes', 'active', 'newest', 'all', 'submit', 'feed' ) );
-
-}
-add_action( 'bp_init', 'bp_links_setup_globals', 4 );
-add_action( 'admin_menu', 'bp_links_setup_globals', 4 );
-
 function bp_links_check_installed() {
 	global $wpdb, $bp;
 
@@ -297,13 +278,15 @@ function bp_links_add_admin_menu() {
 	if ( !is_site_admin() )
 		return false;
 
-	// Add the administration tab under the "Site Admin" tab for site administrators
-	add_object_page(
+	// Add the administration tab under the "BuddyPress" tab for site administrators
+	add_menu_page(
 		__( 'BP Links', 'buddypress-links' ),
 		__( 'BP Links', 'buddypress-links' ),
 		1,
 		BP_LINKS_PLUGIN_NAME . '/admin/link-manager.php',
-		'bp_links_admin_manage_links'
+		'bp_links_admin_manage_links',
+		false,
+		3
 	);
 
 	add_submenu_page( BP_LINKS_PLUGIN_NAME . '/admin/link-manager.php', __( 'Manage Links', 'buddypress-links'), __( 'Manage Links', 'buddypress-links' ), 1, BP_LINKS_PLUGIN_NAME . '/admin/link-manager.php', 'bp_links_admin_manage_links' );
@@ -312,7 +295,7 @@ function bp_links_add_admin_menu() {
 add_action( 'admin_menu', 'bp_links_add_admin_menu' );
 
 function bp_links_setup_nav() {
-	global $bp, $current_blog, $link_obj;
+	global $bp;
 
 	if ( $link_id = BP_Links_Link::link_exists($bp->current_action) ) {
 
@@ -326,21 +309,20 @@ function bp_links_setup_nav() {
 		} else {
 			$bp->is_item_admin = ( $bp->loggedin_user->id == $bp->links->current_link->user_id ) ? true : false;
 		}
-		
-		/* Pre 1.1 backwards compatibility - use $bp->links->current_link instead */
-		$link_obj = &$bp->links->current_link;
 
 		/* Should this link be visible to the logged in user? */
 		$bp->links->current_link->is_link_visible_to_member = bp_links_is_link_visibile( $bp->links->current_link, $bp->loggedin_user->id );
 	}
 
 	/* Add 'Links' to the main navigation */
-	bp_core_new_nav_item( array( 'name' => sprintf( __( 'Links <span>(%d)</span>', 'buddypress-links' ), bp_links_total_links_for_user() ), 'slug' => $bp->links->slug, 'position' => 75, 'screen_function' => 'bp_links_screen_my_links', 'default_subnav_slug' => 'my-links', 'item_css_id' => $bp->links->id ) );
+	$nav_item_name = sprintf( apply_filters( 'bp_links_nav_item_name', __( 'Links <span>(%d)</span>', 'buddypress-links' ) ), bp_links_total_links_for_user() );
+	bp_core_new_nav_item( array( 'name' => $nav_item_name, 'slug' => $bp->links->slug, 'position' => 75, 'screen_function' => 'bp_links_screen_my_links', 'default_subnav_slug' => 'my-links', 'item_css_id' => $bp->links->id ) );
 
 	$links_link = $bp->loggedin_user->domain . $bp->links->slug . '/';
 	
 	/* Add the subnav items to the links nav item */
-	bp_core_new_subnav_item( array( 'name' => __( 'My Links', 'buddypress-links' ), 'slug' => 'my-links', 'parent_url' => $links_link, 'parent_slug' => $bp->links->slug, 'screen_function' => 'bp_links_screen_my_links', 'position' => 10, 'item_css_id' => 'links-my-links' ) );
+	$subnav_name_mylinks = apply_filters( 'bp_links_subnav_item_name_mylinks', __( 'My Links', 'buddypress-links' ) );
+	bp_core_new_subnav_item( array( 'name' => $subnav_name_mylinks, 'slug' => 'my-links', 'parent_url' => $links_link, 'parent_slug' => $bp->links->slug, 'screen_function' => 'bp_links_screen_my_links', 'position' => 10, 'item_css_id' => 'links-my-links' ) );
 
 	if ( $bp->current_component == $bp->links->slug ) {
 		
@@ -383,11 +365,13 @@ function bp_links_setup_nav() {
 			bp_core_new_nav_default( array( 'parent_slug' => $bp->links->slug, 'screen_function' => 'bp_links_screen_link_home', 'subnav_slug' => 'home' ) );
 			
 			/* Add the "Home" subnav item, as this will always be present */
-			bp_core_new_subnav_item( array( 'name' => __( 'Home', 'buddypress-links' ), 'slug' => 'home', 'parent_url' => $link_link, 'parent_slug' => $bp->links->slug, 'screen_function' => 'bp_links_screen_link_home', 'position' => 10, 'item_css_id' => 'link-home' ) );
+			$subnav_name_home = apply_filters( 'bp_links_subnav_item_name_home', __( 'Home', 'buddypress-links' ) );
+			bp_core_new_subnav_item( array( 'name' => $subnav_name_home, 'slug' => 'home', 'parent_url' => $link_link, 'parent_slug' => $bp->links->slug, 'screen_function' => 'bp_links_screen_link_home', 'position' => 10, 'item_css_id' => 'link-home' ) );
 
 			/* If the user is a link mod or more, then show the link admin nav item */
 			if ( $bp->is_item_admin ) {
-				bp_core_new_subnav_item( array( 'name' => __( 'Admin', 'buddypress-links' ), 'slug' => 'admin', 'parent_url' => $link_link, 'parent_slug' => $bp->links->slug, 'screen_function' => 'bp_links_screen_link_admin', 'position' => 20, 'user_has_access' => ( $bp->is_item_admin + (int)$bp->is_item_mod ), 'item_css_id' => 'link-admin' ) );
+				$subnav_name_admin = apply_filters( 'bp_links_subnav_item_name_admin', __( 'Admin', 'buddypress-links' ) );
+				bp_core_new_subnav_item( array( 'name' => $subnav_name_admin, 'slug' => 'admin', 'parent_url' => $link_link, 'parent_slug' => $bp->links->slug, 'screen_function' => 'bp_links_screen_link_admin', 'position' => 20, 'user_has_access' => ( $bp->is_item_admin + (int)$bp->is_item_mod ), 'item_css_id' => 'link-admin' ) );
 			}
 
 		}
@@ -395,8 +379,8 @@ function bp_links_setup_nav() {
 	
 	do_action( 'bp_links_setup_nav', $bp->links->current_link->user_has_access );
 }
-add_action( 'bp_init', 'bp_links_setup_nav', 8 );
-add_action( 'admin_menu', 'bp_links_setup_nav', 8 );
+add_action( 'bp_init', 'bp_links_setup_nav', 5 );
+add_action( 'admin_menu', 'bp_links_setup_nav' );
 
 function bp_links_directory_links_setup() {
 	global $bp;
@@ -821,9 +805,9 @@ function bp_links_action_create_link() {
 				bp_links_record_activity( array(
 					'item_id' => $bp->links->current_link->id,
 					'action' => apply_filters( 'bp_links_activity_created_link', sprintf( __( '%1$s created the link %2$s', 'buddypress-links'), bp_core_get_userlink( $bp->loggedin_user->id ), '<a href="' . bp_get_link_permalink( $bp->links->current_link ) . '">' . attribute_escape( $bp->links->current_link->name ) . '</a>' ) ),
-					'content' => apply_filters( 'bp_links_activity_created_link_content', sprintf( '<div class="activity-inner">%s</div>', bp_get_link_description_excerpt( $bp->links->current_link ) ) ),
+					'content' => apply_filters( 'bp_links_activity_created_link_content', bp_get_link_description_excerpt( $bp->links->current_link ) ),
 					'primary_link' => apply_filters( 'bp_links_activity_created_link_primary_link', bp_get_link_permalink( $bp->links->current_link ) ),
-					'type' => 'created_link'
+					'type' => BP_LINKS_ACTIVITY_ACTION_CREATE
 				) );
 
 				do_action( 'bp_links_create_complete', $bp->links->current_link->id );
@@ -915,11 +899,13 @@ function bp_links_register_activity_actions() {
 	if ( !function_exists( 'bp_activity_set_action' ) )
 		return false;
 
-	bp_activity_set_action( $bp->links->id, 'created_link', __( 'Created a link', 'buddypress' ) );
+	bp_activity_set_action( $bp->links->id, BP_LINKS_ACTIVITY_ACTION_CREATE, __( 'Created a link', 'buddypress' ) );
+	bp_activity_set_action( $bp->links->id, BP_LINKS_ACTIVITY_ACTION_VOTE, __( 'Voted on a link', 'buddypress' ) );
+	bp_activity_set_action( $bp->links->id, BP_LINKS_ACTIVITY_ACTION_COMMENT, __( 'Commented on a link', 'buddypress' ) );
 
 	do_action( 'bp_links_register_activity_actions' );
 }
-add_action( 'bp_init', 'bp_links_register_activity_actions', 6 );
+add_action( 'bp_register_activity_actions', 'bp_links_register_activity_actions' );
 
 function bp_links_record_activity( $args = '' ) {
 	global $bp;
@@ -1080,8 +1066,8 @@ function bp_links_manage_link( $args = '' ) {
 				$link->embed_status_set_enabled();
 			}
 		} catch ( BP_Links_Embed_Exception $e ) {
-			// TODO what should we do with an exception here?
-			throw( $e );
+			// epic failure
+			return false;
 		}
 	}
 
@@ -1297,7 +1283,7 @@ function bp_links_total_links_for_user( $user_id = false ) {
 /*** Link Avatars *************************************************************/
 
 function bp_links_default_avatar_uri() {
-	return apply_filters( 'bp_links_default_avatar_uri', get_stylesheet_directory_uri() . '/links/_inc/images/default_avatar.png' );
+	return apply_filters( 'bp_links_default_avatar_uri', BP_LINKS_THEME_URL_INC . '/images/default_avatar.png' );
 }
 
 function bp_links_check_avatar( $item_id ) {
@@ -1407,27 +1393,20 @@ function bp_links_fetch_avatar( $args = '', $link = false ) {
 	}
 }
 
-// TODO update this to use BP_AVATAR_UPLOAD_PATH constant
 function bp_links_avatar_upload_dir( $link_id = false ) {
 	global $bp;
 
 	if ( !$link_id )
 		$link_id = $bp->links->current_link->id;
 
-	$path  = get_blog_option( BP_ROOT_BLOG, 'upload_path' );
-	$newdir = WP_CONTENT_DIR . str_replace( 'wp-content', '', $path );
-	$newdir .= '/link-avatars/' . $link_id;
+	$subdir = '/link-avatars/' . $link_id;
+	$path = BP_AVATAR_UPLOAD_PATH . $subdir;
+	$url = str_replace( BP_AVATAR_UPLOAD_PATH, BP_AVATAR_URL, $path );
 
-	$newbdir = $newdir;
-	
-	if ( !file_exists( $newdir ) )
-		@wp_mkdir_p( $newdir );
+	if ( !file_exists( $path ) )
+		@wp_mkdir_p( $path );
 
-	$newurl = WP_CONTENT_URL . '/blogs.dir/' . BP_ROOT_BLOG . '/files/link-avatars/' . $link_id;
-	$newburl = $newurl;
-	$newsubdir = '/link-avatars/' . $link_id;
-
-	return apply_filters( 'bp_links_avatar_upload_dir', array( 'path' => $newdir, 'url' => $newurl, 'subdir' => $newsubdir, 'basedir' => $newbdir, 'baseurl' => $newburl, 'error' => false ) );
+	return apply_filters( 'bp_links_avatar_upload_dir', array( 'path' => $path, 'url' => $url, 'subdir' => $subdir, 'basedir' => $path, 'baseurl' => $url, 'error' => false ) );
 }
 
 /*** Link Activity Posting **************************************************/
@@ -1436,9 +1415,10 @@ function bp_links_post_update( $args = '' ) {
 	global $bp;
 
 	$defaults = array(
+		'type' => BP_LINKS_ACTIVITY_ACTION_COMMENT,
 		'content' => false,
 		'user_id' => $bp->loggedin_user->id,
-		'link_id' => false
+		'link_id' => $bp->links->current_link->id
 	);
 
 	$r = wp_parse_args( $args, $defaults );
@@ -1451,14 +1431,13 @@ function bp_links_post_update( $args = '' ) {
 
 	/* Record this in activity streams */
 	$activity_action = sprintf( __( '%s posted a comment on the link %s:', 'buddypress'), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_link_permalink( $bp->links->current_link ) . '">' . attribute_escape( $bp->links->current_link->name ) . '</a>' );
-	$activity_content = '<div class="activity-inner">' . $content . '</div>';
 
 	$activity_id = bp_links_record_activity( array(
 		'user_id' => $user_id,
 		'action' => apply_filters( 'bp_links_activity_new_update_action', $activity_action ),
-		'content' => apply_filters( 'bp_links_activity_new_update_content', $activity_content ),
-		'type' => 'activity_update',
-		'item_id' => $bp->links->current_link->id
+		'content' => apply_filters( 'bp_links_activity_new_update_content', $content ),
+		'type' => $type,
+		'item_id' => $link_id
 	) );
 
  	/* Require the notifications code so email notifications can be set on the 'bp_activity_posted_update' action. */
@@ -1545,7 +1524,7 @@ function bp_links_cast_vote( $link_id, $up_or_down ) {
 				bp_links_record_activity( array(
 					'action' => apply_filters( 'bp_links_activity_voted', $activity_action ),
 					'primary_link' => apply_filters( 'bp_links_activity_voted_primary_link', bp_get_link_permalink( $bp->links->current_link ) ),
-					'type' => 'voted_on_link',
+					'type' => BP_LINKS_ACTIVITY_ACTION_VOTE,
 					'item_id' => $bp->links->current_link->id
 				) );
 
@@ -1583,7 +1562,7 @@ function bp_links_delete_linkmeta( $link_id, $meta_key = false, $meta_value = fa
 
 	if ( is_array($meta_value) || is_object($meta_value) )
 		$meta_value = serialize($meta_value);
-		
+
 	$meta_value = trim( $meta_value );
 
 	if ( !$meta_key ) {
@@ -1594,8 +1573,7 @@ function bp_links_delete_linkmeta( $link_id, $meta_key = false, $meta_value = fa
 		$wpdb->query( $wpdb->prepare( "DELETE FROM " . $bp->links->table_name_linkmeta . " WHERE link_id = %d AND meta_key = %s", $link_id, $meta_key ) );
 	}
 	
-	// TODO need to look into using this.
-	// wp_cache_delete($link_id, 'links');
+	wp_cache_delete( 'bp_links_linkmeta_' . $link_id . '_' . $meta_key, 'bp' );
 
 	return true;
 }
@@ -1610,15 +1588,11 @@ function bp_links_get_linkmeta( $link_id, $meta_key = '') {
 
 	if ( !empty($meta_key) ) {
 		$meta_key = preg_replace('|[^a-z0-9_]|i', '', $meta_key);
-		
-		// TODO need to look into using this.
-		//$user = wp_cache_get($user_id, 'users');
-		
-		// Check the cached user object
-		//if ( false !== $user && isset($user->$meta_key) )
-		//	$metas = array($user->$meta_key);
-		//else
-		$metas = $wpdb->get_col( $wpdb->prepare("SELECT meta_value FROM " . $bp->links->table_name_linkmeta . " WHERE link_id = %d AND meta_key = %s", $link_id, $meta_key) );
+
+		if ( !$metas = wp_cache_get( 'bp_links_linkmeta_' . $link_id . '_' . $meta_key, 'bp' ) ) {
+			$metas = $wpdb->get_col( $wpdb->prepare("SELECT meta_value FROM " . $bp->links->table_name_linkmeta . " WHERE link_id = %d AND meta_key = %s", $link_id, $meta_key) );
+			wp_cache_set( 'bp_links_linkmeta_' . $link_id . '_' . $meta_key, $metas, 'bp' );
+		}
 	} else {
 		$metas = $wpdb->get_col( $wpdb->prepare("SELECT meta_value FROM " . $bp->links->table_name_linkmeta . " WHERE link_id = %d", $link_id) );
 	}
@@ -1643,14 +1617,14 @@ function bp_links_update_linkmeta( $link_id, $meta_key, $meta_value ) {
 	
 	if ( !is_numeric( $link_id ) )
 		return false;
-	
+
 	$meta_key = preg_replace( '|[^a-z0-9_]|i', '', $meta_key );
 
 	if ( is_string($meta_value) )
 		$meta_value = stripslashes($wpdb->escape($meta_value));
-	
+
 	$meta_value = maybe_serialize($meta_value);
-	
+
 	if (empty($meta_value)) {
 		return bp_links_delete_linkmeta( $link_id, $meta_key );
 	}
@@ -1665,8 +1639,8 @@ function bp_links_update_linkmeta( $link_id, $meta_key, $meta_value ) {
 		return false;
 	}
 
-	// TODO need to look into using this.
-	// wp_cache_delete($user_id, 'users');
+	/* Update the cached object and recache */
+	wp_cache_set( 'bp_links_linkmeta_' . $link_id . '_' . $meta_key, $meta_value, 'bp' );
 
 	return true;
 }

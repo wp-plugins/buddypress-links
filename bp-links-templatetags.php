@@ -541,6 +541,13 @@ function bp_link_description_excerpt( $link = false, $length = 55 ) {
 		return apply_filters( 'bp_get_link_description_excerpt', bp_create_excerpt( $link->description, $length ) );
 	}
 
+function bp_link_continue( $link = false ) {
+	echo bp_get_link_continue( $link );
+}
+	function bp_get_link_continue( $link = false ) {
+		return apply_filters( 'bp_get_link_continue', __( 'more...', 'buddypress-links' ) );
+	}
+
 function bp_link_vote_count() {
 	echo bp_get_link_vote_count();
 }
@@ -1537,13 +1544,6 @@ function bp_link_list_item_url_rel() {
 		}
 
 		return null;
-	}
-
-function bp_link_list_item_xtrabar_home() {
-	echo bp_get_link_list_item_xtrabar_home();
-}
-	function bp_get_link_list_item_xtrabar_home() {
-		return apply_filters( 'bp_get_link_list_item_xtrabar_home', __( 'Home', 'buddypress-links' ) );
 	}
 
 function bp_link_list_item_xtrabar_comments() {

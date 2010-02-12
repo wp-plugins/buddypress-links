@@ -27,7 +27,6 @@ if ( isset( $_POST['categories_admin_delete']) && isset( $_POST['allcategories']
 				$message_type = 'error';
 			}
 		} else {
-			// TODO move to a default category instead of throwing error?
 			$message = __( 'Unable to delete a category because it is assigned to one or more links', 'buddypress-links' );
 			$message_type = 'error';
 			break;

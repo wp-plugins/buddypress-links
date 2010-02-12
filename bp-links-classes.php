@@ -618,7 +618,7 @@ class BP_Links_Link {
 		if ( !$show_hidden )
 			$hidden_sql = " AND a.hide_sitewide = 0";
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(a.id) FROM {$bp->activity->table_name} a WHERE a.component = '%s' AND a.item_id = '%d' AND a.type != 'activity_comment'{$hidden_sql}", $bp->links->id, $this->id ) );
+		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(a.id) FROM {$bp->activity->table_name} a WHERE a.component = '%s' AND a.item_id = '%d' AND a.type = 'bp_link_comment'{$hidden_sql}", $bp->links->id, $this->id ) );
 	}
 
 	function get_status_sql( $link_owner_user_id = false, $format_string = '%s' ){
