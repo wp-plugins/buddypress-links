@@ -2,37 +2,6 @@
 /**
  * BP Links admin list categories
  */
-
-// don't load directly
-if ( !defined('ABSPATH') ) {
-	die('-1');
-}
-
-// handle deletions
-if ( isset( $_POST['categories_admin_delete']) && isset( $_POST['allcategories'] ) ) {
-
-	if ( !check_admin_referer('bp-links-categories-admin') ) {
-		return false;
-	}
-
-	foreach ( $_POST['allcategories'] as $category_id ) {
-		$category = new BP_Links_Category( $category_id );
-
-		if ( $category->get_link_count($category_id) == 0 ) {
-			if ( $category->delete() ) {
-				$message = __( 'Categories deleted successfully', 'buddypress-links' );
-				$message_type = 'updated';
-			} else {
-				$message = sprintf( '%s %s', __( 'There were errors when deleting categories.', 'buddypress-links' ), __( 'Please try again.', 'buddypress-links' ) );
-				$message_type = 'error';
-			}
-		} else {
-			$message = __( 'Unable to delete a category because it is assigned to one or more links', 'buddypress-links' );
-			$message_type = 'error';
-			break;
-		}
-	}
-}
 ?>
 
 <?php if ( isset( $message ) ) { ?>
@@ -123,7 +92,7 @@ if ( isset( $_POST['categories_admin_delete']) && isset( $_POST['allcategories']
 						<td><?php bp_links_categories_category_link_count() ?></td>
 						<td><?php bp_links_categories_category_date_created() ?></td>
 						<td><?php bp_links_categories_category_date_updated() ?></td>
-						<td><a href="?page=<?php echo BP_LINKS_PLUGIN_NAME ?>/admin/category-manager.php&category_id=<?php bp_links_categories_category_id() ?>"><?php _e( 'Edit', 'buddypress-links') ?></a></td>
+						<td><a href="?page=buddypress-links-admin-cat&category_id=<?php bp_links_categories_category_id() ?>"><?php _e( 'Edit', 'buddypress-links') ?></a></td>
 					</tr>
 					<?php $counter++ ?>
 				<?php endwhile; ?>
@@ -143,7 +112,7 @@ if ( isset( $_POST['categories_admin_delete']) && isset( $_POST['allcategories']
 
 	<form action="admin.php" method="get">
 		<p class="submit">
-			<input type="hidden" name="page" value="<?php echo BP_LINKS_PLUGIN_NAME ?>/admin/category-manager.php" />
+			<input type="hidden" name="page" value="buddypress-links-admin-cat" />
 			<input type="hidden" name="category_id" value="" />
 			<input type="submit" class="button" value="<?php _e( 'New Category','buddypress-links' ) ?>" />
 		</p>

@@ -67,21 +67,33 @@ if ( !defined( 'BP_LINKS_EMBED_FOTOGLIF_PUBID' ) )
  */
 function bp_links_init() {
 
-	/////////
+	////////////////////////////////
 	// Important Internal Constants
 	// *** DO NOT MODIFY THESE ***
+
+	// Configuration
 	define( 'BP_LINKS_VERSION', '0.3' );
 	define( 'BP_LINKS_DB_VERSION', '4' );
 	define( 'BP_LINKS_PLUGIN_NAME', 'buddypress-links' );
-	define( 'BP_LINKS_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . BP_LINKS_PLUGIN_NAME );
-	define( 'BP_LINKS_PLUGIN_URL', WP_PLUGIN_URL . '/' . BP_LINKS_PLUGIN_NAME );
-	define( 'BP_LINKS_THEMES_DIR', BP_LINKS_PLUGIN_DIR . '/themes' );
-	define( 'BP_LINKS_THEMES_URL', BP_LINKS_PLUGIN_URL . '/themes' );
+	define( 'BP_LINKS_THEMES_PATH', 'themes' );
 	define( 'BP_LINKS_DEFAULT_THEME', 'bp-links-default' );
+	define( 'BP_LINKS_ADMIN_THEME', 'bp-links-admin' );
 	define( 'BP_LINKS_ACTIVITY_ACTION_CREATE', 'bp_link_create' );
 	define( 'BP_LINKS_ACTIVITY_ACTION_VOTE', 'bp_link_vote' );
 	define( 'BP_LINKS_ACTIVITY_ACTION_COMMENT', 'bp_link_comment' );
-	/////////
+
+	// Core Paths
+	define( 'BP_LINKS_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . BP_LINKS_PLUGIN_NAME );
+	define( 'BP_LINKS_PLUGIN_URL', WP_PLUGIN_URL . '/' . BP_LINKS_PLUGIN_NAME );
+
+	// Sub Paths
+	define( 'BP_LINKS_THEMES_DIR', BP_LINKS_PLUGIN_DIR . '/' . BP_LINKS_THEMES_PATH );
+	define( 'BP_LINKS_THEMES_URL', BP_LINKS_PLUGIN_URL . '/' . BP_LINKS_THEMES_PATH );
+	define( 'BP_LINKS_ADMIN_THEME_DIR', BP_LINKS_THEMES_DIR . '/' . BP_LINKS_ADMIN_THEME );
+	define( 'BP_LINKS_ADMIN_THEME_URL', BP_LINKS_THEMES_URL . '/' . BP_LINKS_ADMIN_THEME );
+
+	// ***************************
+	///////////////////////////////
 
 	// ignition, start
 	require_once 'bp-links.php';

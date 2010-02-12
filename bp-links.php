@@ -259,8 +259,7 @@ add_action ( 'bp_init', 'bp_links_load_textdomain', 2 );
 function bp_links_check_installed() {
 	global $wpdb, $bp;
 
-	require ( BP_LINKS_PLUGIN_DIR . '/admin/link-manager.php' );
-	require ( BP_LINKS_PLUGIN_DIR . '/admin/category-manager.php' );
+	require ( BP_LINKS_PLUGIN_DIR . '/bp-links-admin.php' );
 
 	/* Need to check db tables exist, activate hook no-worky in mu-plugins folder. */
 	if ( get_site_option('bp-links-db-version') < BP_LINKS_DB_VERSION )
@@ -278,21 +277,22 @@ function bp_links_add_admin_menu() {
 	if ( !is_site_admin() )
 		return false;
 
-	// Add the administration tab under the "BuddyPress" tab for site administrators
-	add_menu_page(
-		__( 'BP Links', 'buddypress-links' ),
-		__( 'BP Links', 'buddypress-links' ),
-		1,
-		BP_LINKS_PLUGIN_NAME . '/admin/link-manager.php',
-		'bp_links_admin_manage_links',
-		false,
-		3
-	);
-
-	add_submenu_page( BP_LINKS_PLUGIN_NAME . '/admin/link-manager.php', __( 'Manage Links', 'buddypress-links'), __( 'Manage Links', 'buddypress-links' ), 1, BP_LINKS_PLUGIN_NAME . '/admin/link-manager.php', 'bp_links_admin_manage_links' );
-	add_submenu_page( BP_LINKS_PLUGIN_NAME . '/admin/link-manager.php', __( 'Manage Categories', 'buddypress-links'), __( 'Manage Categories', 'buddypress-links' ), 1, BP_LINKS_PLUGIN_NAME . '/admin/category-manager.php', 'bp_links_admin_manage_categories' );
+	add_submenu_page( 'bp-general-settings', __( 'BuddyPress Links', 'buddypress'), '<span class="buddypress-links-admin-menu-header">&diams; ' . __( 'BuddyPress Links', 'buddypress' ) . '</span>', 'manage_options', 'buddypress-links-admin', 'bp_links_admin_index' );
+	add_submenu_page( 'bp-general-settings', __( 'Manage Links', 'buddypress'), '<span class="buddypress-links-admin-menu-item">&raquo; ' . __( 'Manage Links', 'buddypress' ) . '</span>', 'manage_options', 'buddypress-links-admin-links', 'bp_links_admin_manage_links' );
+	add_submenu_page( 'bp-general-settings', __( 'Manage Categories', 'buddypress'), '<span class="buddypress-links-admin-menu-item">&raquo; ' . __( 'Edit Categories', 'buddypress' ) . '</span>', 'manage_options', 'buddypress-links-admin-cat', 'bp_links_admin_manage_categories' );
 }
 add_action( 'admin_menu', 'bp_links_add_admin_menu' );
+
+function bp_core_admin_menu_css() {
+	global $bp;
+?>
+	<style type="text/css">
+		span.buddypress-links-admin-menu-header { font-weight: bold; }
+		span.buddypress-links-admin-menu-item { padding-left: 12px; }
+	</style>
+<?php
+}
+add_action( 'admin_head', 'bp_core_admin_menu_css' );
 
 function bp_links_setup_nav() {
 	global $bp;
