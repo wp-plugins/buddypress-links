@@ -20,7 +20,7 @@ function bp_links_add_admin_menu() {
 	if ( !is_site_admin() )
 		return false;
 
-	add_submenu_page( 'bp-general-settings', __( 'BuddyPress Links', 'buddypress'), '<span class="buddypress-links-admin-menu-header">' . __( 'BuddyPress Links', 'buddypress' ) . '</span>', 'manage_options', 'buddypress-links-admin', 'bp_links_admin_index' );
+	add_submenu_page( 'bp-general-settings', __( 'BuddyPress Links', 'buddypress'), '<span class="buddypress-links-admin-menu-header">' . __( 'BuddyPress Links', 'buddypress' ) . '&nbsp;&nbsp;&nbsp;</span>', 'manage_options', 'buddypress-links-admin', 'bp_links_admin_index' );
 	add_submenu_page( 'bp-general-settings', __( 'Manage Links', 'buddypress'), '<span class="buddypress-links-admin-menu-item">&middot; ' . __( 'Manage Links', 'buddypress' ) . '</span>', 'manage_options', 'buddypress-links-admin-links', 'bp_links_admin_manage_links' );
 	add_submenu_page( 'bp-general-settings', __( 'Manage Categories', 'buddypress'), '<span class="buddypress-links-admin-menu-item">&middot; ' . __( 'Edit Categories', 'buddypress' ) . '</span>', 'manage_options', 'buddypress-links-admin-cats', 'bp_links_admin_manage_categories' );
 }
