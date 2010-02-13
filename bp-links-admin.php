@@ -1,12 +1,33 @@
 <?php
-/* 
+/**
  * Admin Dashboard Hooks
  */
 
 /**
+ * Admin styles action
+ */
+function bp_core_admin_menu_css() {
+	wp_enqueue_style( 'bp-links-admin-style', BP_LINKS_ADMIN_THEME_URL . '/style.css' );
+}
+add_action( 'admin_print_styles', 'bp_core_admin_menu_css' );
+
+/**
+ * Admin menus action
+ */
+function bp_links_add_admin_menu() {
+	global $wpdb, $bp, $menu;
+
+	if ( !is_site_admin() )
+		return false;
+
+	add_submenu_page( 'bp-general-settings', __( 'BuddyPress Links', 'buddypress'), '<span class="buddypress-links-admin-menu-header">' . __( 'BuddyPress Links', 'buddypress' ) . '</span>', 'manage_options', 'buddypress-links-admin', 'bp_links_admin_index' );
+	add_submenu_page( 'bp-general-settings', __( 'Manage Links', 'buddypress'), '<span class="buddypress-links-admin-menu-item">&middot; ' . __( 'Manage Links', 'buddypress' ) . '</span>', 'manage_options', 'buddypress-links-admin-links', 'bp_links_admin_manage_links' );
+	add_submenu_page( 'bp-general-settings', __( 'Manage Categories', 'buddypress'), '<span class="buddypress-links-admin-menu-item">&middot; ' . __( 'Edit Categories', 'buddypress' ) . '</span>', 'manage_options', 'buddypress-links-admin-cat', 'bp_links_admin_manage_categories' );
+}
+add_action( 'admin_menu', 'bp_links_add_admin_menu', 12 );
+
+/**
  * Admin index action
- *
- * @return boolean
  */
 function bp_links_admin_index () {
 	require_once BP_LINKS_ADMIN_THEME_DIR . '/index.php';

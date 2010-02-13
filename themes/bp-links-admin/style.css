@@ -1,0 +1,19 @@
+/**
+ * Admin Styles
+ */
+
+/* Menu */
+span.buddypress-links-admin-menu-header {
+	color: #333333;
+	font: 12px Georgia,"Times New Roman","Bitstream Charter",Times,serif;
+	font-weight: normal;
+}
+span.buddypress-links-admin-menu-item {
+	padding-left: 10px;
+}
+
+/* Content */
+div.buddypress-links-admin-content ul {
+	list-style: disc outside none;
+	margin-left: 24px;
+}

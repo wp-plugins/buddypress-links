@@ -271,29 +271,6 @@ function bp_links_check_installed() {
 }
 add_action( 'admin_menu', 'bp_links_check_installed' );
 
-function bp_links_add_admin_menu() {
-	global $wpdb, $bp, $menu;
-
-	if ( !is_site_admin() )
-		return false;
-
-	add_submenu_page( 'bp-general-settings', __( 'BuddyPress Links', 'buddypress'), '<span class="buddypress-links-admin-menu-header">&diams; ' . __( 'BuddyPress Links', 'buddypress' ) . '</span>', 'manage_options', 'buddypress-links-admin', 'bp_links_admin_index' );
-	add_submenu_page( 'bp-general-settings', __( 'Manage Links', 'buddypress'), '<span class="buddypress-links-admin-menu-item">&raquo; ' . __( 'Manage Links', 'buddypress' ) . '</span>', 'manage_options', 'buddypress-links-admin-links', 'bp_links_admin_manage_links' );
-	add_submenu_page( 'bp-general-settings', __( 'Manage Categories', 'buddypress'), '<span class="buddypress-links-admin-menu-item">&raquo; ' . __( 'Edit Categories', 'buddypress' ) . '</span>', 'manage_options', 'buddypress-links-admin-cat', 'bp_links_admin_manage_categories' );
-}
-add_action( 'admin_menu', 'bp_links_add_admin_menu' );
-
-function bp_core_admin_menu_css() {
-	global $bp;
-?>
-	<style type="text/css">
-		span.buddypress-links-admin-menu-header { font-weight: bold; }
-		span.buddypress-links-admin-menu-item { padding-left: 12px; }
-	</style>
-<?php
-}
-add_action( 'admin_head', 'bp_core_admin_menu_css' );
-
 function bp_links_setup_nav() {
 	global $bp;
 
@@ -380,7 +357,6 @@ function bp_links_setup_nav() {
 	do_action( 'bp_links_setup_nav', $bp->links->current_link->user_has_access );
 }
 add_action( 'bp_init', 'bp_links_setup_nav', 5 );
-add_action( 'admin_menu', 'bp_links_setup_nav' );
 
 function bp_links_directory_links_setup() {
 	global $bp;

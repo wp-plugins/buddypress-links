@@ -132,6 +132,7 @@ function bp_links_init() {
 	define( 'BP_LINKS_THEMES_URL', BP_LINKS_PLUGIN_URL . '/' . BP_LINKS_THEMES_PATH );
 	define( 'BP_LINKS_ADMIN_THEME_DIR', BP_LINKS_THEMES_DIR . '/' . BP_LINKS_ADMIN_THEME );
 	define( 'BP_LINKS_ADMIN_THEME_URL', BP_LINKS_THEMES_URL . '/' . BP_LINKS_ADMIN_THEME );
+	define( 'BP_LINKS_ADMIN_THEME_URL_INC', BP_LINKS_ADMIN_THEME_URL . '/_inc' );
 
 	// ***************************
 	///////////////////////////////
