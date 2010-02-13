@@ -10,8 +10,9 @@
 	</div>
 <?php } ?>
 
-<div class="wrap" style="position: relative">
-	<h2><?php _e( 'Links', 'buddypress-links' ) ?></h2>
+<div class="wrap buddypress-links-admin-content" style="position: relative">
+	<div id="icon-link-manager" class="icon32"><br /></div>
+	<h2><?php _e( 'BuddyPress Links', 'buddypress-links' ) ?>: <?php _e( 'Manage Links', 'buddypress-links' ) ?></h2>
 
 	<form id="wpmu-search" method="post" action="">
 		<input type="text" size="17" value="<?php echo attribute_escape( stripslashes( $_REQUEST['s'] ) ); ?>" name="s" />

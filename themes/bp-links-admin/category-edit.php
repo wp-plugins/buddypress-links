@@ -1,12 +1,12 @@
 <?php
 /**
- * BP Links admin list categories
+ * BP Links admin edit categories
  */
 ?>
 
-<div class="wrap nosubsub">
-	<div id="icon-link-manager" class="icon32"><br /></div>
-	<h2><?php echo $heading_text ?></h2>
+<div class="wrap nosubsub buddypress-links-admin-content">
+	<div id="icon-edit" class="icon32"><br /></div>
+	<h2><?php _e( 'BuddyPress Links', 'buddypress-links' ) ?>: <?php echo $heading_text ?></h2>
 
 <?php echo $heading ?>
 
@@ -16,7 +16,7 @@
 	</div>
 <?php } ?>
 
-<form name="bp_links_category_form" id="bp_links_category_form" method="post" action="?page=buddypress-links-admin-cat" class="validate">
+<form name="bp_links_category_form" id="bp_links_category_form" method="post" action="?page=buddypress-links-admin-cats" class="validate">
 <?php
 	do_action('bp_links_admin_edit_category_form_before', $category);
 	wp_original_referer_field(true, 'previous');

@@ -4,14 +4,16 @@
  */
 ?>
 
-<div class="buddypress-links-admin-content">
+<div class="wrap nosubsub buddypress-links-admin-content" style="position: relative">
+	<div id="icon-link-manager" class="icon32"><br /></div>
+	<h2><?php _e( 'BuddyPress Links', 'buddypress-links' ) ?></h2>
 
 	<h3>Thank you for installing BuddyPress Links!</h3>
 
 	<p>Administrative options:</p>
 	<ul>
 		<li><a href="?page=buddypress-links-admin-links">Manage Links</a></li>
-		<li><a href="?page=buddypress-links-admin-links">Edit Categories</a></li>
+		<li><a href="?page=buddypress-links-admin-cats">Edit Categories</a></li>
 	</ul>
 
 	<p>Where to get support:</p>

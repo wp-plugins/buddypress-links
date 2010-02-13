@@ -22,7 +22,7 @@ function bp_links_add_admin_menu() {
 
 	add_submenu_page( 'bp-general-settings', __( 'BuddyPress Links', 'buddypress'), '<span class="buddypress-links-admin-menu-header">' . __( 'BuddyPress Links', 'buddypress' ) . '</span>', 'manage_options', 'buddypress-links-admin', 'bp_links_admin_index' );
 	add_submenu_page( 'bp-general-settings', __( 'Manage Links', 'buddypress'), '<span class="buddypress-links-admin-menu-item">&middot; ' . __( 'Manage Links', 'buddypress' ) . '</span>', 'manage_options', 'buddypress-links-admin-links', 'bp_links_admin_manage_links' );
-	add_submenu_page( 'bp-general-settings', __( 'Manage Categories', 'buddypress'), '<span class="buddypress-links-admin-menu-item">&middot; ' . __( 'Edit Categories', 'buddypress' ) . '</span>', 'manage_options', 'buddypress-links-admin-cat', 'bp_links_admin_manage_categories' );
+	add_submenu_page( 'bp-general-settings', __( 'Manage Categories', 'buddypress'), '<span class="buddypress-links-admin-menu-item">&middot; ' . __( 'Edit Categories', 'buddypress' ) . '</span>', 'manage_options', 'buddypress-links-admin-cats', 'bp_links_admin_manage_categories' );
 }
 add_action( 'admin_menu', 'bp_links_add_admin_menu', 12 );
 
@@ -211,7 +211,7 @@ function bp_links_admin_edit_category() {
 		if ( false === $error ) {
 			if ( $category->save() ) {
 				$message = sprintf(
-					'%1$s <a href="?page=buddypress-links-admin-cat">%2$s</a> %3$s <a href="?page=buddypress-links-admin-cat&amp;category_id=">%4$s</a>',
+					'%1$s <a href="?page=buddypress-links-admin-cats">%2$s</a> %3$s <a href="?page=buddypress-links-admin-cats&amp;category_id=">%4$s</a>',
 					__( 'Link category saved!', 'buddypress-links' ), // arg 1
 					__( 'Return to list', 'buddypress-links' ), // arg 2
 					__( 'or', 'buddypress-links' ), // arg 3
@@ -248,12 +248,12 @@ function bp_links_admin_edit_category() {
 	//
 
 	if ( $category_id ) {
-		$heading_text = __( 'Edit BP Link Category', 'buddypress-links' );
+		$heading_text = __( 'Edit Category', 'buddypress-links' ) . ': ' . $category_name;
 		$submit_text = __( 'Update Category', 'buddypress-links' );
 		$action = 'update';
 		$nonce_action = 'update-link-category_' . $category_id;
 	} else {
-		$heading_text = __( 'New BP Link Category', 'buddypress-links' );
+		$heading_text = __( 'New Category', 'buddypress-links' );
 		$submit_text = __( 'Add Category', 'buddypress-links' );
 		$action = 'create';
 		$nonce_action = 'add-link-category';

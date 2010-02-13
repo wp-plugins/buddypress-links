@@ -11,9 +11,9 @@
 <?php } ?>
 
 
-<div class="wrap nosubsub" style="position: relative">
-	<div id="icon-link-manager" class="icon32"><br /></div>
-	<h2><?php _e( 'Manage BP Link Categories', 'buddypress-links' ) ?></h2>
+<div class="wrap nosubsub buddypress-links-admin-content" style="position: relative">
+	<div id="icon-edit" class="icon32"><br /></div>
+	<h2><?php _e( 'BuddyPress Links', 'buddypress-links' ) ?>: <?php _e( 'Edit Categories', 'buddypress-links' ) ?></h2>
 
 	<form id="search-form" method="post" action="">
 		<p class="search-box">
@@ -92,7 +92,7 @@
 						<td><?php bp_links_categories_category_link_count() ?></td>
 						<td><?php bp_links_categories_category_date_created() ?></td>
 						<td><?php bp_links_categories_category_date_updated() ?></td>
-						<td><a href="?page=buddypress-links-admin-cat&category_id=<?php bp_links_categories_category_id() ?>"><?php _e( 'Edit', 'buddypress-links') ?></a></td>
+						<td><a href="?page=buddypress-links-admin-cats&category_id=<?php bp_links_categories_category_id() ?>"><?php _e( 'Edit', 'buddypress-links') ?></a></td>
 					</tr>
 					<?php $counter++ ?>
 				<?php endwhile; ?>
@@ -112,7 +112,7 @@
 
 	<form action="admin.php" method="get">
 		<p class="submit">
-			<input type="hidden" name="page" value="buddypress-links-admin-cat" />
+			<input type="hidden" name="page" value="buddypress-links-admin-cats" />
 			<input type="hidden" name="category_id" value="" />
 			<input type="submit" class="button" value="<?php _e( 'New Category','buddypress-links' ) ?>" />
 		</p>
