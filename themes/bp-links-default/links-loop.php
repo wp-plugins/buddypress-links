@@ -1,6 +1,6 @@
 <?php do_action( 'bp_before_links_loop' ) ?>
 
-<?php if ( bp_has_links( bp_dtheme_ajax_querystring( 'links' ) ) ) : ?>
+<?php if ( bp_has_links( bp_ajax_querystring( 'links' ) ) ) : ?>
 
 	<div class="pagination">
 
