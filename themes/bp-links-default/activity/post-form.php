@@ -15,7 +15,7 @@
 	</div>
 
 	<h5>
-		<?php printf( __( "Comment on this link, %s?", 'buddypress-links' ), bp_dtheme_firstname() ) ?>
+		<?php printf( __( "Comment on this link, %s?", 'buddypress-links' ), bp_get_user_firstname() ) ?>
 	</h5>
 
 	<div id="whats-new-content">
