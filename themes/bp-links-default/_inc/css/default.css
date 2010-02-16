@@ -287,3 +287,8 @@ div.link-home div#item-header div#item-actions img.owner-avatar {
 div.link-home div#item-header div#item-actions div.link-owner-text {
 	/*padding-left: 60px;*/
 }
+
+/***** Widget *****/
+ul#links-list li div.item-title {
+	width: 95%;
+}

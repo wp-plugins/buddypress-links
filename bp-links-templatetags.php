@@ -593,6 +593,19 @@ function bp_link_date_created() {
 		return apply_filters( 'bp_get_link_date_created', date( get_option( 'date_format' ), $link->date_created ) );
 	}
 
+function bp_link_time_since_created() {
+	echo bp_get_link_time_since_created();
+}
+	function bp_get_link_time_since_created( $link = false ) {
+		global $links_template;
+
+		if ( !$link )
+			$link =& $links_template->link;
+
+		return apply_filters( 'bp_get_link_time_since_created', bp_core_time_since( $link->date_created ) );
+	}
+
+// TODO get rid of this function, it sucks
 function bp_link_time_elapsed_text() {
 	echo bp_get_link_time_elapsed_text();
 }

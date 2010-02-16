@@ -4,8 +4,7 @@ require ( BP_LINKS_PLUGIN_DIR . '/bp-links-embed.php' );
 require ( BP_LINKS_PLUGIN_DIR . '/bp-links-classes.php' );
 require ( BP_LINKS_PLUGIN_DIR . '/bp-links-ajax.php' );
 require ( BP_LINKS_PLUGIN_DIR . '/bp-links-templatetags.php' );
-// TODO the widget is broken right now
-//require ( BP_LINKS_PLUGIN_DIR . '/bp-links-widgets.php' );
+require ( BP_LINKS_PLUGIN_DIR . '/bp-links-widgets.php' );
 require ( BP_LINKS_PLUGIN_DIR . '/bp-links-filters.php' );
 require ( BP_LINKS_PLUGIN_DIR . '/bp-links-dtheme.php' );
 
