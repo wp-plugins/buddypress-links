@@ -605,39 +605,6 @@ function bp_link_time_since_created() {
 		return apply_filters( 'bp_get_link_time_since_created', bp_core_time_since( $link->date_created ) );
 	}
 
-// TODO get rid of this function, it sucks
-function bp_link_time_elapsed_text() {
-	echo bp_get_link_time_elapsed_text();
-}
-	function bp_get_link_time_elapsed_text( $link = false ) {
-		global $links_template;
-
-		if ( !$link )
-			$link =& $links_template->link;
-
-		$time_elapsed = time() - $link->date_created;
-
-		if( $time_elapsed > 86400 ) {
-			// at least one day old
-			$ret_number = floor( $time_elapsed / 86400 );
-			$ret_text = ( $ret_number > 1 ) ? __( '%1$d days ago', 'buddypress-links' ) : __( '%1$d day ago', 'buddypress-links' );
-		} elseif( $time_elapsed > 3600 ) {
-			// at least one hour old
-			$ret_number = floor( $time_elapsed / 60 / 60 );
-			$ret_text = ( $ret_number > 1 ) ? __( '%1$d hours ago', 'buddypress-links' ) : __( '%1$d hour ago', 'buddypress-links' );
-		} elseif( $time_elapsed > 60 ) {
-			// at least one minute hold
-			$ret_number = floor( $time_elapsed / 60 );
-			$ret_text = ( $ret_number > 1 ) ? __( '%1$d minutes ago', 'buddypress-links' ) : __( '%1$d minute ago', 'buddypress-links' );
-		} else {
-			// only seconds old
-			$ret_number = $time_elapsed;
-			$ret_text = ( $ret_number > 1 ) ? __( '%1$d seconds ago', 'buddypress-links' ) : __( '%1$d second ago', 'buddypress-links' );
-		}
-
-		return apply_filters( 'bp_get_link_time_elapsed_text', sprintf( $ret_text, $ret_number ) );
-	}
-
 function bp_link_play_button() {
 	echo bp_get_link_play_button();
 }
@@ -1569,7 +1536,7 @@ function bp_link_list_item_xtrabar_userlink_created() {
 	echo bp_get_link_list_item_xtrabar_userlink_created();
 }
 	function bp_get_link_list_item_xtrabar_userlink_created() {
-		return apply_filters( 'bp_get_link_list_item_xtrabar_userlink_created', sprintf( '%s %s', __( 'created', 'buddypress-links' ), bp_get_link_time_elapsed_text() ) );
+		return apply_filters( 'bp_get_link_list_item_xtrabar_userlink_created', sprintf( __( 'created %s ago', 'buddypress-links' ), bp_get_link_time_since_created() ) );
 	}
 
 ?>
