@@ -97,7 +97,7 @@ jQuery(document).ready( function() {
 							jQuery("div.link-vote-panel span#vote-count-" + link[2]).html(response_split[3]);
 						}
 
-						jQuery("ul#link-list div#link-vote-panel-" + link[2]).fadeIn(200);
+						jQuery("div#link-vote-panel-" + link[2]).fadeIn(200);
 					}
 				);
 
