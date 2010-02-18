@@ -2,21 +2,18 @@
 Contributors: MrMaz
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8591311
 Tags: wpmu, buddypress, social, networking, links, rich media, embed, youtube, flickr, metacafe
-Requires at least: PHP 5.2, WordPress MU 2.9.1, BuddyPress 1.2.x
+Requires at least: PHP 5.2, WordPress 2.9.1, BuddyPress 1.2.x
 Tested up to: PHP 5.2.x, WordPress 2.9.1, BuddyPress 1.2.x
-Stable tag: 0.2.1
+Stable tag: 0.3
 
 BuddyPress Links is a drop in link and rich media sharing component for BuddyPress 1.2.x
 
 == Description ==
 
-#### Update!
+#### Warning!
 
-Rich media embedding is now available in version 0.2. Currently there is
-support for YouTube, Flickr, and metacafe with more to come. As of 0.2.1 there
-is now support for embedding regular web pages as rich media!
-
-Check out my blog post, which has a screencast demonstrating all of the new features! http://marshallsorenson.com/post/rich-media-embedding-and-mashing-with-buddypress-links
+The 0.3.x branch is not backwards compatible with the BuddyPress 1.1.x branch, or compatible with the 1.2.x classic theme.
+The links data from the 0.2.x branch is compatible with 0.3.x, except that all links wire posts will be lost.
 
 #### What is BuddyPress Links?
 
@@ -58,9 +55,9 @@ See it in action at http://primehockey.com/
 
 == Screenshots ==
 
-1. This is the directory. There is also a widget that looks almost identical, but has configurable thumbs sizes.
-2. This is the home page of a link. Most people will probably want to modify the template.
-3. This is the create/admin form. You can see a YouTube clip that was auto-detected.
+1. This is the directory. Not seen on this image are the search, order by, and category drop down filters.
+2. This is the how the links activity items appear on the main activity stream.
+3. This is the create/admin form. You can see how web page thumbs were auto-detected.
 
 == Installation ==
 
@@ -72,20 +69,20 @@ BuddyPress Links 0.2.x requires WordPress 2.8.4 or higher with BuddyPress 1.1.x 
 ####Plugin:
 
 1. Upload everything into the "/wp-content/plugins" directory of your installation.
-1. Activate BuddyPress Links in the "Plugins" admin panel using the "Activate" link (both work).
+1. Activate BuddyPress Links in the "Plugins" admin panel using the "Activate" link.
 1. DO NOT COPY/MOVE THEME FILES TO YOUR CHILD THEME. This is no longer required as of 0.3
 
 ####Upgrading from an earlier version:
 
 1. BACK UP ALL OF YOUR DATA.
-1. The wire has been deprecated. ALL LINKS WIRE POSTS MAY BE LOST!
+1. The wire has been deprecated. ALL LINKS WIRE POSTS WILL BE LOST!
 1. This version can use data created by previous versions, assuming you are porting your site to the new BP 1.2 default theme!
 
 == Upgrade Notice ==
 
 = 0.3 =
 
-DO NOT attempt to install this version on BP 1.1.X!  DO NOT try to use this plugin with the classic theme!
+DO NOT attempt to install version 0.3 or higher on BP 1.1.X!  DO NOT try to use this plugin with the classic theme!
 
 = 0.2 =
 
@@ -95,7 +92,7 @@ This version contains the first support for rich media embedding. *Please make s
 
 = 0.3 =
 
-* Baseline BuddyPress 1.2 support, REQUIRES BP 1.2-RC2 or higher
+* Baseline BuddyPress 1.2 support, REQUIRES BP 1.2 or higher
 * Removed classic theme support (may re-support in the future if there is a huge demand)
 * Wire support has been dropped and replaced with the activity stream
 * Deep and seamless activity stream integration, complete with RSS feeds
@@ -106,7 +103,12 @@ This version contains the first support for rich media embedding. *Please make s
 * Moved link loop item HTML from hard coded PHP to a template (links-loop-item.php)
 * Added the much requested filters for link REL and TARGET
 * Completely hooked into default theme AJAX (no duplicate functionality)
-* Fixed several trivial bugs
+* Removed redundant "Home" link from link list
+* Major overhaul of how we hook into the dashboard
+* Replaced full blown widget with a basic widget based on groups
+* Replaced custom elapsed time function with bp_core_time_since for continuity
+* Added filters for changing navigation tab names.
+* Fixed many old bugs
 
 = 0.2.1 =
 
@@ -130,13 +132,13 @@ This version contains the first support for rich media embedding. *Please make s
 * Many, many i18n fixes
 * A few bug fixes
 
-== License ==
+== Frequently Asked Questions ==
 
-All original code is Copyright (c) 2009 Marshall Sorenson. All rights reserved.
+= What is the license? =
 
 Released under the GNU GENERAL PUBLIC LICENSE 3.0 (http://www.gnu.org/licenses/gpl.txt)
 
-== Frequently Asked Questions ==
+All original code is Copyright (c) 2009 Marshall Sorenson. All rights reserved.
 
 = How do I customize the default templates? =
 
@@ -144,7 +146,18 @@ To override only certain templates from the bp-links-default theme directory,
 create a directory named "bp-links-default" in your child theme,
 and replace the template using the EXACT same path AND filename.
 
-To create a totally custom theme, create a directory called "bp-links-custom" in your child theme.
+To create a totally custom theme in order to completely bypass any core links
+themes you will need to define a custom theme name.
+
+For example, if your active WordPress theme is 'bluesky', and you wanted
+to define your links theme as 'links-custom', you would put your files in:
+
+/path/to/wp-content/themes/bluesky/links-custom
+
+And in wp-config.php you would place this define statement:
+
+define( 'BP_LINKS_CUSTOM_THEME', 'links-custom' )
+
 To find out which template files are required to exist, do a recursive search for 'bp_links_load_template'
 
 = Where can I get support? =
