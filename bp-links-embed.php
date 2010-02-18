@@ -250,11 +250,11 @@ function bp_links_auto_embed_panel_content( $embed_service = null ) {
 		$js_html = null;
 		$image_idx = null;
 		$image_selected_idx = null;
-		$image_selection_count = 1;
+		$image_selection_count = 0;
 		$image_selection_diplay = null;
 
 		// multiple images to select from?
-		if ( $embed_service instanceof BP_Links_Embed_Has_Selectable_Image && count( $embed_service->image_selection() ) > 1 ) {
+		if ( $embed_service instanceof BP_Links_Embed_Has_Selectable_Image && count( $embed_service->image_selection() ) >= 1 ) {
 
 			// body of javascript array
 			$js_array = array();

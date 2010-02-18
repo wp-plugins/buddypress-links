@@ -200,10 +200,19 @@ final class BP_Links_Embed_Service_WebPage
 		$page_images_bytes = $this->get_images_bytes( $page_images_sorted );
 
 		if ( is_array( $page_images_bytes ) && count( $page_images_bytes ) ) {
+
 			// use the array as is
 			$this->data()->images = $page_images_bytes;
-			// set index to first key from array
-			$this->data()->images_idx = key( $page_images_bytes );
+
+			// set the default index if image selection has at least one entry
+			if ( count( $this->image_selection() ) ) {
+				// set index to first key from array
+				$this->data()->images_idx = key( $page_images_bytes );
+			} else {
+				// no images returned by selection method
+				$this->data()->images_idx = null;
+			}
+			
 		} else {
 			return false;
 		}
