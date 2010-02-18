@@ -4,9 +4,7 @@
 
 /* Menu */
 span.buddypress-links-admin-menu-header {
-	color: #333333;
-	font: 12px Georgia,"Times New Roman","Bitstream Charter",Times,serif;
-	font-weight: normal;
+	font-weight: bold;
 	border-top: 1px solid gray;
 	padding-top: 3px;
 }
