@@ -211,7 +211,7 @@ class BP_Links_Link {
 					embed_service = %s,
 					embed_status = %d,
 					embed_data = %s,
-					date_updated = NOW()
+					date_updated = %s
 				WHERE
 					id = %d
 				",
@@ -231,6 +231,7 @@ class BP_Links_Link {
 					$this->embed_service,
 					$this->embed_status,
 					$this->embed_data,
+					date('Y-m-d H:i:s'),
 					$this->id
 			);
 			
@@ -263,7 +264,7 @@ class BP_Links_Link {
 					embed_data,
 					date_created
 				) VALUES (
-					%d, %d, %s, MD5(%s), %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %d, %s, NOW()
+					%d, %d, %s, MD5(%s), %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %d, %s, %s
 				)",
 					$this->user_id,
 					$this->category_id,
@@ -280,7 +281,8 @@ class BP_Links_Link {
 					$this->popularity,
 					$this->embed_service,
 					$this->embed_status,
-					$this->embed_data
+					$this->embed_data,
+					date('Y-m-d H:i:s')
 			);
 		}
 		
@@ -444,13 +446,13 @@ class BP_Links_Link {
 		global $wpdb, $bp;
 
 		// retire links older than 7 days from the popularity rankings, if not already retired
-		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->links->table_name} SET popularity = %d WHERE popularity < %d AND date_created < SUBDATE(NOW(), INTERVAL 7 DAY)", self::POPULARITY_RETIRED, self::POPULARITY_RETIRED ) );
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->links->table_name} SET popularity = %d WHERE popularity < %d AND date_created < SUBDATE(%s, INTERVAL 7 DAY)", self::POPULARITY_RETIRED, self::POPULARITY_RETIRED, date('Y-m-d H:i:s') ) );
 
 		// apply minimum vote total threshold to all links that aren't retired
 		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->links->table_name} SET popularity = %d WHERE popularity < %d AND vote_total < %d", self::POPULARITY_IGNORE, self::POPULARITY_IGNORE, self::POPULARITY_THRESH ) );
 
 		// determine popularity sql
-		$popularity_sql = apply_filters( 'bp_links_link_popularity_recalculate_all_sql', 'FLOOR( FLOOR( ( NOW() - date_created ) / 60 ) / vote_total )' );
+		$popularity_sql = sprintf( apply_filters( 'bp_links_link_popularity_recalculate_all_sql', 'FLOOR( FLOOR( ( %s - date_created ) / 60 ) / vote_total )' ), date('Y-m-d H:i:s') );
 
 		// update the popularity of all links that are not retired.
 		// also update the popularity if they were previously ignored, but now meet the threshold.
@@ -718,7 +720,7 @@ class BP_Links_Category {
 			$sql = $wpdb->prepare( "UPDATE {$bp->links->table_name_categories} SET name = %s, description = %s, priority = %d WHERE id = %d", $this->name, $this->description, $this->priority, $this->id );
 		} else {
 			// slug is created
-			$sql = $wpdb->prepare( "INSERT INTO {$bp->links->table_name_categories} ( slug, name, description, priority, date_created ) VALUES ( %s, %s, %s, %d, NOW() )", $this->slug, $this->name, $this->description, $this->priority );
+			$sql = $wpdb->prepare( "INSERT INTO {$bp->links->table_name_categories} ( slug, name, description, priority, date_created ) VALUES ( %s, %s, %s, %d, %s )", $this->slug, $this->name, $this->description, $this->priority, date('Y-m-d H:i:s') );
 		}
 
 		if ( false === $wpdb->query($sql) )
@@ -952,7 +954,7 @@ class BP_Links_Vote {
 			if ( $this->_edit_mode ) {
 				$sql = $wpdb->prepare( "UPDATE {$bp->links->table_name_votes} SET vote = %d WHERE link_id = %d AND user_id = %d", $this->vote, $this->link_id, $this->user_id );
 			} else {
-				$sql = $wpdb->prepare( "INSERT INTO {$bp->links->table_name_votes} ( link_id, user_id, vote, date_created ) VALUES ( %d, %d, %d, NOW() )", $this->link_id, $this->user_id, $this->vote );
+				$sql = $wpdb->prepare( "INSERT INTO {$bp->links->table_name_votes} ( link_id, user_id, vote, date_created ) VALUES ( %d, %d, %d, %s )", $this->link_id, $this->user_id, $this->vote, date('Y-m-d H:i:s') );
 			}
 
 			if ( false === $wpdb->query($sql) ) {
