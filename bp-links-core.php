@@ -357,6 +357,16 @@ function bp_links_setup_nav() {
 }
 add_action( 'bp_setup_nav', 'bp_links_setup_nav' );
 
+function bp_links_setup_activity_nav() {
+	global $bp;
+
+	$user_domain = ( !empty( $bp->displayed_user->domain ) ) ? $bp->displayed_user->domain : $bp->loggedin_user->domain;
+	$activity_link = $user_domain . $bp->activity->slug . '/';
+
+	bp_core_new_subnav_item( array( 'name' => __( 'Links', 'buddypress' ), 'slug' => BP_LINKS_SLUG, 'parent_url' => $activity_link, 'parent_slug' => $bp->activity->slug, 'screen_function' => 'bp_links_screen_activity', 'position' => 35, 'item_css_id' => 'activity-links' ) );
+}
+add_action( 'bp_activity_setup_nav', 'bp_links_setup_activity_nav' );
+
 function bp_links_directory_links_setup() {
 	global $bp;
 
@@ -444,6 +454,16 @@ function bp_links_screen_my_links_content() {
 	bp_links_locate_template( array( 'member.php' ), true );
 }
 add_action( 'bp_before_member_body', 'bp_links_screen_my_links_content' );
+
+function bp_links_screen_activity() {
+	global $bp;
+
+	if ( !is_site_admin() )
+		$bp->is_item_admin = false;
+
+	do_action( 'bp_links_screen_activity' );
+	bp_core_load_template( apply_filters( 'bp_links_template_links_activity', 'members/single/home' ) );
+}
 
 function bp_links_screen_link_home() {
 	global $bp;

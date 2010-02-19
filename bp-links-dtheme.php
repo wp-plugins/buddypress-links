@@ -196,18 +196,27 @@ function bp_links_dtheme_ajax_querystring_activity_filter( $query_string, $objec
 
 	$do_filter = false;
 
-	// only filter activity. ignore profile activity.
-	if ( $bp->activity->id == $object && !bp_is_my_profile() ) {
-		
-		if ( empty( $bp->current_component ) || $bp->activity->id == $bp->current_component ) {
-			// filter under 'activity' component with 'links' scope
-			if ( $bp->links->id == $scope ) {
+	// only filter activity.
+	if ( $bp->activity->id == $object ) {
+
+		if (  bp_is_my_profile() ) {
+			// handle filtering for profile
+			// this nav does not use AJAX so don't rely on $scope
+			if ( $bp->activity->id == $bp->current_component && $bp->links->slug == $bp->current_action ) {
 				$do_filter = 1;
 			}
-		} elseif ( $bp->links->id == $bp->current_component ) {
-			// filter 'links' component home pages
-			if ( $bp->is_single_item ) {
-				$do_filter = 2;
+		} else {
+			// handle filtering for all non-profile pages
+			if ( empty( $bp->current_component ) || $bp->activity->id == $bp->current_component ) {
+				// filter under 'activity' component with 'links' scope
+				if ( $bp->links->id == $scope ) {
+					$do_filter = 1;
+				}
+			} elseif ( $bp->links->id == $bp->current_component ) {
+				// filter 'links' component home pages
+				if ( $bp->is_single_item ) {
+					$do_filter = 2;
+				}
 			}
 		}
 	}
