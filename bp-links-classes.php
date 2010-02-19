@@ -452,7 +452,7 @@ class BP_Links_Link {
 		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->links->table_name} SET popularity = %d WHERE popularity < %d AND vote_total < %d", self::POPULARITY_IGNORE, self::POPULARITY_IGNORE, self::POPULARITY_THRESH ) );
 
 		// determine popularity sql
-		$popularity_sql = sprintf( apply_filters( 'bp_links_link_popularity_recalculate_all_sql', 'FLOOR( FLOOR( ( %s - date_created ) / 60 ) / vote_total )' ), date('Y-m-d H:i:s') );
+		$popularity_sql = sprintf( apply_filters( 'bp_links_link_popularity_recalculate_all_sql', "FLOOR( FLOOR( ( UNIX_TIMESTAMP('%s') - UNIX_TIMESTAMP(date_created) ) / 60 ) / vote_total )" ), date('Y-m-d H:i:s') );
 
 		// update the popularity of all links that are not retired.
 		// also update the popularity if they were previously ignored, but now meet the threshold.
