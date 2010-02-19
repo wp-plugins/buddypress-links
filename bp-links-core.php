@@ -355,7 +355,7 @@ function bp_links_setup_nav() {
 	
 	do_action( 'bp_links_setup_nav', $bp->links->current_link->user_has_access );
 }
-add_action( 'bp_init', 'bp_links_setup_nav', 5 );
+add_action( 'bp_setup_nav', 'bp_links_setup_nav' );
 
 function bp_links_directory_links_setup() {
 	global $bp;
