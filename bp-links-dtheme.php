@@ -63,7 +63,7 @@ function bp_links_dtheme_activity_type_tabs_setup() {
 	if ( is_user_logged_in() && bp_links_total_links_for_user( bp_loggedin_user_id() ) ) {
 		echo sprintf(
 			'<li id="activity-links"><a href="%s" title="%s">%s</a></li>',
-			site_url( BP_ACTIVITY_SLUG . '/#links/' ),
+			bp_loggedin_user_domain() . BP_ACTIVITY_SLUG . '/' . BP_LINKS_SLUG . '/',
 			__( 'The activity of links I created.', 'buddypress-links' ),
 			sprintf(
 				__( 'My Links (%s)', 'buddypress-links' ),
