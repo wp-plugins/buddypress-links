@@ -20,7 +20,7 @@ function bp_links_add_js() {
 	if ( $bp->current_component == $bp->links->slug ) {
 		// load global ajax scripts
 		wp_enqueue_script( 'bp-links-ajax', BP_LINKS_THEME_URL_INC . '/global.js', array('jquery') );
-		// load color box JS if single item
+		// load color box JS
 		wp_enqueue_script( 'bp-links-ajax-colorbox', BP_LINKS_THEME_URL_INC . '/jquery.colorbox-min.js', array('jquery') );
 		// load create forms ajax scripts if necessary
 		if ( $bp->current_action == 'create' || bp_links_is_link_admin_page() ) {
