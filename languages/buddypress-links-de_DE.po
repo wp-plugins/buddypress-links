@@ -1,20 +1,21 @@
+# Translation of the WordPress plugin BuddyPress Links 0.3-bleeding by Marshall Sorenson (MrMaz).
+# Copyright (C) 2010 Marshall Sorenson (MrMaz)
+# This file is distributed under the same license as the BuddyPress Links package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: BuddyPress Links 0.3-bleeding\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/buddypress-links\n"
 "POT-Creation-Date: 2010-02-17 20:40+0000\n"
-"PO-Revision-Date: \n"
-"Last-Translator: dan <contact@netajour.com>\n"
-"Language-Team: Daniel <contact@netajour.com>\n"
+"PO-Revision-Date: 2010-02-21 15:08+0100\n"
+"Last-Translator: Michael Berra <michael.berra@gmail.com>\n"
+"Language-Team: Michael Berra <michael.berra@gmail.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-KeywordsList: _e;__\n"
-"X-Poedit-Basepath: .\n"
-"X-Poedit-Language: French\n"
-"X-Poedit-Country: FRANCE\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: SWITZERLAND\n"
 
 #. #-#-#-#-#  plugin.pot (BuddyPress Links 0.3-bleeding)  #-#-#-#-#
 #. Plugin Name of an extension
@@ -24,25 +25,25 @@ msgstr ""
 #: themes/bp-links-admin/index.php:9
 #: themes/bp-links-admin/link-manager.php:15
 msgid "BuddyPress Links"
-msgstr "Vos Liens - BuddyPress Links"
+msgstr "BuddyPress Links"
 
 #: bp-links-admin.php:24
 #: themes/bp-links-admin/link-manager.php:15
 msgid "Manage Links"
-msgstr "Gestion des liens"
+msgstr "Links verwalten"
 
 #: bp-links-admin.php:25
 msgid "Manage Categories"
-msgstr "Gestion des catégories"
+msgstr "Kategorien verwalten"
 
 #: bp-links-admin.php:25
 #: themes/bp-links-admin/category-list.php:16
 msgid "Edit Categories"
-msgstr "Modifier les catégories"
+msgstr "Kategorien bearbeiten"
 
 #: bp-links-admin.php:56
 msgid "There were errors when deleting links."
-msgstr "Des erreurs se sont produites pendant la suppression des liens."
+msgstr "Es gab Fehler beim Löschen der Links"
 
 #: bp-links-admin.php:56
 #: bp-links-admin.php:108
@@ -60,115 +61,115 @@ msgstr "Des erreurs se sont produites pendant la suppression des liens."
 #: bp-links-embed.php:151
 #: bp-links-embed.php:155
 msgid "Please try again."
-msgstr "Essayez encore une fois"
+msgstr "Bitte versuche es nochmals"
 
 #: bp-links-admin.php:59
 msgid "Links deleted successfully"
-msgstr "Suppression des liens réussie"
+msgstr "Links wurden erfolgreich gelöscht"
 
 #: bp-links-admin.php:77
 msgid "You do not have sufficient permissions to edit link categories for this blog."
-msgstr "Vous n'avez pas les droits nécessaires pour modifier les catégories de liens sur ce site."
+msgstr "Du hast nicht genug Rechte, um Link-Kategorien für diesen Blog zu bearbeiten."
 
 #: bp-links-admin.php:105
 msgid "Categories deleted successfully"
-msgstr "Suppression de la catégorie réussie"
+msgstr "Kategorien erfolgreich gelöscht"
 
 #: bp-links-admin.php:108
 msgid "There were errors when deleting categories."
-msgstr "Des erreurs se sont produites pendant la suppression de la catégorie."
+msgstr "Es gab Fehler beim Löschen der Kategorien"
 
 #: bp-links-admin.php:112
 msgid "Unable to delete a category because it is assigned to one or more links"
-msgstr "Impossible de supprimer la catégorie qui est encore assignée à un ou plusieurs liens"
+msgstr "Es ist nicht möglich eine Kategorie zu löschen, die einen oder mehrere Links enthält"
 
 #: bp-links-admin.php:162
 msgid "Link category slug from this name already exists."
-msgstr "Un lien depuis ce nom existe déjà"
+msgstr "Link-Kategorie \"Slug\" mit diesem Namen existiert bereits."
 
 #: bp-links-admin.php:169
 #, php-format
 msgid "Link category name must be %1$d to %2$d characters in length."
-msgstr "Le nom de la catégorie doit contenir entre %1$d to %2$d caractères"
+msgstr "Der Name einer Link-Kategorie muss zwischen %1$d und %2$d Zeichen lang sein."
 
 #: bp-links-admin.php:174
 msgid "Link category name is required."
-msgstr "Un nom de catégorie est obligatoire"
+msgstr "Link-Kategorie-Name ist erforderlich."
 
 #: bp-links-admin.php:188
 #, php-format
 msgid "Link category description must be %1$d to %2$d characters in length."
-msgstr "La description doit contenir entre %1$d to %2$d caractères."
+msgstr "Die Beschreibung einer Link-Kategorie muss zwischen %1$d und %2$d Zeichen lang sein."
 
 #: bp-links-admin.php:201
 #, php-format
 msgid "Link category priority must be a number from %1$d to %2$d."
-msgstr "L'ordre de priorité des catégories doit être comprit entre %1$d et %2$d"
+msgstr "Die Priorität einer Link-Kategorie muss eine Nummer zwischen %1$d und %2$d sein."
 
 #: bp-links-admin.php:206
 msgid "Link category priority is required."
-msgstr "Veuillez attribuer un ordre de priorité à la catégorie."
+msgstr "Link-Kategorie-Priorität ist erforderlich."
 
 #: bp-links-admin.php:215
 msgid "Link category saved!"
-msgstr "Catégorie enregistrée !"
+msgstr "Link-Kategorie gespeichert!"
 
 #: bp-links-admin.php:216
 msgid "Return to list"
-msgstr "Revenir à la liste"
+msgstr "Zurück zur Liste"
 
 #: bp-links-admin.php:217
 msgid "or"
-msgstr "ou"
+msgstr "oder"
 
 #: bp-links-admin.php:218
 msgid "Create new category"
-msgstr "Créer une nouvelle catégorie"
+msgstr "Neue Kategorie erstellen"
 
 #: bp-links-admin.php:222
 msgid "There were errors when saving the link category."
-msgstr "Des erreurs se sont produites pendant l'enregistrement de la catégorie."
+msgstr "Es gab Fehler beim Speichern der Link-Kategorie."
 
 #: bp-links-admin.php:251
 msgid "Edit Category"
-msgstr "Modifier la catégorie"
+msgstr "Kategorie bearbeiten"
 
 #: bp-links-admin.php:252
 msgid "Update Category"
-msgstr "Mettre la catégorie à jour"
+msgstr "Kategorie updaten"
 
 #: bp-links-admin.php:256
 #: themes/bp-links-admin/category-list.php:117
 msgid "New Category"
-msgstr "Nouvelle Catégorie"
+msgstr "Neue Kategorie"
 
 #: bp-links-admin.php:257
 msgid "Add Category"
-msgstr "Ajouter une catégorie"
+msgstr "Kategorie hinzufügen"
 
 #: bp-links-ajax.php:27
 msgid "Vote recorded."
-msgstr "Note enregistrée."
+msgstr "Stimme erhalten."
 
 #: bp-links-ajax.php:29
 msgid "You have already voted."
-msgstr "Vous avez déjà voté pour ce lien"
+msgstr "Du hast bereits abgestimmt."
 
 #: bp-links-ajax.php:32
 msgid "There was a problem recording your vote. Please try again."
-msgstr "Un problème est survenu pendant la procédure de vote. Merci de bien vouloir recommencer."
+msgstr "Es gab ein Problem beim Abgeben deiner Stimme. Bitte versuche es nochmals."
 
 #: bp-links-ajax.php:37
 msgid "You must be logged in to vote!"
-msgstr "Vous devez vous connecter pour voter !"
+msgstr "Du musst eingeloggt sein, um abstimmen zu können!"
 
 #: bp-links-ajax.php:87
 msgid "Auto-fill not available for this URL."
-msgstr "L'auto-complétion n'est pas disponible pour cette URL"
+msgstr "'Automatisches Ausfüllen' nicht möglich für diese URL."
 
 #: bp-links-ajax.php:106
 msgid "Invalid request"
-msgstr "Requêtes non valide !"
+msgstr "Ungültige Anfrage"
 
 #: bp-links-core.php:104
 #: bp-links-core.php:105
@@ -177,21 +178,21 @@ msgstr "Requêtes non valide !"
 #: bp-links-core.php:108
 #, php-format
 msgid "Every %1$d minutes"
-msgstr "Toutes les %1$d minutes"
+msgstr "Alle %1$d Minuten"
 
 #: bp-links-core.php:294
 #, php-format
 msgid "Links <span>(%d)</span>"
-msgstr "Liens <span>(%d)</span>"
+msgstr "Links <span>(%d)</span>"
 
 #: bp-links-core.php:300
 #: bp-links-core.php:307
 msgid "My Links"
-msgstr "Mes liens"
+msgstr "Meine Links"
 
 #: bp-links-core.php:344
 msgid "Home"
-msgstr "Accueil"
+msgstr "Start"
 
 #: bp-links-core.php:349
 msgid "Admin"
@@ -199,184 +200,184 @@ msgstr "Admin"
 
 #: bp-links-core.php:383
 msgid "Admin Options"
-msgstr "Options"
+msgstr "Admin Einstellungen"
 
 #: bp-links-core.php:386
 #: bp-links-templatetags.php:724
 #: themes/bp-links-default/single/forms/delete.php:5
 #: themes/bp-links-default/single/forms/delete.php:16
 msgid "Delete Link"
-msgstr "Supprimer le lien"
+msgstr "Link löschen"
 
 #: bp-links-core.php:397
 msgid "Random Link"
-msgstr "Lien aléatoire"
+msgstr "Zufalls-Link"
 
 #: bp-links-core.php:517
 msgid "Link details were successfully updated."
-msgstr "La description du lien a été modifiée avec succès."
+msgstr "Die Link-Details wurden erfolgreich aktualisiert."
 
 #: bp-links-core.php:526
 msgid "There was an error updating link details."
-msgstr "Une erreur s'est produite pendant la modification de la description du lien."
+msgstr "Es gab einen Fehler beim Aktualisieren der Link-Details."
 
 #: bp-links-core.php:552
 msgid "Your avatar was deleted successfully!"
-msgstr "L'avatar a été supprimé avec succès."
+msgstr "Dein Link-Bild wurde erfolgreich gelöscht!"
 
 #: bp-links-core.php:554
 msgid "There was a problem deleting that avatar"
-msgstr "Une erreur s'est produite pendant la suppression de l'avatar."
+msgstr "Es gab einen Fehler beim Löschen deines Link-Bildes"
 
 #: bp-links-core.php:568
 msgid "The link avatar was uploaded successfully!"
-msgstr "L'avatar du lien a été téléchargé avec succès."
+msgstr "Das Link-Bild wurde erfolgreich hochgeladen!"
 
 #: bp-links-core.php:570
 #: bp-links-embed.php:151
 msgid "There was an error saving link avatar."
-msgstr "Une erreur s'est produite pendant l'enregistrement de l'avatar du lien."
+msgstr "Es gab einen Fehler beim Speichern deines Link-Bildes. "
 
 #: bp-links-core.php:628
 msgid "The link was deleted successfully"
-msgstr "Le lien a été supprimé avec succès"
+msgstr "Der Link wurde erfolgreich gelöscht"
 
 #: bp-links-core.php:631
 msgid "There was an error deleting the link, please try again."
-msgstr "Une erreur s'est produite pendant la suppression du lien. Veuillez recommencer."
+msgstr "Es gab einen Fehler beim Löschen des Links. Bitte versuche es nochmals. "
 
 #: bp-links-core.php:645
 msgid "Please fill in all of the required fields"
-msgstr "Veuillez remplir tous les champs"
+msgstr "Bitte fülle alle erforderlichen Felder aus"
 
 #: bp-links-core.php:661
 #, php-format
 msgid "Link URL must be %1$d characters or less, please make corrections and re-submit."
-msgstr "L'URL du lien ne doit pas dépasser %1$d caractères. Veuillez rectifier cela avant de recommencer."
+msgstr "Die URL des Links muss %1$d Zeichen oder weniger sein. Bitte korrigiere und schicke erneut ab."
 
 #: bp-links-core.php:664
 msgid "The URL you entered is not valid."
-msgstr "L'URL que vous venez d'indiquer n'est pas valide."
+msgstr "Die eingegebene URL ist ungültig. "
 
 #: bp-links-core.php:681
 #, php-format
 msgid "Link Name must be %1$d characters or less, please make corrections and re-submit."
-msgstr "Le nom du lien ne doit pas dépasser %1$d caractères. Veuillez rectifier cela avant de recommencer."
+msgstr "Der Link-Name muss %1$d Zeichen oder weniger sein. Bitte korrigiere und schicke erneut ab."
 
 #: bp-links-core.php:698
 #, php-format
 msgid "Link Description must be %1$d characters or less, please make corrections and re-submit."
-msgstr "La description du lien ne doit pas dépasser %1$d caractères. Veuillez rectifier cela avant de recommencer"
+msgstr "Die Link-Beschreibung muss %1$d Zeichen oder weniger sein. Bitte korrigiere und schicke erneut ab."
 
 #: bp-links-core.php:782
 #, php-format
 msgid "%1$s created the link %2$s"
-msgstr "%1$s a créé le lien %2$s"
+msgstr "%1$s erstellte den Link %2$s"
 
 #: bp-links-core.php:797
 msgid "There was an error saving link details."
-msgstr "Une erreur s'est produite pendant l'enregistrement de la description."
+msgstr "Es gab einen Fehler beim Speichern der Link-Details."
 
 #: bp-links-core.php:877
 msgid "Created a link"
-msgstr "a créé un lien"
+msgstr "Erstellte einen Link"
 
 #: bp-links-core.php:878
 msgid "Voted on a link"
-msgstr "a voté pour un lien"
+msgstr "Stimmte für einen Link ab"
 
 #: bp-links-core.php:879
 msgid "Commented on a link"
-msgstr "a commenté un lien"
+msgstr "Kommentierte einen Link"
 
 #: bp-links-core.php:935
 msgid "Link Example Event"
-msgstr "Exemble d'événement"
+msgstr "Link-Beispiel--Event"
 
 #: bp-links-core.php:935
 #, php-format
 msgid "%d number of example events happened for the link \"%s\""
-msgstr "%d nombre d'événement exemplaires survenus pour le lien \"%s\""
+msgstr "%d Anzahl an Beispiel-Events eines Links \"%s\""
 
 #: bp-links-core.php:938
 #, php-format
 msgid "%1$s triggered a notification for the link \"%2$s\""
-msgstr "%1$s a déclenché une notification pour le lien \"%2$s\""
+msgstr "%1$s löste eine Benachrichtung für den Link \"%2$s\" aus"
 
 #: bp-links-core.php:1287
 #: bp-links-templatetags.php:720
 #: themes/bp-links-default/single/forms/avatar.php:5
 msgid "Link Avatar"
-msgstr "Avatar du lien"
+msgstr "Link-Bild"
 
 #: bp-links-core.php:1408
 #, php-format
 msgid "%s posted a comment on the link %s:"
-msgstr "%1$s a commenté le lien %2$s:"
+msgstr "%s hat den Link %s kommentiert:"
 
 #: bp-links-core.php:1494
 msgid "up"
-msgstr "en faveur"
+msgstr "gut"
 
 #: bp-links-core.php:1494
 msgid "down"
-msgstr "en défaveur"
+msgstr "schlecht"
 
 #: bp-links-core.php:1497
 #, php-format
 msgid "%1$s voted %2$s the link %3$s"
-msgstr "%1$s a voté %2$s du lien %3$s"
+msgstr "%1$s stimmte '%2$s' für den Link %3$s"
 
 #: bp-links-dtheme.php:51
 #: bp-links-templatetags.php:1401
 #: bp-links-widgets.php:13
 #: themes/bp-links-admin/category-list.php:68
 msgid "Links"
-msgstr "Liens"
+msgstr "Links"
 
 #: bp-links-dtheme.php:67
 msgid "The activity of links I created."
-msgstr "Activités des liens que j'ai créé"
+msgstr "Die Aktivitäten der von mir erstellten Links."
 
 #: bp-links-dtheme.php:69
 #: themes/bp-links-default/index.php:20
 #, php-format
 msgid "My Links (%s)"
-msgstr "Mes liens (%s)"
+msgstr "Meine Links (%s)"
 
 #: bp-links-dtheme.php:84
 msgid "Show Link Created"
-msgstr "Afficher le lien créé"
+msgstr "Zeige den erstellten Link"
 
 #: bp-links-dtheme.php:86
 msgid "Show Link Comments"
-msgstr "Afficher les commentaires"
+msgstr "Zeige die Link-Kommentare"
 
 #: bp-links-dtheme.php:87
 msgid "Show Link Votes"
-msgstr "Afficher les votes"
+msgstr "Zeige die Link-Abstimmungen"
 
 #: bp-links-dtheme.php:108
 msgid "Search anything..."
-msgstr "Rechercher tout..."
+msgstr "Durchsuche alles..."
 
 #: bp-links-dtheme.php:109
 msgid "Search"
-msgstr "Rechercher"
+msgstr "Suche"
 
 #: bp-links-dtheme.php:119
 msgid "Create"
-msgstr "Créer"
+msgstr "Erstelle"
 
 #: bp-links-dtheme.php:120
 msgid "Start Over"
-msgstr "Recommencer"
+msgstr "Nochmals"
 
 #: bp-links-embed-classes.php:349
 #: bp-links-embed-classes.php:1019
 #, php-format
 msgid "Downloading content details from %1$s failed."
-msgstr "Le téléchargement des informations additionnelles en provenance de %1$s a échoué."
+msgstr "Die Inhaltsdetails von %1$s runterzuladen hat nicht geklappt."
 
 #: bp-links-embed-classes.php:349
 #: themes/bp-links-default/single/forms/details.php:19
@@ -386,16 +387,16 @@ msgstr "URL"
 #: bp-links-embed-classes.php:1009
 #, php-format
 msgid "The URL you entered is not a valid %1$s link."
-msgstr "L'URL que vous venez d'indiquer pour %1$s est incorrecte."
+msgstr "Die eingegebene URL ist kein gültiger %1$s Link."
 
 #: bp-links-embed-classes.php:1014
 #, php-format
 msgid "The code you entered is not valid %1$s embedding code."
-msgstr "Le code d'insertion %1$s  que vous avez indiqué n'est pas valide."
+msgstr "Der eingegbene Code ist kein gültiger %1$s Embed-Code."
 
 #: bp-links-embed-services.php:122
 msgid "Web Page"
-msgstr "Site web"
+msgstr "Webseite"
 
 #: bp-links-embed-services.php:403
 msgid "PicApp"
@@ -415,44 +416,44 @@ msgstr "Flickr"
 
 #: bp-links-embed-services.php:1442
 msgid "MetaCafe"
-msgstr "MetaCafé"
+msgstr "MetaCafe"
 
 #: bp-links-embed.php:109
 msgid "Upload Failed! Error was:"
-msgstr "Le téléchargement a échoué ! L'erreur indique:"
+msgstr "Upload hat nicht geklappt. Der Fehler war:"
 
 #: bp-links-embed.php:155
 msgid "Downloading image from remote website failed."
-msgstr "Le téléchargement de l'image depuis le site distant a échoué."
+msgstr "Bild von der externen Website runterzuladen hat nicht geklappt."
 
 #: bp-links-embed.php:159
 msgid "The embedding code you entered was not recognized."
-msgstr "Le code d'insertion que vous avez indiqué n'est pas reconnu."
+msgstr "Der Embed-Code, den du eingegeben hast, wurde nicht erkannt."
 
 #: bp-links-embed.php:224
 msgid "Clear"
-msgstr "Annuler"
+msgstr "Löschen"
 
 #: bp-links-embed.php:331
 msgid "Rich Media Detected:"
-msgstr "Rich Média détecté:"
+msgstr "Rich-Media erkannt:"
 
 #: bp-links-embed.php:332
 msgid "Edit Name and Description"
-msgstr "Modifier le nom et la description"
+msgstr "Bearbeite Name und Beschreibung"
 
 #: bp-links-embed.php:345
 msgid "Thumbs"
-msgstr "Vignettes"
+msgstr "Miniaturbilder"
 
 #: bp-links-embed.php:347
 msgid "No Thumbnail"
-msgstr "Image non fournie"
+msgstr "Keine Miniaturbilder"
 
 #: bp-links-notifications.php:19
 #, php-format
 msgid "%s commented on your link \"%s\""
-msgstr "%s a commenté votre lien \"%s\""
+msgstr "%s hat deinen Link \"%s\" kommentiert"
 
 #: bp-links-notifications.php:22
 #, php-format
@@ -465,11 +466,11 @@ msgid ""
 "\n"
 "---------------------\n"
 msgstr ""
-"%s a commenté votre lien \"%s\":\n"
+"%s hat deinen Link \"%s\" kommentiert:\n"
 "\n"
 "\"%s\"\n"
 "\n"
-"Pour voir le message ou répondre: %s\n"
+"Um diese Nachricht anzusehen und darauf zu antworten log dich ein und besuche: %s\n"
 "\n"
 "---------------------\n"
 
@@ -477,12 +478,12 @@ msgstr ""
 #: bp-links-notifications.php:82
 #, php-format
 msgid "To disable these notifications please log in and go to: %s"
-msgstr "Pour désactiver ces messages connectez-vous sur : %s"
+msgstr "Um diese Benachrichtigungen abzustellen log dich bitte ein und besuche: %s"
 
 #: bp-links-notifications.php:70
 #, php-format
 msgid "%s mentioned you in the link \"%s\""
-msgstr "%s vous cite sur le lien \"%s\""
+msgstr "%s hat dich im Link \"%s\" erwähnt"
 
 #: bp-links-notifications.php:73
 #, php-format
@@ -495,325 +496,325 @@ msgid ""
 "\n"
 "---------------------\n"
 msgstr ""
-"%s vous cite sur le lien \"%s\":\n"
+"%s hat dich im Link \"%s\" erwähnt:\n"
 "\n"
 "\"%s\"\n"
 "\n"
-"Pour voir le message ou répondre: %s\n"
+"Um diese Nachricht anzusehen und darauf zu antworten log dich ein und besuche: %s\n"
 "\n"
 "---------------------\n"
 
 #: bp-links-templatetags.php:364
 msgid "Public Link"
-msgstr "Ce lien est public"
+msgstr "Öffentlicher Link"
 
 #: bp-links-templatetags.php:366
 msgid "Friends Only Link"
-msgstr "Ce lien est réservé aux amis"
+msgstr "Nur-für-Freunde-Link"
 
 #: bp-links-templatetags.php:368
 msgid "Hidden Link"
-msgstr "ce lien est masqué"
+msgstr "Versteckter Link"
 
 #: bp-links-templatetags.php:370
 msgid "Link"
-msgstr "Lien"
+msgstr "Link"
 
 #: bp-links-templatetags.php:475
 msgid "not yet active"
-msgstr "actuellement inactif"
+msgstr "noch nicht aktiv"
 
 #: bp-links-templatetags.php:545
 msgid "more..."
-msgstr "suite..."
+msgstr "mehr..."
 
 #: bp-links-templatetags.php:676
 #, php-format
 msgid "Viewing link %1$d to %2$d (of %3$d links)"
-msgstr "Liens %1$d à %2$d (sur %3$d liens)"
+msgstr "Zeige Link %1$d bis %2$d (von %3$d Links)"
 
 #: bp-links-templatetags.php:713
 msgid "Edit Details"
-msgstr "Modifier la description"
+msgstr "Details bearbeiten"
 
 #: bp-links-templatetags.php:735
 msgid "This is a hidden link. Only the user who owns it can view it."
-msgstr "Ce lien est masqué. Il n'y a que son auteur qui peut le voir."
+msgstr "Dies ist ein versteckter Link. Nur der Benutzer, der ihn erstellt hat, kann ihn sehen."
 
 #: bp-links-templatetags.php:737
 msgid "This is a friends only link. Only the owner's friends can view it."
-msgstr "Ce lien est réservé aux amis. Seuls les amis de l'auteur peuvent le voir."
+msgstr "Das ist ein Nur-für-Freunde-Link. Nur die Freunde des Link-Erstellers können ihn sehen."
 
 #: bp-links-templatetags.php:739
 msgid "You do not have permission to access this link."
-msgstr "Vous n'êtes pas autorisé à accéder à ce lien."
+msgstr "Du hast keine Berechtigung auf diesen Link zuzugreifen."
 
 #: bp-links-templatetags.php:1212
 #, php-format
 msgid "Viewing category %1$d to %2$d (of %3$d categories)"
-msgstr "Cat&eacute;gories de %1$d &agrave; %2$d (sur %3$d cat&eacute;gories)"
+msgstr "Zeige Kategorie %1$d bis %2$d (von %3$d Kategorien)"
 
 #: bp-links-templatetags.php:1357
 #: themes/bp-links-default/index.php:49
 msgid "All"
-msgstr "Tout"
+msgstr "Alle"
 
 #: bp-links-templatetags.php:1402
 msgid "Yes"
-msgstr "Oui"
+msgstr "Ja"
 
 #: bp-links-templatetags.php:1403
 msgid "No"
-msgstr "Non"
+msgstr "Nein"
 
 #: bp-links-templatetags.php:1407
 msgid "A member posts a comment on a link you created"
-msgstr "Un membre a commenté un de vos liens"
+msgstr "Ein Mitglied kommentiert einen von dir erstellten Link"
 
 #: bp-links-templatetags.php:1475
 #: bp-links-widgets.php:36
 msgid "Votes"
-msgstr "Voix"
+msgstr "Stimmen"
 
 #: bp-links-templatetags.php:1532
 msgid "Comments"
-msgstr "commentaire(s)"
+msgstr "Kommentare"
 
 #: bp-links-templatetags.php:1539
 #: bp-links-widgets.php:127
 #, php-format
 msgid "created %s ago"
-msgstr "publié il y a %s"
+msgstr "vor %s erstellt"
 
 #: bp-links-widgets.php:13
 msgid "Your BuddyPress Links"
-msgstr "Vos Liens"
+msgstr "Deine BuddyPress Links"
 
 #: bp-links-widgets.php:34
 msgid "Newest"
-msgstr "Les plus récents"
+msgstr "Neuste"
 
 #: bp-links-widgets.php:35
 msgid "Active"
-msgstr "Actif"
+msgstr "Aktiv"
 
 #: bp-links-widgets.php:37
 msgid "Rating"
-msgstr "Noter"
+msgstr "Bewertung"
 
 #: bp-links-widgets.php:38
 msgid "Popular"
-msgstr "Populaires"
+msgstr "Beliebt"
 
 #: bp-links-widgets.php:50
 #: bp-links-widgets.php:131
 msgid "%+d rating"
-msgstr "%+d vote"
+msgstr "%+d Bewertung"
 
 #: bp-links-widgets.php:62
 msgid "There are no links to display."
-msgstr "Aucun lien à afficher."
+msgstr "Es gibt keine Links anzuzeigen."
 
 #: bp-links-widgets.php:83
 msgid "Max links to show:"
-msgstr "Nbre maxi de liens à afficher:"
+msgstr "Maximale Links anzuzeigen:"
 
 #: bp-links-widgets.php:133
 #, php-format
 msgid "%s votes"
-msgstr "%s votes"
+msgstr "%s Stimmen"
 
 #: bp-links-widgets.php:148
 msgid "No links matched the current filter."
-msgstr "Aucun lien ne correspond à votre recherche."
+msgstr "Keine Links entsprechen dem aktuellen Filter."
 
 #: feeds/bp-links-feed.php:22
 msgid "Most Recent Links"
-msgstr "Liens récents"
+msgstr "Zuletzt hinzugefügte Links"
 
 #: feeds/bp-links-feed.php:26
 msgid "Most Recent Links Feed"
-msgstr "Fil RSS des liens récents"
+msgstr "Zuletzt hinzugefügte Link-Feeds"
 
 #: feeds/bp-links-link-feed.php:21
 msgid "Link Activity"
-msgstr "Activité du lien"
+msgstr "Link-Aktivität"
 
 #: feeds/bp-links-link-feed.php:24
 #, php-format
 msgid "%s - Link Activity Feed"
-msgstr "%s - Fil d'activité du lien"
+msgstr "%s - Link Aktivitäts-Feed"
 
 #: feeds/bp-links-link-feed.php:43
 #: feeds/bp-links-mylinks-feed.php:54
 #, php-format
 msgid "Comments: %s"
-msgstr "Commentaires: %s"
+msgstr "Kommentare: %s"
 
 #: feeds/bp-links-mylinks-feed.php:21
 #: feeds/bp-links-mylinks-feed.php:24
 msgid "My Links - Public Activity"
-msgstr "Mes liens - Activités publiques"
+msgstr "Meine Links - öffentliche Aktivität"
 
 #: themes/bp-links-admin/category-edit.php:29
 msgid "Link Category Name"
-msgstr "Nom de la catégorie"
+msgstr "Link-Kategoriename"
 
 #: themes/bp-links-admin/category-edit.php:33
 msgid "Description (optional)"
-msgstr "Description (facultatif)"
+msgstr "Beschreibung (optional)"
 
 #: themes/bp-links-admin/category-edit.php:37
 msgid "Priority (optional)"
-msgstr "Priorité (facultatif)"
+msgstr "Priorität (optional)"
 
 #: themes/bp-links-admin/category-edit.php:38
 msgid "to"
-msgstr "à"
+msgstr "bis"
 
 #: themes/bp-links-admin/category-list.php:22
 msgid "Search Categories"
-msgstr "Rechercher parmi les catégories"
+msgstr "Durchsuche Kategorien"
 
 #: themes/bp-links-admin/category-list.php:33
 #: themes/bp-links-admin/link-manager.php:29
 msgid "Delete"
-msgstr "Supprimer"
+msgstr "Löschen"
 
 #: themes/bp-links-admin/category-list.php:33
 #: themes/bp-links-admin/link-manager.php:29
 msgid "Are you sure?"
-msgstr "Voulez-vous vraiment faire cela ?"
+msgstr "Bist du sicher?"
 
 #: themes/bp-links-admin/category-list.php:42
 msgid "Categories matching:"
-msgstr "Catégories trouvées: "
+msgstr "Passende Kategorien:"
 
 #: themes/bp-links-admin/category-list.php:56
 #: themes/bp-links-default/single/forms/details.php:29
 msgid "Name"
-msgstr "Nom"
+msgstr "Name"
 
 #: themes/bp-links-admin/category-list.php:59
 #: themes/bp-links-default/single/forms/details.php:33
 msgid "Description"
-msgstr "Description"
+msgstr "Beschreibung"
 
 #: themes/bp-links-admin/category-list.php:62
 msgid "Slug"
-msgstr "Chemin"
+msgstr "Slug"
 
 #: themes/bp-links-admin/category-list.php:65
 msgid "Priority"
-msgstr "Priorité"
+msgstr "Priorität"
 
 #: themes/bp-links-admin/category-list.php:71
 #: themes/bp-links-admin/link-manager.php:66
 msgid "Created"
-msgstr "Création"
+msgstr "Erstellt"
 
 #: themes/bp-links-admin/category-list.php:74
 msgid "Updated"
-msgstr "Mis à jour"
+msgstr "Aktualisiert"
 
 #: themes/bp-links-admin/category-list.php:95
 #: themes/bp-links-admin/link-manager.php:93
 msgid "Edit"
-msgstr "Modifier"
+msgstr "Bearbeiten"
 
 #: themes/bp-links-admin/category-list.php:105
 msgid "No categories found."
-msgstr "Aucune catégorie trouvée."
+msgstr "Keine Kategorien gefunden."
 
 #: themes/bp-links-admin/link-manager.php:19
 msgid "Search Links"
-msgstr "Rechercher des liens"
+msgstr "Durchsuche Links"
 
 #: themes/bp-links-admin/link-manager.php:38
 msgid "Links matching:"
-msgstr "Liens trouvés:"
+msgstr "Passende Links:"
 
 #: themes/bp-links-admin/link-manager.php:54
 #: themes/bp-links-default/single/forms/details.php:10
 msgid "Details"
-msgstr "Détails"
+msgstr "Details"
 
 #: themes/bp-links-admin/link-manager.php:57
 #: themes/bp-links-default/single/forms/details.php:14
 msgid "Category"
-msgstr "Voir par catégorie"
+msgstr "Kategorie"
 
 #: themes/bp-links-admin/link-manager.php:60
 msgid "Type"
-msgstr "Type"
+msgstr "Typ"
 
 #: themes/bp-links-admin/link-manager.php:63
 msgid "Owner"
-msgstr "Propriétaire"
+msgstr "Inhaber"
 
 #: themes/bp-links-admin/link-manager.php:69
 #: themes/bp-links-default/index.php:29
 #: themes/bp-links-default/member.php:12
 msgid "Last Active"
-msgstr "Dernière activité"
+msgstr "Zuletzt aktiv"
 
 #: themes/bp-links-admin/link-manager.php:103
 msgid "No links found."
-msgstr "Aucun lien trouvé."
+msgstr "Keine Links gefunden."
 
 #: themes/bp-links-default/activity/post-form.php:7
 #, php-format
 msgid "You are mentioning %s in a new update, this user will be sent a notification of your message."
-msgstr "Vous citez %s dans une de vos mise à jour. Cet utilisateur va recevoir un message d'information à ce sujet."
+msgstr "Du erwähnst %s in einem neuen Update. Dieser Benutzer wird eine Benachrichtigung erhalten."
 
 #: themes/bp-links-default/activity/post-form.php:18
 #, php-format
 msgid "Comment on this link, %s?"
-msgstr "Voulez-vous copmmenter ce lien, %s ?"
+msgstr "Diesen Link kommentieren, %s?"
 
 #: themes/bp-links-default/activity/post-form.php:29
 msgid "Post Update"
-msgstr "Mis à jour"
+msgstr "Update schreiben"
 
 #: themes/bp-links-default/create.php:6
 #: themes/bp-links-default/index.php:7
 msgid "Create a Link"
-msgstr "Créer un lien"
+msgstr "Einen Link erfassen"
 
 #: themes/bp-links-default/create.php:6
 #: themes/bp-links-default/index.php:7
 msgid "Links Directory"
-msgstr "Annuaire des Liens"
+msgstr "Linkverzeichnis"
 
 #: themes/bp-links-default/index.php:17
 #, php-format
 msgid "All Links (%s)"
-msgstr "Tous les liens (%s)"
+msgstr "Alle Links (%s)"
 
 #: themes/bp-links-default/index.php:27
 #: themes/bp-links-default/member.php:10
 msgid "Order By:"
-msgstr "Trier par:"
+msgstr "Sortieren nach:"
 
 #: themes/bp-links-default/index.php:30
 #: themes/bp-links-default/member.php:13
 msgid "Most Popular"
-msgstr "Les plus populaires"
+msgstr "Beliebteste"
 
 #: themes/bp-links-default/index.php:31
 #: themes/bp-links-default/member.php:14
 msgid "Newly Created"
-msgstr "Récents"
+msgstr "Neu erstellt"
 
 #: themes/bp-links-default/index.php:32
 #: themes/bp-links-default/member.php:15
 msgid "Most Votes"
-msgstr "Les plus plébiscités"
+msgstr "Am meisten Stimmen"
 
 #: themes/bp-links-default/index.php:33
 #: themes/bp-links-default/member.php:16
 msgid "Highest Rated"
-msgstr "Les plus notés"
+msgstr "Am höchsten bewertet"
 
 #: themes/bp-links-default/index.php:43
 #: themes/bp-links-default/single/activity.php:3
@@ -822,289 +823,156 @@ msgstr "RSS"
 
 #: themes/bp-links-default/index.php:47
 msgid "Category:"
-msgstr "Catégorie:"
+msgstr "Kategorie:"
 
 #: themes/bp-links-default/links-loop.php:41
 msgid "There were no links found."
-msgstr "Aucun lien n'a été trouvé."
+msgstr "Es wurden keine Links gefunden."
 
 #: themes/bp-links-default/single/forms/avatar.php:12
 msgid "Delete Avatar"
-msgstr "Supprimer l'avatar"
+msgstr "Link-Bild löschen"
 
 #: themes/bp-links-default/single/forms/avatar.php:21
 msgid "Upload an image to use as an avatar for this link. The image will be shown on the main link page, and in search results."
-msgstr "Télécharger une image qui servira d'avatar au lien. L'image s'affichera sur la page d'accueil des liens et dans les résultats de recherche."
+msgstr "Lade eine Bild hoch, das für diesen Link verwendet werden soll. Das Bild wird auf der Hauptseite des Links und in den Suchresultaten erscheinen."
 
 #: themes/bp-links-default/single/forms/avatar.php:25
 msgid "Upload Image"
-msgstr "Télécharger l'image"
+msgstr "Bild hochladen"
 
 #: themes/bp-links-default/single/forms/avatar.php:32
 msgid "OR"
-msgstr "OU"
+msgstr "ODER"
 
 #: themes/bp-links-default/single/forms/avatar.php:35
 #, php-format
 msgid "Paste Image Embed Code (%1$s and %2$s are supported)"
-msgstr "Collez ici le code d'insertion de l'image externe (seules les illustrations en provenance de %1$s et %2$s sont autorisées)"
+msgstr "Füge Bild Embed-Code ein (%1$s und %2$s sind unterstützt)"
 
 #: themes/bp-links-default/single/forms/avatar.php:39
 msgid "Embed Image"
-msgstr "Intégrer l'image"
+msgstr "Bild einbetten"
 
 #: themes/bp-links-default/single/forms/avatar.php:48
 msgid "Crop Avatar"
-msgstr "Retailler l'avatar du lien"
+msgstr "Bild beschneiden"
 
 #: themes/bp-links-default/single/forms/avatar.php:50
 msgid "Avatar to crop"
-msgstr "Avatar à tailler"
+msgstr "Zu beschneidendes Bild"
 
 #: themes/bp-links-default/single/forms/avatar.php:53
 msgid "Avatar preview"
-msgstr "Prévisualisation"
+msgstr "Bild-Vorschau"
 
 #: themes/bp-links-default/single/forms/avatar.php:56
 msgid "Crop Image"
-msgstr "Retailler l'avatar"
+msgstr "Bild beschneiden"
 
 #: themes/bp-links-default/single/forms/delete.php:10
 msgid "WARNING: Deleting this link will completely remove ALL content associated with it. There is no way back, please be careful with this option."
-msgstr "ATTENTION: la suppression de ce lien supprimera également TOUS les contenus qui lui sont associés. Vous ne pourrez pas annuler cette action, aussi soyez prudent avec cette option."
+msgstr "WARNUNG: Mit dem Löschen dieses Links wird auch ALLER Inhalt, der damit verknüpft ist gelöscht. Es gibt keinen Weg zurück, also sei vorsichtig mit dieser Option!"
 
 #: themes/bp-links-default/single/forms/delete.php:13
 msgid "I understand the consequences of deleting this link."
-msgstr "Je confirme la suppression du lien."
+msgstr "Ich verstehe die Konsequenzen, wenn ich diesen Link lösche."
 
 #: themes/bp-links-default/single/forms/details.php:46
 msgid "Edit Avatar Options"
-msgstr "Modifier l'avatar"
+msgstr "Bildbearbeitungs-Optionen"
 
 #: themes/bp-links-default/single/forms/details.php:52
 msgid "Current"
-msgstr "Actuel"
+msgstr "Aktuell"
 
 #: themes/bp-links-default/single/forms/details.php:62
 msgid "Customize"
-msgstr "Personnaliser"
+msgstr "Individuell anpassen"
 
 #: themes/bp-links-default/single/forms/details.php:64
 msgid "After saving this link you will be directed to a page where you can customize the avatar."
-msgstr "Une fois ce lien enregistré vous serez redirigé vers une page où vous pourrez personnaliser son avatar."
+msgstr "Nach dem speichern des Links wirst du auf eine Seite weitergeleitet, wo du das Bild anpassen kannst."
 
 #: themes/bp-links-default/single/forms/details.php:75
 msgid "Edit Advanced Settings"
-msgstr "Paramètres avancés"
+msgstr "Erweitere Einstellungen bearbeiten"
 
 #: themes/bp-links-default/single/forms/details.php:79
 msgid "Privacy Options"
-msgstr "Options de confidentialité"
+msgstr "Einstellungen zur Privatsphäre"
 
 #: themes/bp-links-default/single/forms/details.php:83
 msgid "This is a public link"
-msgstr "Le lien est public"
+msgstr "Das ist ein öffentlicher Link"
 
 #: themes/bp-links-default/single/forms/details.php:86
 msgid "Any site member can see this link, and comment on it."
-msgstr "Tous les membres du site peuvent voir le lien et le commenter."
+msgstr "Jedes Mitglied kann den Link sehen und kommentieren."
 
 #: themes/bp-links-default/single/forms/details.php:87
 msgid "This link will be listed in the links directory and in search results."
-msgstr "Le lien sera affiché dans le répertoire des liens et apparaîtra dans les résultats de recherche."
+msgstr "Dieser Link wird im Linkverzeichnis und in den Suchresultaten erscheinen."
 
 #: themes/bp-links-default/single/forms/details.php:88
 msgid "Link content and activity will be visible to any site member."
-msgstr "Tous les membres du site peuvent voir le contenu et l'activité du lien."
+msgstr "Der Inhalt und die Aktivitäten des Links werden für alle Mitglieder sichtbar sein. "
 
 #: themes/bp-links-default/single/forms/details.php:93
 msgid "This is a friends-only link"
-msgstr "Le lien est réservé aux amis."
+msgstr "Das ist ein Nur-für-Freunde-Link"
 
 #: themes/bp-links-default/single/forms/details.php:96
 msgid "Only users who are in your friends list can see the link and comment on it."
-msgstr "Seuls les utilisateurs figurant sur votre liste d'amis peuvent voir le lien et le commenter."
+msgstr "Nur Benutzer, die in deiner Freundesliste sind, können diesen Link sehen und kommentieren."
 
 #: themes/bp-links-default/single/forms/details.php:97
 #: themes/bp-links-default/single/forms/details.php:107
 msgid "This link will NOT be listed in the links directory or in search results."
-msgstr "Le lien NE SERA PAS affiché dans le répertoire des liens et n'apparaîtra pas dans les résultats de recherche."
+msgstr "Dieser LInk wird NICHT im Linkverzeichnis oder den Suchresultaten erscheinen."
 
 #: themes/bp-links-default/single/forms/details.php:98
 msgid "Link content and activity will only be visible to your friends."
-msgstr "Le contenu et l'activité du lien ne seront visibles que par vos amis."
+msgstr "Der Inahlt und die Aktivitäten des Links werden nur für deine Freunde sichtbar sein."
 
 #: themes/bp-links-default/single/forms/details.php:103
 msgid "This is a hidden link"
-msgstr "Le lien est masqué."
+msgstr "Das ist ein versteckter Link"
 
 #: themes/bp-links-default/single/forms/details.php:106
 msgid "Only you can see the link."
-msgstr "Il n'y a que vous qui pouvez voir ce lien."
+msgstr "Nur du kannst diesen Link sehen."
 
 #: themes/bp-links-default/single/forms/details.php:108
 msgid "Link content and activity will only be visible to you."
-msgstr "Il n'y a que vous qui pourrez voir le contenu et l'activité du lien."
+msgstr "Der Inhalt und die Aktivitäten dieses Links werden nur für dich sichtbar sein."
 
 #: themes/bp-links-default/single/forms/details.php:119
 msgid "Save Link"
-msgstr "Enregistrer"
+msgstr "Link speichern"
 
 #: themes/bp-links-default/single/link-header.php:7
 msgid "Link Owner"
-msgstr "Proposé par"
+msgstr "Link-Inhaber"
 
 #: themes/bp-links-default/single/link-header.php:26
 #, php-format
 msgid "active %s ago"
-msgstr "actif il y a %s"
+msgstr "vor %s aktiv"
 
 #. Plugin URI of an extension
 msgid "http://wordpress.org/extend/plugins/buddypress-links/"
-msgstr ""
+msgstr "http://wordpress.org/extend/plugins/buddypress-links/"
 
 #. Description of an extension
 msgid "BuddyPress Links is a link sharing component for BuddyPress."
-msgstr "BuddyPress Links est un plugin de partage de liens pour BuddyPress."
+msgstr "BuddyPress Links ist eine Komponente, um Inhalte zu teilen."
 
 #. Author of an extension
 msgid "Marshall Sorenson (MrMaz)"
-msgstr ""
+msgstr "Marshall Sorenson (MrMaz)"
 
 #. Author URI of an extension
 msgid "http://buddypress.org/developers/mrmaz/"
-msgstr ""
-
-#~ msgid "Edit BP Link Category"
-#~ msgstr "Modifier une catégorie"
-#~ msgid "New BP Link Category"
-#~ msgstr "Nouvelle catégorie"
-#~ msgid "Manage BP Link Categories"
-#~ msgstr "Gestion des catégories"
-#~ msgid "Wire Posts"
-#~ msgstr "Messages sur le Fil"
-#~ msgid "New wire post on link: %1$s"
-#~ msgstr "Nouveau commentaire sur le lien 1$%s"
-#~ msgid "Recently Active"
-#~ msgstr "Les plus actifs"
-#~ msgid "Vote Rating"
-#~ msgstr "Les mieux notés"
-#~ msgid "%1$d days ago"
-#~ msgstr "il y a %1$d jours"
-#~ msgid "%1$d day ago"
-#~ msgstr "il y a %1$d  jour"
-#~ msgid "%1$d hours ago"
-#~ msgstr "il y a %1$d heures"
-#~ msgid "%1$d hour ago"
-#~ msgstr "il y a %1$d heure"
-#~ msgid "%1$d minutes ago"
-#~ msgstr "il y a %1$d minutes"
-#~ msgid "%1$d minute ago"
-#~ msgstr "il y a %1$d minute"
-#~ msgid "%1$d seconds ago"
-#~ msgstr "il y a %1$d secondes"
-#~ msgid "%1$d second ago"
-#~ msgstr "il y a %1$d  seconde"
-#~ msgid "Filter links"
-#~ msgstr "Filtrer les liens"
-#~ msgid "created"
-#~ msgstr "a proposé ce lien"
-#~ msgid "Most Recent Links RSS Feed"
-#~ msgstr "Fil RSS des liens récents"
-#~ msgid "Avatar Size:"
-#~ msgstr "Dimensions de l'avatar:"
-#~ msgid "BP Links"
-#~ msgstr "BP Links"
-#~ msgid "Wire"
-#~ msgstr "Le Fil du lien"
-#~ msgid "Wire message could not be posted."
-#~ msgstr "Le message n'a pas pu être posté sur le Fil"
-#~ msgid "Wire message successfully posted."
-#~ msgstr "Le message a été posté avec succès."
-#~ msgid "There was an error deleting the wire message."
-#~ msgstr "Une erreur s'est produite pendant la suppression du message."
-#~ msgid "Wire message successfully deleted."
-#~ msgstr "Le message a été supprimé avec succès."
-#~ msgid "New link wire post"
-#~ msgstr "Message sur le Fil du Lien"
-#~ msgid "Links Listing"
-#~ msgstr "Liste des Liens"
-#~ msgid "Find Links"
-#~ msgstr "Chercher un lien"
-#~ msgid "%1$s's Links"
-#~ msgstr "Les Liens de %1$s"
-#~ msgid "You haven't added any links yet."
-#~ msgstr "Vous n'avez pas encore ajouté de lien."
-#~ msgid "%1$s hasn't added any links yet."
-#~ msgstr "%1$s n'a pas encore ajouté de lien."
-#~ msgid "No matching links found."
-#~ msgstr "Aucun lien correspond n'a été trouvé."
-#~ msgid "Comment Wire"
-#~ msgstr "Fil de commentaire"
-#~ msgid "On"
-#~ msgstr "Ouvert"
-#~ msgid "Off"
-#~ msgstr "Fermé"
-#~ msgid "Gallery"
-#~ msgstr "Médiathèque"
-#~ msgid "Link Wire"
-#~ msgstr "Tous les messages du Fil"
-#~ msgid "There are no wire posts for %1$s"
-#~ msgstr "Aucun message à afficher pour %1$s"
-#~ msgid "Sorry, the link does not exist."
-#~ msgstr "Désolé, le lien n'existe pas."
-#~ msgid "Cast Your Vote"
-#~ msgstr "Cote du lien"
-#~ msgid "Failed to auto embed this URL."
-#~ msgstr "L'intégration automatique de cette URL a échoué."
-#~ msgid "Would you like to embed this content?"
-#~ msgstr "Voulez-vous intégrer ce contenu ?"
-#~ msgid "The code you entered is not valid Fotoglif embedding code."
-#~ msgstr ""
-#~ "Le code d'insertion FotoGlif que vous avez indiqué n'est pas valide."
-#~ msgid "A fatal error has occurred. Please try again in a moment."
-#~ msgstr ""
-#~ "Une erreur fatale s'est produite. Veuillez attendre et recommencer un peu "
-#~ "plus tard."
-#~ msgid "Link avatar"
-#~ msgstr "Avatar du lien"
-#~ msgid "Link Details"
-#~ msgstr "Description du lien"
-#~ msgid "There was an error saving link settings."
-#~ msgstr "Une erreur s'est produite pendant l'enregistrement des réglages."
-#~ msgid "There was an error updating link settings."
-#~ msgstr ""
-#~ "Une erreur s'est produite pendant l'enregistrement des modifications."
-#~ msgid "Link settings were successfully updated."
-#~ msgstr "Les réglages du lien ont été modifié avec succès"
-#~ msgid "The new link avatar was uploaded successfully!"
-#~ msgstr "Le nouvel avatar du lien a été téléchargé avec succès."
-#~ msgid "Avatar Image"
-#~ msgstr "Image"
-#~ msgid "(required)"
-#~ msgstr "(obligatoire)"
-#~ msgid "Link URL"
-#~ msgstr "URL"
-#~ msgid "Link Name"
-#~ msgstr "Nom"
-#~ msgid "Enable comment wire"
-#~ msgstr "Activer le Fil pour les commentaires"
-#~ msgid "Crop Link Avatar"
-#~ msgstr "Retailler l'avatar du lien"
-#~ msgid "To skip the avatar upload process, hit the \"Finish\" button."
-#~ msgstr ""
-#~ "Pour interrompre la procédure de téléchargement de l'image, cliquez sur "
-#~ "le bouton  \"Terminer\""
-#~ msgid "Previous Step"
-#~ msgstr "Etape précédente"
-#~ msgid "Next Step"
-#~ msgstr "Etape suivante"
-#~ msgid "Create Link and Continue"
-#~ msgstr "Créer le lien et continuer"
-#~ msgid "Finish"
-#~ msgstr "Terminer"
-#~ msgid "Save Changes"
-#~ msgstr "Enregistrer les modifications"
-#~ msgid "This is a friends only link"
-#~ msgstr "Ceci est un lien réservé aux amis."
+msgstr "http://buddypress.org/developers/mrmaz/"
 
