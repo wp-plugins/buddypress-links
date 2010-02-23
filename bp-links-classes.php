@@ -512,8 +512,8 @@ class BP_Links_Link {
 		}
 
 		if ( $user_id ) {
-			$paged_links = $wpdb->get_results( $wpdb->prepare( "SELECT l.id as link_id FROM {$bp->links->table_name_linkmeta} lm INNER JOIN {$bp->links->table_name} l ON lm.link_id = l.id WHERE lm.meta_key = 'last_activity'{$status_sql}{$filter_sql} AND l.user_id = %d ORDER BY lm.meta_value DESC {$pag_sql}", $user_id ) );
-			$total_links = $wpdb->get_var( $wpdb->prepare( "SELECT count(l.id) FROM {$bp->links->table_name_linkmeta} lm INNER JOIN {$bp->links->table_name} l ON lm.link_id = l.id WHERE lm.meta_key = 'last_activity'{$status_sql}{$filter_sql} AND l.user_id = %d ORDER BY lm.meta_value DESC", $user_id ) );
+			$paged_links = $wpdb->get_results( $wpdb->prepare( "SELECT l.id as link_id FROM {$bp->links->table_name_linkmeta} lm INNER JOIN {$bp->links->table_name} l ON lm.link_id = l.id WHERE lm.meta_key = 'last_activity'{$status_sql}{$filter_sql}{$category_sql} AND l.user_id = %d ORDER BY lm.meta_value DESC {$pag_sql}", $user_id ) );
+			$total_links = $wpdb->get_var( $wpdb->prepare( "SELECT count(l.id) FROM {$bp->links->table_name_linkmeta} lm INNER JOIN {$bp->links->table_name} l ON lm.link_id = l.id WHERE lm.meta_key = 'last_activity'{$status_sql}{$filter_sql}{$category_sql} AND l.user_id = %d ORDER BY lm.meta_value DESC", $user_id ) );
 		} else {
 			$paged_links = $wpdb->get_results( $wpdb->prepare( "SELECT l.id AS link_id, l.slug FROM {$bp->links->table_name_linkmeta} lm, {$bp->links->table_name} l WHERE l.id = lm.link_id {$status_sql}{$filter_sql}{$category_sql} AND lm.meta_key = 'last_activity' ORDER BY lm.meta_value DESC {$pag_sql}" ) );
 			$total_links = $wpdb->get_var( $wpdb->prepare( "SELECT count(*) FROM {$bp->links->table_name_linkmeta} lm, {$bp->links->table_name} l WHERE l.id = lm.link_id{$status_sql}{$filter_sql}{$category_sql} AND lm.meta_key = 'last_activity'" ) );
