@@ -163,15 +163,21 @@ add_action( 'wp_ajax_links_filter', 'bp_links_dtheme_template_loader' );
 function bp_links_dtheme_ajax_querystring_content_filter( $query_string, $object, $filter, $scope, $page, $search_terms, $extras ) {
 	global $bp;
 
-	if ( $bp->links->slug != $bp->current_component || 'links' != $object )
-		return $query_string;
+	if ( $bp->links->slug == $bp->current_component && 'links' == $object ) {
 
-	$selected_category = bp_links_dtheme_selected_category();
-
-	if ( !empty( $selected_category ) ) {
 		$args = array();
 		parse_str( $query_string, $args );
-		$args['category'] = $selected_category;
+
+		$selected_category = bp_links_dtheme_selected_category();
+
+		if ( !empty( $selected_category ) ) {
+			$args['category'] = $selected_category;
+		}
+		
+		if ( 'mylinks' == $scope || 'my-links' == $bp->current_action ) {
+			$args['user_id'] = ( $bp->displayed_user->id ) ? $bp->displayed_user->id : $bp->loggedin_user->id;
+		}
+
 		return http_build_query( $args );
 	}
 
