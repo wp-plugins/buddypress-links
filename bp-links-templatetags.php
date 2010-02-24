@@ -27,7 +27,7 @@ class BP_Links_Template {
 	function bp_links_template( $user_id, $type, $page, $per_page, $max, $slug, $search_terms, $category_id = null ) {
 		global $bp;
 
-		$this->pag_page = isset( $_REQUEST['lpage'] ) ? intval( $_REQUEST['lpage'] ) : 1;
+		$this->pag_page = isset( $_REQUEST['lpage'] ) ? intval( $_REQUEST['lpage'] ) : $page;
 		$this->pag_num = isset( $_REQUEST['num'] ) ? intval( $_REQUEST['num'] ) : $per_page;
 		
 		switch ( $type ) {
