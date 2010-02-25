@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: wpmu, buddypress, social, networking, links, rich media, embed, youtube, flickr, metacafe
 Requires at least: PHP 5.2, WordPress 2.9.1, BuddyPress 1.2.x
 Tested up to: PHP 5.2.x, WordPress 2.9.1, BuddyPress 1.2.x
-Stable tag: 0.3.1
+Stable tag: 0.3.2
 
 BuddyPress Links is a drop in link and rich media sharing component for BuddyPress 1.2.x
 
@@ -90,11 +90,18 @@ This version contains the first support for rich media embedding. *Please make s
 
 == Changelog ==
 
+= 0.3.2 =
+
+* Fixed broken paging
+* Fixed bug with status check in some queries
+* My Links now correctly only shows the displayed user's links
+* My Links activity now correctly only shows the displayed user's links activity
+
 = 0.3.1 =
 
 * Fixed nasty SQL query bug, big props to windhamdavid
 * Fixed broken category filtering that affected recently active links for single user
-* Updated French translations, prope Chouf1
+* Updated French translations, props Chouf1
 * Added German translation, props Michael Berra
 * Added Swedish translation, props Ezbizniz
 
