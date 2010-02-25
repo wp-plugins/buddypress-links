@@ -47,6 +47,15 @@ if ( !defined( 'BP_LINKS_VOTE_ALLOW_CHANGE' ) )
 if ( !defined( 'BP_LINKS_VOTE_RECORD_ACTIVITY' ) )
 	define( 'BP_LINKS_VOTE_RECORD_ACTIVITY', true );
 
+// Limitations of the activity API require that we pass all item ids that we want to
+// display activity for if we are limiting results to links owned by a single user.
+// Passing the ids of all links that a user owns could get out of control. This
+// option allows you to override the default number of links that have recent entries
+// in the activity stream which are passed to the activity API. This is set to the number
+// of link ids! Each id could have many entries in the activity table.
+if ( !defined( 'BP_LINKS_PERSONAL_ACTIVITY_HISTORY' ) )
+	define( 'BP_LINKS_PERSONAL_ACTIVITY_HISTORY', 100 );
+
 // The following three constants are used by the create/edit link validation
 // code to limit the number of characters allowed for url, name and description.
 // Any value over 255 (varchar limit) for url and name will be truncated by MySQL. UTF8 string

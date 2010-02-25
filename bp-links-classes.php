@@ -623,6 +623,16 @@ class BP_Links_Link {
 		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(a.id) FROM {$bp->activity->table_name} a WHERE a.component = '%s' AND a.item_id = '%d' AND a.type = 'bp_link_comment'{$hidden_sql}", $bp->links->id, $this->id ) );
 	}
 
+	function get_activity_recent_ids_for_user( $user_id, $show_hidden = false ) {
+		global $wpdb, $bp;
+
+		// Hide Hidden Items?
+		if ( !$show_hidden )
+			$hidden_sql = " AND a.hide_sitewide = 0";
+
+		return $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT l.id FROM {$bp->links->table_name} AS l JOIN {$bp->activity->table_name} AS a ON l.id = a.item_id WHERE l.user_id = %d AND a.component = %s{$hidden_sql} ORDER BY a.date_recorded DESC LIMIT %d", $user_id, $bp->links->id, BP_LINKS_PERSONAL_ACTIVITY_HISTORY ) );
+	}
+
 	function get_status_sql( $link_owner_user_id = false, $format_string = '%s' ){
 		global $bp;
 		

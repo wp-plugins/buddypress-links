@@ -1250,9 +1250,18 @@ function bp_links_total_links_for_user( $user_id = false ) {
 	global $bp;
 	
 	if ( !$user_id )
-		$user_id = $bp->displayed_user->id;
+		$user_id = ( $bp->displayed_user->id ) ? $bp->displayed_user->id : $bp->loggedin_user->id;
 		
 	return BP_Links_Link::get_total_link_count_for_user( $user_id );
+}
+
+function bp_links_recent_activity_item_ids_for_user( $user_id = false ) {
+	global $bp;
+
+	if ( !$user_id )
+		$user_id = ( $bp->displayed_user->id ) ? $bp->displayed_user->id : $bp->loggedin_user->id;
+
+	return BP_Links_Link::get_activity_recent_ids_for_user( $user_id );
 }
 
 /*** Link Avatars *************************************************************/

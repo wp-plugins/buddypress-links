@@ -219,7 +219,7 @@ function bp_links_dtheme_ajax_querystring_activity_filter( $query_string, $objec
 	}
 
 	if ( $do_filter ) {
-		
+
 		// parse query string
 		$args = array();
 		parse_str( $query_string, $args );
@@ -227,11 +227,18 @@ function bp_links_dtheme_ajax_querystring_activity_filter( $query_string, $objec
 		// override with links object
 		$args['object'] = $bp->links->id;
 
-		// force comments type on initial link home page load
-		if ( 2 === $do_filter ) {
-			if ( empty( $args['action'] ) ) {
+		switch ( $do_filter ) {
+			case 1:
+				// set user id
+				$args['user_id'] = $bp->loggedin_user->id;
+				$recent_ids = bp_links_recent_activity_item_ids_for_user();
+				if ( count( $recent_ids ) )
+					$args['primary_id'] = join( ',', $recent_ids );
+				break;
+			case 2:
+				// force comments type on initial link home page load
 				$args['action'] = BP_LINKS_ACTIVITY_ACTION_COMMENT;
-			}
+				break;
 		}
 
 		// set primary id to current link id if applicable
