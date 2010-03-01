@@ -90,6 +90,13 @@ This version contains the first support for rich media embedding. *Please make s
 
 == Changelog ==
 
+= 0.4 =
+
+* Initial group integration support added
+* Added profile and group sharing features
+* Moved link list update/error messages to inside the current link's li block
+* Heavy duty javascript refactoring
+
 = 0.3.2 =
 
 * Fixed broken paging

@@ -1,5 +1,5 @@
 <?php do_action( 'bp_before_links_list_item' ) ?>
-<li class="<?php bp_link_list_item_class() ?>">
+<li id="<?php bp_link_list_item_id() ?>" class="<?php bp_link_list_item_class() ?>">
 	<?php do_action( 'bp_before_links_list_item_content' ) ?>
 	
 	<?php do_action( 'bp_before_links_list_item_left' ) ?>
@@ -68,6 +68,14 @@
 		<?php do_action( 'bp_after_links_list_item_footer_content' ) ?>	
 	</div>
 	<?php do_action( 'bp_after_links_list_item_footer' ) ?>	
+
+	<div class="action">
+	<?php do_action( 'bp_before_links_list_item_action_content' ) ?>
+	<?php bp_link_remove_from_group_button() ?>
+	<?php bp_link_share_button() ?>
+	<!-- div class="meta"></div -->
+	<?php do_action( 'bp_after_links_list_item_action_content' ) ?>
+	</div>
 
 	<?php do_action( 'bp_after_links_list_item_content' ) ?>
 	<div class="clear"></div>

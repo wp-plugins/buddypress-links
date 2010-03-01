@@ -17,13 +17,14 @@ function bp_links_add_js() {
 	if ( !bp_links_is_default_theme() )
 		return false;
 
-	if ( $bp->current_component == $bp->links->slug ) {
+	// TODO make this easier to do the right way
+	if ( 1 == 1 /* $bp->current_component == $bp->links->slug */) {
 		// load global ajax scripts
 		wp_enqueue_script( 'bp-links-ajax', BP_LINKS_THEME_URL_INC . '/global.js', array('jquery') );
 		// load color box JS
 		wp_enqueue_script( 'bp-links-ajax-colorbox', BP_LINKS_THEME_URL_INC . '/jquery.colorbox-min.js', array('jquery') );
 		// load create forms ajax scripts if necessary
-		if ( $bp->current_action == 'create' || bp_links_is_link_admin_page() ) {
+		if ( 1 == 1 /*$bp->current_action == 'create' || bp_links_is_link_admin_page() */) {
 			wp_enqueue_script( 'bp-links-ajax-forms', BP_LINKS_THEME_URL_INC . '/forms.js', array('jquery') );
 		}
 	}
@@ -107,19 +108,38 @@ function bp_links_dtheme_search_form() {
 	<form action="" method="get" id="search-links-form">
 		<label><input type="text" name="s" id="links_search" value="<?php if ( isset( $_GET['s'] ) ) { echo attribute_escape( $_GET['s'] ); } else { _e( 'Search anything...', 'buddypress-links' ); } ?>"  onfocus="if (this.value == '<?php _e( 'Search anything...', 'buddypress-links' ) ?>') {this.value = '';}" onblur="if (this.value == '') {this.value = '<?php _e( 'Search anything...', 'buddypress-links' ) ?>';}" /></label>
 		<input type="submit" id="links_search_submit" name="links_search_submit" value="<?php _e( 'Search', 'buddypress-links' ) ?>" />
-	</form>
-<?php
+	</form> <?php
 }
 
 function bp_links_dtheme_creation_tabs() {
 	global $bp;
 
-	$href = sprintf( '%s/%s/create/', $bp->root_domain, $bp->links->slug );
-?>
+	$href = sprintf( '%s/%s/create/', $bp->root_domain, $bp->links->slug ); ?>
+
 	<li class="current"<a href="<?php echo $href ?>"><?php _e( 'Create', 'buddypress-links' ) ?></a></li>
-	<li><a href="<?php echo $href ?>"><?php _e( 'Start Over', 'buddypress-links' ) ?></a></li>
-<?php
+	<li><a href="<?php echo $href ?>"><?php _e( 'Start Over', 'buddypress-links' ) ?></a></li> <?php
 	do_action( 'bp_links_dtheme_creation_tabs' );
+}
+
+function bp_links_dtheme_link_order_options_list() { ?>
+	<li id="links-order-select" class="last filter">
+		<?php _e( 'Order By:', 'buddypress' ) ?>
+		<select id="links-all">
+			<?php bp_links_link_order_options() ?>
+			<?php do_action( 'bp_links_dtheme_link_order_options_list' ) ?>
+		</select>
+	</li> <?php
+}
+
+function bp_links_dtheme_link_category_filter_options_list() { ?>
+		<li id="links-category-filter-select" class="last">
+			<?php _e( 'Category:', 'buddypress-links' ) ?>
+			<select id="links-category-filter">
+				<option value="-1"><?php _e( 'All', 'buddypress' ) ?></option>
+				<?php bp_links_category_select_options( bp_links_dtheme_selected_category() ) ?>
+				<?php do_action( 'bp_links_category_filter_options' ) ?>
+			</select>
+		</li> <?php
 }
 
 //
@@ -149,35 +169,92 @@ function bp_links_dtheme_template_loader() {
 add_action( 'wp_ajax_links_filter', 'bp_links_dtheme_template_loader' );
 
 /**
- * Filter all AJAX bp_filter_request() calls for the 'links' object
+ * Filter all AJAX bp_filter_request() calls for the category filter
+ *
+ * @param string $query_string
+ * @param string $object
+ * @return string
+ */
+function bp_links_dtheme_ajax_querystring_category_filter( $query_string, $object ) {
+	global $bp;
+
+	if ( ( $bp->links->slug == $bp->current_component || 'links' == $object ) || ( $bp->groups->slug == $bp->current_component && $bp->current_action == $bp->links->slug ) ) {
+
+		$selected_category = bp_links_dtheme_selected_category();
+
+		if ( !empty( $selected_category ) ) {
+			$args = array();
+			parse_str( $query_string, $args );
+			$args['category'] = $selected_category;
+			return http_build_query( $args );
+		}
+
+	}
+
+	return $query_string;
+}
+add_filter( 'bp_dtheme_ajax_querystring', 'bp_links_dtheme_ajax_querystring_category_filter', 1, 2 );
+
+/**
+ * Filter all AJAX bp_filter_request() calls to add group and user ids to group home page calls
  *
  * @param string $query_string
  * @param string $object
  * @param string $filter
  * @param string $scope
- * @param integer $page
- * @param string $search_terms
- * @param string $extras
  * @return string
  */
-function bp_links_dtheme_ajax_querystring_content_filter( $query_string, $object, $filter, $scope, $page, $search_terms, $extras ) {
+function bp_links_dtheme_ajax_querystring_directory_filter( $query_string, $object, $filter, $scope ) {
 	global $bp;
 
-	if ( $bp->links->slug != $bp->current_component || 'links' != $object )
-		return $query_string;
+	// look for links component
+	if ( $bp->links->slug == $bp->current_component ) {
+		// must be my links action or scope
+		if ( 'mylinks' == $scope || 'my-links' == $bp->current_action ) {
 
-	$selected_category = bp_links_dtheme_selected_category();
+			$args = array();
+			parse_str( $query_string, $args );
 
-	if ( !empty( $selected_category ) ) {
+			// inject user id
+			$args['user_id'] = $bp->loggedin_user->id;
+
+			return http_build_query( $args );
+		}
+	}
+
+	return $query_string;
+}
+add_filter( 'bp_dtheme_ajax_querystring', 'bp_links_dtheme_ajax_querystring_directory_filter', 1, 4 );
+
+/**
+ * Filter all AJAX bp_filter_request() calls to add group and user ids to group home page calls
+ *
+ * @param string $query_string
+ * @return string
+ */
+function bp_links_dtheme_ajax_querystring_group_filter( $query_string ) {
+	global $bp;
+
+	// look for groups component and links action
+	if ( $bp->groups->slug == $bp->current_component && $bp->current_action == $bp->links->slug ) {
+
 		$args = array();
 		parse_str( $query_string, $args );
-		$args['category'] = $selected_category;
+
+		// inject group id
+		$args['group_id'] = $bp->groups->current_group->id;
+
+		// inject user id if we are on my group links page
+		if ( 'my-links' == $bp->action_variables[0] ) {
+			$args['user_id'] = $bp->loggedin_user->id;
+		}
+
 		return http_build_query( $args );
 	}
 
 	return $query_string;
 }
-add_filter( 'bp_dtheme_ajax_querystring', 'bp_links_dtheme_ajax_querystring_content_filter', 1, 7 );
+add_filter( 'bp_dtheme_ajax_querystring', 'bp_links_dtheme_ajax_querystring_group_filter', 1 );
 
 /**
  * Filter all AJAX bp_activity_request() calls for the 'activity' object with the 'links' scope
@@ -230,11 +307,18 @@ function bp_links_dtheme_ajax_querystring_activity_filter( $query_string, $objec
 		// override with links object
 		$args['object'] = $bp->links->id;
 
-		// force comments type on initial link home page load
-		if ( 2 === $do_filter ) {
-			if ( empty( $args['action'] ) ) {
+		switch ( $do_filter ) {
+			case 1:
+				// set user id
+				$args['user_id'] = $bp->loggedin_user->id;
+				$recent_ids = bp_links_recent_activity_item_ids_for_user();
+				if ( count( $recent_ids ) )
+					$args['primary_id'] = join( ',', $recent_ids );
+				break;
+			case 2:
+				// force comments type on initial link home page load
 				$args['action'] = BP_LINKS_ACTIVITY_ACTION_COMMENT;
-			}
+				break;
 		}
 
 		// set primary id to current link id if applicable
@@ -285,5 +369,190 @@ function bp_links_dtheme_activity_custom_update( $object, $item_id, $content ) {
 	}
 }
 add_filter( 'bp_activity_custom_update', 'bp_links_dtheme_activity_custom_update', 10, 3 );
+
+/**
+ * Handle AJAX action from clicking of link share button
+ */
+function bp_dtheme_ajax_link_share() {
+	global $bp;
+
+	check_ajax_referer( 'link_share' );
+
+	if ( !is_user_logged_in() ) {
+		bp_links_ajax_response_string( -1, __( 'You must be logged in to share links.', 'buddypress-links' ) );
+	}
+
+	$link_id = ( is_numeric( $_POST['link_id'] ) ) ? ( integer ) $_POST['link_id'] : die();
+
+	$link = new BP_Links_Link( $link_id );
+
+	if ( $link->id ) { ?>
+
+		1[[split]]<div class="link-share-panel">
+			<form action="<?php echo bp_get_link_permalink( $link ) . '/share-link' ?>" method="post" id="link-share-form">
+				<fieldset id="link-share-where-set">
+					<legend><?php _e( 'Share this link in:', 'buddypress-links' ) ?></legend>
+					<input type="radio" name="link-share-where" id="link-share-who-profile" value="1" checked="checked"> My Profile
+					<input type="radio" name="link-share-where" id="link-share-who-group" value="2"> A Group
+				</fieldset>
+				<fieldset id="link-share-group-set">
+					<legend><?php _e( 'Select a group:', 'buddypress' ) ?></legend>
+					<select name="link-share-group" id="link-share-group">
+						<option value="-1"><?php _e( 'Please Choose', 'buddypress-links' ) ?> ---&gt;</option>
+						<?php bp_link_user_group_options() ?>
+					</select>
+				</fieldset>
+				<input type="hidden" name="link-share-id" id="link-share-id" value="<?php echo bp_get_link_id( $link ) ?>">
+				<input type="submit" name="link-share-save" id="link-share-save" value="<?php _e( 'Share Now', 'buddypress-links' ) ?>">
+				<input type="submit" name="link-share-cancel" id="link-share-cancel" value="<?php _e( 'Cancel', 'buddypress-links' ) ?>">
+				<?php wp_nonce_field( 'link_share_save', 'link-share-nonce' ) ?>
+			</form>
+		</div><?php
+
+		die();
+	}
+
+	// something went wrong
+	bp_links_ajax_response_string( -1, __( 'Loading sharing options has failed.', 'buddypress-links' ) );
+}
+add_action( 'wp_ajax_link_share', 'bp_dtheme_ajax_link_share' );
+
+/**
+ * Handle AJAX action from clicking of link share save button (personal share)
+ */
+function bp_dtheme_ajax_link_share_save() {
+	global $bp;
+
+	check_ajax_referer( 'link_share_save' );
+
+	if ( !is_user_logged_in() ) {
+		bp_links_ajax_response_string( -1, __( 'You must be logged in to share links.', 'buddypress-links' ) );
+	}
+	
+	$link_id = ( is_numeric( $_POST['link_id'] ) ) ? ( integer ) $_POST['link_id'] : die();
+
+	$link = new BP_Links_Link( $link_id );
+
+	if ( $link->id ) {
+		// TODO create personal share
+	}
+
+	// something went horribly, horribly wrong
+	bp_links_ajax_response_string( -1, __( 'Sharing this link has failed.', 'buddypress-links' ) );
+}
+add_action( 'wp_ajax_link_share_save', 'bp_dtheme_ajax_link_share_save' );
+
+/**
+ * Handle AJAX action from clicking of link share save button (group share)
+ */
+function bp_dtheme_ajax_link_share_save_group() {
+	global $bp;
+
+	check_ajax_referer( 'link_share_save' );
+
+	if ( !is_user_logged_in() ) {
+		bp_links_ajax_response_string( -1, __( 'You must be logged in to share links.', 'buddypress-links' ) );
+	}
+
+	$link_id = ( is_numeric( $_POST['link_id'] ) ) ? (integer) $_POST['link_id'] : die();
+	$group_id = ( is_numeric( $_POST['group_id'] ) && $_POST['group_id'] >= 1 ) ? (integer) $_POST['group_id'] : die();
+
+	$link = new BP_Links_Link( $link_id );
+	$group = new BP_Groups_Group( $group_id );
+
+	if ( $link->id && $group->id ) {
+
+		// get group name
+		$group_name = bp_get_group_name( $group );
+
+		// does group share already exist?
+		if ( bp_links_group_link_exists( $link_id, $group_id ) ) {
+
+			// try to load group link
+			$group_link = new BP_Links_Group_Link( $link_id, $group_id );
+
+			// check if link was previously removed from this group
+			if ( $group_link->removed() ) {
+				switch( true ) {
+					// only admins and moderators can re-add links
+					case ( groups_is_user_admin( $bp->loggedin_user->id, $group->id ) ):
+					case ( groups_is_user_mod( $bp->loggedin_user->id, $group->id ) ):
+						if ( $group_link->remove_revert() )
+							bp_links_ajax_response_string( 1, sprintf( __( 'Sharing this link with the %s group was re-enabled.', 'buddypress-links' ), $group_name ) );
+						else
+							bp_links_ajax_response_string( -1, sprintf( __( 'Failed to re-enable sharing this link with the %s group.', 'buddypress-links' ), $group_name ) );
+					default:
+						bp_links_ajax_response_string( -1, sprintf( __( 'This link was previously removed from the %s group by an admin or moderator.', 'buddypress-links' ), $group_name ) );
+				}
+			}
+			
+			// link already exists
+			bp_links_ajax_response_string( 1, sprintf( __( 'This link has already been shared with the %s group.', 'buddypress-links' ), $group_name ) );
+			
+		} else if ( groups_is_user_member( $bp->loggedin_user->id, $group_id ) ) {
+
+			// try to create a new share
+			$group_link = new BP_Links_Group_Link();
+			$group_link->link_id = $link_id;
+			$group_link->group_id = $group_id;
+			$group_link->user_id = $bp->loggedin_user->id;
+
+			if ( $group_link->save() ) {
+				bp_links_ajax_response_string( 1, sprintf( __( 'This link has been shared with the %s group.', 'buddypress-links' ), $group_name ) );
+			} else {
+				bp_links_ajax_response_string( -1, sprintf( __( 'Sharing this link with the %s group has failed.', 'buddypress-links' ), $group_name ) );
+			}
+
+		} else {
+			// not a group member
+			bp_links_ajax_response_string( -1, sprintf( __( 'You are not a member of the %s group.', 'buddypress-links' ), $group_name ) );
+		}
+	}
+
+	// something went horribly, horribly wrong
+	bp_links_ajax_response_string( -1, __( 'Sharing with a group has failed.', 'buddypress-links' ) );
+}
+add_action( 'wp_ajax_link_share_save_group', 'bp_dtheme_ajax_link_share_save_group' );
+
+/**
+ * Handle AJAX action from clicking of remove group link button
+ * 
+ * @return string
+ */
+function bp_dtheme_ajax_group_link_remove() {
+	global $bp;
+
+	check_ajax_referer( 'group_link_remove' );
+
+	$link_id = ( is_numeric( $_POST['link_id'] ) ) ? ( integer ) $_POST['link_id'] : die();
+	$group_id = ( is_numeric( $_POST['group_id'] ) ) ? ( integer ) $_POST['group_id'] : die();
+
+	$link = new BP_Links_Link( $link_id );
+	$group = new BP_Groups_Group( $group_id );
+
+	if ( $link->id && $group->id ) {
+
+		// try to load group link
+		$group_link = new BP_Links_Group_Link( $link->id, $group->id );
+
+		switch( true ) {
+			// person who added link can delete the share
+			case ( $bp->loggedin_user->id == $group_link->user_id ):
+				if ( $group_link->delete() )
+					bp_links_ajax_response_string( 1, __( 'This link has been removed from this group.', 'buddypress-links' ) );
+				break;
+			// admins and moderators can remove the share
+			case ( groups_is_user_admin( $bp->loggedin_user->id, $group->id ) ):
+			case ( groups_is_user_mod( $bp->loggedin_user->id, $group->id ) ):
+				if ( $group_link->remove() )
+					bp_links_ajax_response_string( 1, __( 'This link has been removed from this group.', 'buddypress-links' ) );
+				break;
+		}
+	}
+
+	// something went wrong
+	bp_links_ajax_response_string( -1, __( 'Removing link from this group has failed.', 'buddypress-links' ) );
+}
+add_action( 'wp_ajax_group_link_remove', 'bp_dtheme_ajax_group_link_remove' );
 
 ?>

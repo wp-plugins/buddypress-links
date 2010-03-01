@@ -22,19 +22,8 @@
 
 					<?php do_action( 'bp_links_directory_link_types' ) ?>
 					
-					<li id="links-order-select" class="last filter">
-
-						<?php _e( 'Order By:', 'buddypress' ) ?>
-						<select>
-							<option value="active"><?php _e( 'Last Active', 'buddypress' ) ?></option>
-							<option value="popular"><?php _e( 'Most Popular', 'buddypress-links' ) ?></option>
-							<option value="newest"><?php _e( 'Newly Created', 'buddypress' ) ?></option>
-							<option value="most-votes"><?php _e( 'Most Votes', 'buddypress-links' ) ?></option>
-							<option value="high-votes"><?php _e( 'Highest Rated', 'buddypress-links' ) ?></option>
-
-							<?php do_action( 'bp_links_directory_order_options' ) ?>
-						</select>
-					</li>
+					<?php bp_links_dtheme_link_order_options_list() ?>
+		
 				</ul>
 			</div><!-- .item-list-tabs -->
 
@@ -43,14 +32,7 @@
 					<li class="feed"><a href="<?php bp_directory_links_feed_link() ?>" title="RSS Feed"><?php _e( 'RSS', 'buddypress' ) ?></a></li>
 					<?php do_action( 'bp_links_syndication_options' ) ?>
 
-					<li id="links-category-filter-select" class="last">
-						<?php _e( 'Category:', 'buddypress-links' ) ?>
-						<select id="links-category-filter">
-							<option value="-1"><?php _e( 'All', 'buddypress' ) ?></option>
-							<?php bp_links_category_select_options( bp_links_dtheme_selected_category() ) ?>
-							<?php do_action( 'bp_links_category_filter_options' ) ?>
-						</select>
-					</li>
+					<?php bp_links_dtheme_link_category_filter_options_list() ?>
 				</ul>
 			</div><!-- .item-list-tabs -->
 

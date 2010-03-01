@@ -45,12 +45,11 @@ jQuery(document).ready( function() {
 			},
 			function(response)
 			{
-				var response_split = response.split('[[split]]');
-				var err_num = response_split[0];
+				var rs = bpl_split_response(response);
 
-				if ( err_num >= 1 ) {
+				if ( rs[0] >= 1 ) {
 					j.fn.colorbox({
-						html: response_split[1],
+						html: rs[1],
 						maxWidth: '90%',
 						maxHeight: '90%'
 					});
@@ -63,49 +62,209 @@ jQuery(document).ready( function() {
 
 	/**** Voting ******************************/
 
-	jQuery("div.link-vote-panel a.vote").live('click',
+	j("div.link-vote-panel a.vote").live('click',
 		function() {
 
-			jQuery('.ajax-loader').toggle();
+			bpl_get_loader().toggle();
 
-			var link = jQuery(this).attr('id')
+			var link = j(this).attr('id')
 			link = link.split('-');
 
-			jQuery.post( ajaxurl, {
+			j.post( ajaxurl, {
 				action: 'link_vote',
 				'cookie': encodeURIComponent(document.cookie),
-				'_wpnonce': jQuery("input#_wpnonce-link-vote").val(),
+				'_wpnonce': j("input#_wpnonce-link-vote").val(),
 				'up_or_down': link[1],
 				'link_id': link[2]
 			},
 			function(response)
 			{
-				var response_split = response.split('[[split]]');
-				var err_num = response_split[0];
+				var rs = bpl_split_response(response);
 
-				jQuery("div#link-vote-panel-" + link[2]).fadeOut(200,
+				j("div#link-vote-panel-" + link[2]).fadeOut(200,
 					function() {
-						jQuery('#message').remove();
+						bpl_remove_msg();
 
-						if ( err_num <= -1 ) {
-							jQuery('ul#link-list').before('<div id="message" class="error fade"><p>' + response_split[1] + '</p></div>')
-						} else if ( err_num == 0 ) {
-							jQuery('ul#link-list').before('<div id="message" class="updated"><p>' + response_split[1] + '</p></div>')
+						if ( rs[0] <= -1 ) {
+							bpl_list_item_msg(link[2], 'error', rs[1]);
+						} else if ( rs[0] == 0 ) {
+							bpl_list_item_msg(link[2], 'updated', rs[1]);
 						} else {
-							jQuery('ul#link-list').before('<div id="message" class="updated"><p>' + response_split[1] + '</p></div>')
-							jQuery("div.link-vote-panel div#vote-total-" + link[2]).html(response_split[2]);
-							jQuery("div.link-vote-panel span#vote-count-" + link[2]).html(response_split[3]);
+							bpl_list_item_msg(link[2], 'updated', rs[1]);
+							j("div.link-vote-panel div#vote-total-" + link[2]).html(rs[2]);
+							j("div.link-vote-panel span#vote-count-" + link[2]).html(rs[3]);
 						}
 
-						jQuery("div#link-vote-panel-" + link[2]).fadeIn(200);
+						j("div#link-vote-panel-" + link[2]).fadeIn(200);
 					}
 				);
 
-				jQuery('.ajax-loader').toggle();
+				bpl_get_loader().toggle();
 			});
 
 			return false;
 		}
 	);
+
+	/** Share Link Buttons **************************************/
+
+	j("div.link-share-button a").live('click', function() {
+		
+		var button = j(this).parent();
+		var pid = button.attr('id').split('-');
+		var lid = pid[1];
+		var loader = bpl_get_loader('link-share-loader-' + lid);
+
+		loader.toggle();
+
+		var nonce = j(this).attr('href').split('?_wpnonce=');
+		nonce = nonce[1].split('&');
+		nonce = nonce[0];
+
+		j.post( ajaxurl, {
+			action: 'link_share',
+			'cookie': encodeURIComponent(document.cookie),
+			'link_id': lid,
+			'_wpnonce': nonce
+		},
+		function(response)
+		{
+			var rs = bpl_split_response(response);
+
+			bpl_remove_msg();
+
+			if ( rs[0] >= 1 ) {
+				
+				j('ul#link-list li div.link-share-panel').remove();
+				j('ul#link-list li div.link-share-button').fadeIn(200);
+
+				button.after(rs[1]);
+				var panel = j('ul#link-list li div.link-share-panel');
+				
+				button.fadeOut(400, function () {
+					panel.fadeIn(400, function() {
+
+						// handle submit button
+						j('input[name=link-share-save]').click( function() {
+
+							// determine group and action
+							var group_id = j('select#link-share-group').val();
+							var save_action = 'link_share_save' + ((group_id >= 1) ? '_group' : '');
+
+							// send request
+							j.post( ajaxurl, {
+								action: save_action,
+								'cookie': encodeURIComponent(document.cookie),
+								'link_id': lid,
+								'group_id': group_id,
+								'_wpnonce': j('input[name=link-share-nonce]').val()
+							},
+							function(response)
+							{
+								var rsx = bpl_split_response(response);
+
+								bpl_remove_msg();
+
+								if ( rsx[0] >= 1 ) {
+									bpl_list_item_msg(lid, 'updated', rsx[1]);
+									panel.fadeOut(200, function() {
+										panel.remove();
+									});
+								} else {
+									bpl_list_item_msg(lid, 'error', rsx[1]);
+								}
+							});
+							return false;
+						});
+
+						// handle cancel button
+						j('input[name=link-share-cancel]').click( function() {
+							panel.fadeOut(400, function() {
+								button.fadeIn(400);
+								panel.remove();
+							});
+							return false;
+						});
+						
+						// handle share toggle radio
+						j('input[name=link-share-where]').change( function() {
+							if ( j(this).val() == 2 ) {
+								j('fieldset#link-share-group-set').fadeIn(400);
+							} else {
+								j('select#link-share-group').val(-1);
+								j('fieldset#link-share-group-set').fadeOut(400);
+							}
+						});
+					});
+				});
+			} else {
+				bpl_list_item_msg(lid, 'error', rs[1]);
+			}
+
+			loader.toggle();
+		});
+		return false;
+	} );
+
 	
+	j("div.link-remove-button a").live('click', function() {
+
+		var pid = j(this).parent().attr('id').split('-');
+		var gid = pid[1];
+		var lid = pid[2];
+
+		var loader = bpl_get_loader('link-remove-loader-' + lid);
+		loader.toggle();
+		
+		var nonce = j(this).attr('href').split('?_wpnonce=');
+		nonce = nonce[1].split('&');
+		nonce = nonce[0];
+
+		j.post( ajaxurl, {
+			action: 'group_link_remove',
+			'cookie': encodeURIComponent(document.cookie),
+			'group_id': gid,
+			'link_id': lid,
+			'_wpnonce': nonce
+		},
+		function(response)
+		{
+			var rs = bpl_split_response(response);
+
+			bpl_remove_msg();
+
+			if ( rs[0] >= 1 ) {
+				location.href = location.href;
+			} else {
+				bpl_list_item_msg(lid, 'error', rs[1]);
+			}
+
+			loader.toggle();
+		});
+		return false;
+	} );
+
+	/*** Helpers **************************************************************/
+
+	function bpl_get_loader(id)
+	{
+		var x_id = (id) ? '#' + id : null;
+		return j('.ajax-loader' + x_id);
+	}
+
+	function bpl_split_response(str)
+	{
+		return str.split('[[split]]');
+	}
+
+	function bpl_remove_msg()
+	{
+		j('#message').remove();
+	}
+	
+	function bpl_list_item_msg(lid, type, msg)
+	{
+		j('ul#link-list li#linklistitem-' + lid).prepend('<div id="message" class="' + type + ' fade"><p>' + msg + '</p></div>');
+	}
+
 });

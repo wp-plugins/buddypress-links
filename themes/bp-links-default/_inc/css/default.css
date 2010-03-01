@@ -31,6 +31,10 @@ div.item-avatar a.link-play {
 ul#link-list li {
 	/* no styles yet */
 }
+	ul#link-list li div#message {
+		margin-top: 0px;
+		width: 90%;
+	}
 	ul#link-list li div.item-title {
 		margin: 0 0 4px 0px;
 	}
@@ -209,6 +213,43 @@ ul#link-list li div.xtrabar {
 		vertical-align: -0.45em;
 		border: 1px solid #c0c0c0;
 	}
+
+ul#link-list li div.link-remove-button {
+	margin-bottom: 8px;
+}
+
+ul#link-list li div.link-share-panel {
+	display: none;
+	background-color: #f8f8f8;
+	border: 1px solid #ddd;
+	padding: 0px 8px 5px 8px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	color: #888;
+	text-align: center;
+}
+	ul#link-list li form#link-share-form fieldset {
+		margin: 5px 0px 5px 0px;
+	}
+	ul#link-list li form#link-share-form legend {
+		padding: 0px 3px 3px 3px;
+	}
+	ul#link-list li form#link-share-form fieldset#link-share-group-set {
+		display: none;
+	}
+	ul#link-list li form#link-share-form select#link-share-group {
+		font-size: 11px;
+		min-width: 150px;
+		margin-top: 2px;
+	}
+	ul#link-list li form#link-share-form input[type=submit] {
+		font-size: 11px;
+		margin-top: 5px;
+		width: 45%;
+	}
+
+/**** Vote Panel *******/
 
 div.link-vote-panel {
 	width: auto;

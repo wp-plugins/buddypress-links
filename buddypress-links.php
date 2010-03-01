@@ -6,7 +6,7 @@ Description: BuddyPress Links is a link sharing component for BuddyPress.
 Author: Marshall Sorenson (MrMaz)
 Author URI: http://buddypress.org/developers/mrmaz/
 License: GNU GENERAL PUBLIC LICENSE 3.0 http://www.gnu.org/licenses/gpl.txt
-Version: 0.3
+Version: 0.4-bleeding
 Text Domain: buddypress-links
 Site Wide Only: false
 */
@@ -47,6 +47,15 @@ if ( !defined( 'BP_LINKS_VOTE_ALLOW_CHANGE' ) )
 if ( !defined( 'BP_LINKS_VOTE_RECORD_ACTIVITY' ) )
 	define( 'BP_LINKS_VOTE_RECORD_ACTIVITY', true );
 
+// Limitations of the activity API require that we pass all item ids that we want to
+// display activity for if we are limiting results to links owned by a single user.
+// Passing the ids of all links that a user owns could get out of control. This
+// option allows you to override the default number of links that have recent entries
+// in the activity stream which are passed to the activity API. This is set to the number
+// of link ids! Each id could have many entries in the activity table.
+if ( !defined( 'BP_LINKS_PERSONAL_ACTIVITY_HISTORY' ) )
+	define( 'BP_LINKS_PERSONAL_ACTIVITY_HISTORY', 100 );
+
 // The following three constants are used by the create/edit link validation
 // code to limit the number of characters allowed for url, name and description.
 // Any value over 255 (varchar limit) for url and name will be truncated by MySQL. UTF8 string
@@ -73,8 +82,8 @@ if ( !defined( 'BP_LINKS_EMBED_FOTOGLIF_PUBID' ) )
 // *** DO NOT MODIFY THESE ***
 
 // Configuration
-define( 'BP_LINKS_VERSION', '0.3' );
-define( 'BP_LINKS_DB_VERSION', '4' );
+define( 'BP_LINKS_VERSION', '0.4' );
+define( 'BP_LINKS_DB_VERSION', '5' );
 define( 'BP_LINKS_PLUGIN_NAME', 'buddypress-links' );
 define( 'BP_LINKS_THEMES_PATH', 'themes' );
 define( 'BP_LINKS_DEFAULT_THEME', 'bp-links-default' );
@@ -122,6 +131,8 @@ function bp_links_setup_globals() {
 	$bp->links->table_name = $wpdb->base_prefix . 'bp_links';
 	$bp->links->table_name_categories = $wpdb->base_prefix . 'bp_links_categories';
 	$bp->links->table_name_votes = $wpdb->base_prefix . 'bp_links_votes';
+	$bp->links->table_name_share_relink = $wpdb->base_prefix . 'bp_links_share_relink';
+	$bp->links->table_name_share_grlink = $wpdb->base_prefix . 'bp_links_share_grlink';
 	$bp->links->table_name_linkmeta = $wpdb->base_prefix . 'bp_links_linkmeta';
 	$bp->links->format_notification_function = 'bp_links_format_notifications';
 	$bp->links->slug = BP_LINKS_SLUG;
@@ -138,8 +149,8 @@ function bp_links_setup_globals() {
  */
 function bp_links_init() {
 	// If we ever need to execute BP code outside of
-	// any WP action or filter scope, it will go here!
-	return true;
+	// any WP action or filter scope, it should go here!
+	require_once 'bp-links-groupext.php';
 }
 
 //
