@@ -131,7 +131,7 @@ function bp_links_setup_globals() {
 	$bp->links->table_name = $wpdb->base_prefix . 'bp_links';
 	$bp->links->table_name_categories = $wpdb->base_prefix . 'bp_links_categories';
 	$bp->links->table_name_votes = $wpdb->base_prefix . 'bp_links_votes';
-	$bp->links->table_name_share_relink = $wpdb->base_prefix . 'bp_links_share_relink';
+	$bp->links->table_name_share_prlink = $wpdb->base_prefix . 'bp_links_share_prlink';
 	$bp->links->table_name_share_grlink = $wpdb->base_prefix . 'bp_links_share_grlink';
 	$bp->links->table_name_linkmeta = $wpdb->base_prefix . 'bp_links_linkmeta';
 	$bp->links->format_notification_function = 'bp_links_format_notifications';

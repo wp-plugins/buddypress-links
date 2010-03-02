@@ -81,6 +81,16 @@ function bp_links_install() {
 			KEY `date_created` (`date_created`)
 			) {$charset_collate};";
 
+	$sql[] = "CREATE TABLE `{$bp->links->table_name_share_prlink}` (
+				`link_id` bigint unsigned NOT NULL,
+				`user_id` bigint unsigned NOT NULL,
+				`date_created` datetime NOT NULL,
+				`date_updated` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+			PRIMARY KEY  (`link_id`,`user_id`),
+			KEY `user_id` (`user_id`),
+			KEY `date_created` (`date_created`)
+			) {$charset_collate};";
+	
 	$sql[] = "CREATE TABLE `{$bp->links->table_name_share_grlink}` (
 				`link_id` bigint unsigned NOT NULL,
 				`group_id` bigint unsigned NOT NULL,
@@ -1317,7 +1327,23 @@ function bp_links_check_link_exists( $link_id ) {
 	return BP_Links_Link::link_exists( $link_id );
 }
 
-/*** Group Link Functions ***************************************************/
+/*** Profile and Group Link Sharing Functions ***************************************************/
+
+function bp_links_profile_link_create( $link_id, $user_id ) {
+	$profile_link = new BP_Links_Profile_Link();
+	$profile_link->link_id = $link_id;
+	$profile_link->user_id = $user_id;
+	return $profile_link->save();
+}
+
+function bp_links_profile_link_delete( $link_id, $user_id ) {
+	$profile_link = new BP_Links_Group_Link( $link_id, $user_id );
+	return $profile_link->delete();
+}
+
+function bp_links_profile_link_exists( $link_id, $user_id ) {
+	return BP_Links_Profile_Link::check_exists( $link_id, $user_id );
+}
 
 function bp_links_group_link_create( $link_id, $group_id ) {
 	$group_link = new BP_Links_Group_Link();

@@ -608,6 +608,30 @@ function bp_link_time_since_created() {
 		return apply_filters( 'bp_get_link_time_since_created', bp_core_time_since( $link->date_created ) );
 	}
 
+function bp_link_share_has_profile_link() {
+	echo bp_get_link_share_has_profile_link();
+}
+	function bp_get_link_share_has_profile_link( $link = false ) {
+		global $links_template;
+
+		if ( !$link )
+			$link =& $links_template->link;
+
+		return apply_filters( 'bp_get_link_share_has_profile_link', !empty( $link->prlink_date_created ) );
+	}
+
+function bp_link_share_profile_link_date_created() {
+	echo bp_get_link_share_profile_link_date_created();
+}
+	function bp_get_link_share_profile_link_date_created( $link = false ) {
+		global $links_template;
+
+		if ( !$link )
+			$link =& $links_template->link;
+
+		return apply_filters( 'bp_get_link_share_profile_link_date_created', date( get_option( 'date_format' ), $link->prlink_date_created ) );
+	}
+
 function bp_link_play_button() {
 	echo bp_get_link_play_button();
 }
@@ -1044,43 +1068,51 @@ function bp_link_share_button( $link = false ) {
 
 		if ( !$link )
 			$link = $links_template->link;
-		
-		printf(
-			'<div class="generic-button link-share-button" id="linksharebutton-%1$d">
-				<span class="ajax-loader" id="link-share-loader-%1$d"></span> <a class="link-share" href="%2$s">%3$s</a>
-			</div>',
-			$link->id, // arg 1
-			wp_nonce_url( bp_get_link_permalink( $link ) . '/share-link', 'link_share' ), // arg 2
-			__( 'Share', 'buddypress-links' ) // arg 3
-		);
+
+		$html = apply_filters( 'bp_link_share_button_html', '<input type="submit" name="link-share" id="linkshare-%d" value="%s">' );
+		printf( $html, $link->id, __( 'Share', 'buddypress-links' ) );
 	}
 }
 
-function bp_link_remove_from_group_button( $group ) {
-	global $bp, $groups_template, $links_template;
+function bp_link_share_remove_button( $link, $object, $object_id ) {
+	global $bp;
 
-	// Only display to group admins/moderators in the group context
-	if ( $bp->current_component == $bp->groups->slug && is_user_logged_in() ) {
+	if ( !is_user_logged_in() )
+		return false;
+	
+	$remove_from = false;
 
-		if ( !$group )
-			$group =& $groups_template->group;
+	switch ( $object ) {
 
-		$is_link_owner = ( $links_template->link->user_id == $bp->loggedin_user->id );
+		default:
+		case 'profile':
+			// only display to share creator in the global context
+			if ( bp_get_link_share_has_profile_link( $link ) )
+				$remove_from = __( 'Remove from Profile', 'buddypress-links' );
+			break;
+		
+		case 'group':
+			// only display to share creator and group admins/mods in the group context
+			if ( is_numeric( $object_id ) && $object_id >= 1 ) {
+				$group = new BP_Groups_Group( (integer) $object_id );
+			} else {
+				break;
+			}
 
-		switch ( true ) {
-			case $is_link_owner:
-			case $bp->is_item_admin:
-			case $bp->is_item_mod:
-				printf(
-					'<div class="generic-button link-remove-button" id="linkremovebutton-%1$d-%2$d">
-						<span class="ajax-loader" id="link-remove-loader-%1$d"></span> <a class="link-remove" href="%3$s">%4$s</a>
-					</div>',
-					$group->id, // arg 1
-					$links_template->link->id, // arg 2
-					wp_nonce_url( bp_get_group_permalink( $group ) . $bp->links->slug . '/remove-link', 'group_link_remove' ), // arg 3
-					__( 'Remove', 'buddypress-links' ) // arg 4
-				);
-		}
+			if ( $group->id ) {
+				switch ( true ) {
+					case ( $link->user_id == $bp->loggedin_user->id ):
+					case $bp->is_item_admin:
+					case $bp->is_item_mod:
+						$remove_from = __( 'Remove from Group', 'buddypress-links' );
+				}
+			}
+			break;
+	}
+
+	if ( $remove_from ) {
+		$html = apply_filters( 'bp_link_share_remove_button_html', '<input type="submit" name="link-share-remove" id="linkshareremove-%d" value="%s">' );
+		printf( $html, $link->id, $remove_from );
 	}
 }
 

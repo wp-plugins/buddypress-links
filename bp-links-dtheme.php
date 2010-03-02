@@ -142,6 +142,39 @@ function bp_links_dtheme_link_category_filter_options_list() { ?>
 		</li> <?php
 }
 
+function bp_links_dtheme_share_button( $link = false, $group = false ) {
+	global $bp, $links_template, $groups_template;
+
+	if ( is_user_logged_in() ) {
+		
+		$anchor_id = $bp->loggedin_user->id;
+		$anchor_id_where = 'profile';
+
+		if ( !$link )
+			$link = $links_template->link;
+
+		if ( !$group && $groups_template->group->id ) {
+			$group = $groups_template->group;
+			$anchor_id = $group->id;
+			$anchor_id_where = 'group';
+		}
+
+		printf(
+			'<div class="generic-button link-share-button" id="linksharebutton-%1$d">
+				<span class="ajax-loader" id="link-share-loader-%1$d"></span>
+				<a class="link-share" id="linkshare-%5$s-%6$d" href="%2$s">%3$s%4$s</a>
+			</div>',
+			$link->id, // arg 1
+			wp_nonce_url( bp_get_link_permalink( $link ) . '/share-link', 'link_share' ), // arg 2
+			( bp_get_link_share_has_profile_link( $link ) ) ? '<span class="link-share-active"></span> ' : null, // arg 3
+			__( 'Share', 'buddypress-links' ), // arg 4
+			$anchor_id_where,
+			$anchor_id
+
+		);
+	}
+}
+
 //
 // AJAX Actions and Filters
 //
@@ -405,6 +438,7 @@ function bp_dtheme_ajax_link_share() {
 				<input type="hidden" name="link-share-id" id="link-share-id" value="<?php echo bp_get_link_id( $link ) ?>">
 				<input type="submit" name="link-share-save" id="link-share-save" value="<?php _e( 'Share Now', 'buddypress-links' ) ?>">
 				<input type="submit" name="link-share-cancel" id="link-share-cancel" value="<?php _e( 'Cancel', 'buddypress-links' ) ?>">
+				<?php bp_link_share_remove_button( $link, $_POST['object'], $_POST['object_id'] ) ?>
 				<?php wp_nonce_field( 'link_share_save', 'link-share-nonce' ) ?>
 			</form>
 		</div><?php
@@ -425,19 +459,44 @@ function bp_dtheme_ajax_link_share_save() {
 
 	check_ajax_referer( 'link_share_save' );
 
-	if ( !is_user_logged_in() ) {
+	if ( is_user_logged_in() ) {
+		$user_id = $bp->loggedin_user->id;
+	} else {
 		bp_links_ajax_response_string( -1, __( 'You must be logged in to share links.', 'buddypress-links' ) );
 	}
 	
-	$link_id = ( is_numeric( $_POST['link_id'] ) ) ? ( integer ) $_POST['link_id'] : die();
+	$link_id = ( is_numeric( $_POST['link_id'] ) ) ? (integer) $_POST['link_id'] : die();
 
 	$link = new BP_Links_Link( $link_id );
 
 	if ( $link->id ) {
-		// TODO create personal share
+
+		if ( $user_id == $link->user_id ) {
+
+			// umm, don't try to share links with yourself
+			bp_links_ajax_response_string( -1, __( 'Sharing a link with yourself is not allowed.', 'buddypress-links' ) );
+
+		} elseif ( bp_links_profile_link_exists( $link_id, $user_id ) ) {
+
+			// link already exists
+			bp_links_ajax_response_string( -1, __( 'This link has already been shared in your profile.', 'buddypress-links' ) );
+
+		} else {
+
+			// try to create a new share
+			$profile_link = new BP_Links_Profile_Link();
+			$profile_link->link_id = $link_id;
+			$profile_link->user_id = $user_id;
+
+			if ( $profile_link->save() ) {
+				bp_links_ajax_response_string( 1, __( 'This link has been shared in your profile.', 'buddypress-links' ) );
+			} else {
+				bp_links_ajax_response_string( -1, __( 'Sharing this link in your profile has failed.', 'buddypress-links' ) );
+			}
+		}
 	}
 
-	// something went horribly, horribly wrong
+	// something went horribly wrong
 	bp_links_ajax_response_string( -1, __( 'Sharing this link has failed.', 'buddypress-links' ) );
 }
 add_action( 'wp_ajax_link_share_save', 'bp_dtheme_ajax_link_share_save' );
@@ -450,12 +509,14 @@ function bp_dtheme_ajax_link_share_save_group() {
 
 	check_ajax_referer( 'link_share_save' );
 
-	if ( !is_user_logged_in() ) {
+	if ( is_user_logged_in() ) {
+		$user_id = $bp->loggedin_user->id;
+	} else {
 		bp_links_ajax_response_string( -1, __( 'You must be logged in to share links.', 'buddypress-links' ) );
 	}
 
 	$link_id = ( is_numeric( $_POST['link_id'] ) ) ? (integer) $_POST['link_id'] : die();
-	$group_id = ( is_numeric( $_POST['group_id'] ) && $_POST['group_id'] >= 1 ) ? (integer) $_POST['group_id'] : die();
+	$group_id = ( is_numeric( $_POST['object_id'] ) && $_POST['object_id'] >= 1 ) ? (integer) $_POST['object_id'] : die();
 
 	$link = new BP_Links_Link( $link_id );
 	$group = new BP_Groups_Group( $group_id );
@@ -475,8 +536,8 @@ function bp_dtheme_ajax_link_share_save_group() {
 			if ( $group_link->removed() ) {
 				switch( true ) {
 					// only admins and moderators can re-add links
-					case ( groups_is_user_admin( $bp->loggedin_user->id, $group->id ) ):
-					case ( groups_is_user_mod( $bp->loggedin_user->id, $group->id ) ):
+					case ( groups_is_user_admin( $user_id, $group->id ) ):
+					case ( groups_is_user_mod( $user_id, $group->id ) ):
 						if ( $group_link->remove_revert() )
 							bp_links_ajax_response_string( 1, sprintf( __( 'Sharing this link with the %s group was re-enabled.', 'buddypress-links' ), $group_name ) );
 						else
@@ -489,13 +550,13 @@ function bp_dtheme_ajax_link_share_save_group() {
 			// link already exists
 			bp_links_ajax_response_string( 1, sprintf( __( 'This link has already been shared with the %s group.', 'buddypress-links' ), $group_name ) );
 			
-		} else if ( groups_is_user_member( $bp->loggedin_user->id, $group_id ) ) {
+		} else if ( groups_is_user_member( $user_id, $group_id ) ) {
 
 			// try to create a new share
 			$group_link = new BP_Links_Group_Link();
 			$group_link->link_id = $link_id;
 			$group_link->group_id = $group_id;
-			$group_link->user_id = $bp->loggedin_user->id;
+			$group_link->user_id = $user_id;
 
 			if ( $group_link->save() ) {
 				bp_links_ajax_response_string( 1, sprintf( __( 'This link has been shared with the %s group.', 'buddypress-links' ), $group_name ) );
@@ -515,17 +576,60 @@ function bp_dtheme_ajax_link_share_save_group() {
 add_action( 'wp_ajax_link_share_save_group', 'bp_dtheme_ajax_link_share_save_group' );
 
 /**
- * Handle AJAX action from clicking of remove group link button
+ * Handle AJAX action from clicking of remove share from profile button
+ *
+ * @return string
+ */
+function bp_dtheme_ajax_link_share_remove_profile() {
+	global $bp;
+
+	check_ajax_referer( 'link_share_save' );
+
+	if ( is_user_logged_in() ) {
+		$user_id = $bp->loggedin_user->id;
+	} else {
+		bp_links_ajax_response_string( -1, __( 'You must be logged in to remove links.', 'buddypress-links' ) );
+	}
+
+	$link_id = ( is_numeric( $_POST['link_id'] ) ) ? ( integer ) $_POST['link_id'] : die();
+
+	$link = new BP_Links_Link( $link_id );
+
+	if ( $link->id ) {
+
+		// try to load profile link
+		$profile_link = new BP_Links_Profile_Link( $link->id, $user_id );
+
+		if ( $user_id == $profile_link->user_id ) {
+			if ( $profile_link->delete() ) {
+				bp_links_ajax_response_string( 1, __( 'This link has been removed from your profile.', 'buddypress-links' ) );
+			}
+		}
+	}
+
+	// something went wrong
+	bp_links_ajax_response_string( -1, __( 'Removing this link from your profile has failed.', 'buddypress-links' ) );
+}
+add_action( 'wp_ajax_share_link_remove_profile', 'bp_dtheme_ajax_link_share_remove_profile' );
+
+/**
+ * Handle AJAX action from clicking of remove share from group button
  * 
  * @return string
  */
-function bp_dtheme_ajax_group_link_remove() {
+function bp_dtheme_ajax_link_share_remove_group() {
 	global $bp;
 
-	check_ajax_referer( 'group_link_remove' );
+	check_ajax_referer( 'link_share_save' );
+
+	if ( is_user_logged_in() ) {
+		$user_id = $bp->loggedin_user->id;
+	} else {
+		bp_links_ajax_response_string( -1, __( 'You must be logged in to remove links.', 'buddypress-links' ) );
+	}
 
 	$link_id = ( is_numeric( $_POST['link_id'] ) ) ? ( integer ) $_POST['link_id'] : die();
-	$group_id = ( is_numeric( $_POST['group_id'] ) ) ? ( integer ) $_POST['group_id'] : die();
+	$group_id = ( is_numeric( $_POST['object_id'] ) ) ? ( integer ) $_POST['object_id'] : die();
 
 	$link = new BP_Links_Link( $link_id );
 	$group = new BP_Groups_Group( $group_id );
@@ -537,13 +641,13 @@ function bp_dtheme_ajax_group_link_remove() {
 
 		switch( true ) {
 			// person who added link can delete the share
-			case ( $bp->loggedin_user->id == $group_link->user_id ):
+			case ( $user_id == $group_link->user_id ):
 				if ( $group_link->delete() )
 					bp_links_ajax_response_string( 1, __( 'This link has been removed from this group.', 'buddypress-links' ) );
 				break;
 			// admins and moderators can remove the share
-			case ( groups_is_user_admin( $bp->loggedin_user->id, $group->id ) ):
-			case ( groups_is_user_mod( $bp->loggedin_user->id, $group->id ) ):
+			case ( groups_is_user_admin( $user_id, $group->id ) ):
+			case ( groups_is_user_mod( $user_id, $group->id ) ):
 				if ( $group_link->remove() )
 					bp_links_ajax_response_string( 1, __( 'This link has been removed from this group.', 'buddypress-links' ) );
 				break;
@@ -551,8 +655,8 @@ function bp_dtheme_ajax_group_link_remove() {
 	}
 
 	// something went wrong
-	bp_links_ajax_response_string( -1, __( 'Removing link from this group has failed.', 'buddypress-links' ) );
+	bp_links_ajax_response_string( -1, __( 'Removing this link from this group has failed.', 'buddypress-links' ) );
 }
-add_action( 'wp_ajax_group_link_remove', 'bp_dtheme_ajax_group_link_remove' );
+add_action( 'wp_ajax_share_link_remove_group', 'bp_dtheme_ajax_link_share_remove_group' );
 
 ?>

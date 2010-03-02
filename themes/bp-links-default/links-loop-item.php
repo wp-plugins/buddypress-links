@@ -58,8 +58,7 @@
 					<a href="<?php bp_link_permalink() ?>" class="comments"><?php bp_link_activity_post_count() ?>&nbsp;<?php bp_link_list_item_xtrabar_comments() ?></a>
 					<?php do_action( 'bp_after_links_list_item_xtrabar_comments' ) ?>
 					<?php do_action( 'bp_before_links_list_item_xtrabar_userlink' ) ?>
-					<div class="owner">
-						<?php bp_link_user_avatar_mini() ?>&nbsp;<?php bp_link_userlink() ?> <?php bp_link_list_item_xtrabar_userlink_created() ?></div>
+					<div class="owner"><?php bp_link_user_avatar_mini() ?>&nbsp;<?php bp_link_userlink() ?> <?php bp_link_list_item_xtrabar_userlink_created() ?></div>
 					<?php do_action( 'bp_after_links_list_item_xtrabar_userlink' ) ?>
 					<?php do_action( 'bp_after_links_list_item_xtrabar_content' ) ?>
 				</div>
@@ -71,8 +70,7 @@
 
 	<div class="action">
 	<?php do_action( 'bp_before_links_list_item_action_content' ) ?>
-	<?php bp_link_remove_from_group_button() ?>
-	<?php bp_link_share_button() ?>
+	<?php bp_links_dtheme_share_button() ?>
 	<!-- div class="meta"></div -->
 	<?php do_action( 'bp_after_links_list_item_action_content' ) ?>
 	</div>

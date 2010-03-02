@@ -109,11 +109,16 @@ jQuery(document).ready( function() {
 	/** Share Link Buttons **************************************/
 
 	j("div.link-share-button a").live('click', function() {
+
+		var tid = j(this).attr('id').split('-');
+		var object = tid[1];
+		var object_id = tid[2];
 		
 		var button = j(this).parent();
 		var pid = button.attr('id').split('-');
-		var lid = pid[1];
-		var loader = bpl_get_loader('link-share-loader-' + lid);
+		var link_id = pid[1];
+		
+		var loader = bpl_get_loader('link-share-loader-' + link_id);
 
 		loader.toggle();
 
@@ -124,7 +129,9 @@ jQuery(document).ready( function() {
 		j.post( ajaxurl, {
 			action: 'link_share',
 			'cookie': encodeURIComponent(document.cookie),
-			'link_id': lid,
+			'link_id': link_id,
+			'object': object,
+			'object_id': object_id,
 			'_wpnonce': nonce
 		},
 		function(response)
@@ -148,6 +155,7 @@ jQuery(document).ready( function() {
 						j('input[name=link-share-save]').click( function() {
 
 							// determine group and action
+							// TODO make it so group is not hard coded here
 							var group_id = j('select#link-share-group').val();
 							var save_action = 'link_share_save' + ((group_id >= 1) ? '_group' : '');
 
@@ -155,8 +163,8 @@ jQuery(document).ready( function() {
 							j.post( ajaxurl, {
 								action: save_action,
 								'cookie': encodeURIComponent(document.cookie),
-								'link_id': lid,
-								'group_id': group_id,
+								'link_id': link_id,
+								'object_id': group_id,
 								'_wpnonce': j('input[name=link-share-nonce]').val()
 							},
 							function(response)
@@ -166,16 +174,48 @@ jQuery(document).ready( function() {
 								bpl_remove_msg();
 
 								if ( rsx[0] >= 1 ) {
-									bpl_list_item_msg(lid, 'updated', rsx[1]);
-									panel.fadeOut(200, function() {
-										panel.remove();
-									});
+									bpl_list_item_msg(link_id, 'updated', rsx[1]);
+									button.children('a.link-share').addClass('link-share-active');
 								} else {
-									bpl_list_item_msg(lid, 'error', rsx[1]);
+									bpl_list_item_msg(link_id, 'error', rsx[1]);
 								}
+
+								panel.fadeOut(400, function() {
+									panel.remove();
+									button.fadeIn(400);
+								});
 							});
 							return false;
 						});
+
+						j('input[name=link-share-remove]').click( function() {
+							
+							j.post( ajaxurl, {
+								action: 'share_link_remove_' + object,
+								'cookie': encodeURIComponent(document.cookie),
+								'link_id': link_id,
+								'object_id': object_id,
+								'_wpnonce': j('input[name=link-share-nonce]').val()
+							},
+							function(response)
+							{
+								var rsx = bpl_split_response(response);
+
+								bpl_remove_msg();
+
+								if ( rsx[0] >= 1 ) {
+									bpl_list_item_msg(link_id, 'updated', rsx[1]);
+								} else {
+									bpl_list_item_msg(link_id, 'error', rsx[1]);
+								}
+
+								panel.fadeOut(400, function() {
+									button.fadeIn(400);
+									panel.remove();
+								});
+							});
+							return false;
+						} );
 
 						// handle cancel button
 						j('input[name=link-share-cancel]').click( function() {
@@ -198,7 +238,7 @@ jQuery(document).ready( function() {
 					});
 				});
 			} else {
-				bpl_list_item_msg(lid, 'error', rs[1]);
+				bpl_list_item_msg(link_id, 'error', rs[1]);
 			}
 
 			loader.toggle();
@@ -206,43 +246,6 @@ jQuery(document).ready( function() {
 		return false;
 	} );
 
-	
-	j("div.link-remove-button a").live('click', function() {
-
-		var pid = j(this).parent().attr('id').split('-');
-		var gid = pid[1];
-		var lid = pid[2];
-
-		var loader = bpl_get_loader('link-remove-loader-' + lid);
-		loader.toggle();
-		
-		var nonce = j(this).attr('href').split('?_wpnonce=');
-		nonce = nonce[1].split('&');
-		nonce = nonce[0];
-
-		j.post( ajaxurl, {
-			action: 'group_link_remove',
-			'cookie': encodeURIComponent(document.cookie),
-			'group_id': gid,
-			'link_id': lid,
-			'_wpnonce': nonce
-		},
-		function(response)
-		{
-			var rs = bpl_split_response(response);
-
-			bpl_remove_msg();
-
-			if ( rs[0] >= 1 ) {
-				location.href = location.href;
-			} else {
-				bpl_list_item_msg(lid, 'error', rs[1]);
-			}
-
-			loader.toggle();
-		});
-		return false;
-	} );
 
 	/*** Helpers **************************************************************/
 
