@@ -6,6 +6,7 @@
 
 		<li id="activity-filter-select" class="last">
 			<select>
+				<option value="-1"><?php _e( 'No Filter', 'buddypress') ?></option>
 				<?php do_action( 'bp_link_activity_filter_options' ) ?>
 			</select>
 		</li>

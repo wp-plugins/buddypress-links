@@ -81,9 +81,7 @@ function bp_links_dtheme_activity_filter_options_setup() {
 	if ( !bp_links_is_default_theme() )
 		return false;
 
-	if ( !$bp->is_single_item ) {
-		echo sprintf( '<option value="%s">%s</option>', BP_LINKS_ACTIVITY_ACTION_CREATE, __( 'Show Link Created', 'buddypress-links' ) );
-	}
+	echo sprintf( '<option value="%s">%s</option>', BP_LINKS_ACTIVITY_ACTION_CREATE, __( 'Show Link Created', 'buddypress-links' ) );
 	echo sprintf( '<option value="%s">%s</option>', BP_LINKS_ACTIVITY_ACTION_COMMENT, __( 'Show Link Comments', 'buddypress-links' ) );
 	echo sprintf( '<option value="%s">%s</option>', BP_LINKS_ACTIVITY_ACTION_VOTE, __( 'Show Link Votes', 'buddypress-links' ) );
 }
@@ -309,7 +307,7 @@ function bp_links_dtheme_ajax_querystring_activity_filter( $query_string, $objec
 	// only filter activity.
 	if ( $bp->activity->id == $object ) {
 
-		if (  bp_is_my_profile() ) {
+		if ( bp_is_my_profile() ) {
 			// handle filtering for profile
 			// this nav does not use AJAX so don't rely on $scope
 			if ( $bp->activity->id == $bp->current_component && $bp->links->slug == $bp->current_action ) {
@@ -339,7 +337,7 @@ function bp_links_dtheme_ajax_querystring_activity_filter( $query_string, $objec
 
 		// override with links object
 		$args['object'] = $bp->links->id;
-
+		
 		switch ( $do_filter ) {
 			case 1:
 				// set user id
@@ -349,14 +347,11 @@ function bp_links_dtheme_ajax_querystring_activity_filter( $query_string, $objec
 					$args['primary_id'] = join( ',', $recent_ids );
 				break;
 			case 2:
-				// force comments type on initial link home page load
-				$args['action'] = BP_LINKS_ACTIVITY_ACTION_COMMENT;
+				// set primary id to current link id if applicable
+				if ( $bp->links->current_link ) {
+					$args['primary_id'] = $bp->links->current_link->id;
+				}
 				break;
-		}
-
-		// set primary id to current link id if applicable
-		if ( $bp->links->current_link ) {
-			$args['primary_id'] = $bp->links->current_link->id;
 		}
 
 		// return modified query string
