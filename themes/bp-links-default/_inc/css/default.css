@@ -226,14 +226,17 @@ ul#link-list li div.link-share-button span.link-share-active {
 }
 
 ul#link-list li div.link-share-panel {
+	z-index: 999;
+	position: absolute;
+	right: 0px;
 	display: none;
 	background-color: #f8f8f8;
-	border: 1px solid #ddd;
+	border: 3px dotted #ddd;
 	width: 160px;
 	padding: 0px 8px 5px 8px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
 	color: #888;
 	text-align: center;
 }
