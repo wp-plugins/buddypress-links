@@ -47,7 +47,7 @@
 		<?php do_action( 'bp_before_links_list_item_footer_content' ) ?>
 			<div class="link-list-footer-left">
 				<?php do_action( 'bp_before_links_list_item_vote_panel' ) ?>
-				<?php bp_link_vote_panel() ?>
+				<?php bp_link_vote_panel( false ) ?>
 				<?php do_action( 'bp_after_links_list_item_vote_panel' ) ?>
 			</div>
 			<div class="link-list-footer-right">
@@ -71,7 +71,7 @@
 	<div class="action">
 	<?php do_action( 'bp_before_links_list_item_action_content' ) ?>
 	<?php bp_links_dtheme_share_button() ?>
-	<!-- div class="meta"></div -->
+		<div class="meta"><?php bp_link_type() ?></div>
 	<?php do_action( 'bp_after_links_list_item_action_content' ) ?>
 	</div>
 
