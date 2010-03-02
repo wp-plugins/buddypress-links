@@ -793,7 +793,15 @@ function bp_link_details_form_action() {
 		if ( bp_links_current_link_exists() ) {
 			$form_action = bp_get_link_admin_form_action();
 		} else {
-			$form_action = $bp->loggedin_user->domain . $bp->links->slug . '/create';
+			switch ( $bp->current_component ) {
+				default:
+				case $bp->links->slug:
+					$form_action = $bp->loggedin_user->domain . $bp->links->slug . '/create';
+					break;
+				case $bp->groups->slug:
+					$form_action = sprintf( '%s/%s/%s/%s/create', $bp->root_domain, $bp->groups->slug, $bp->groups->current_group->slug, $bp->links->slug ) ;
+			}
+			
 		}
 
 		return apply_filters( 'bp_get_link_details_form_action', $form_action, $admin_action );

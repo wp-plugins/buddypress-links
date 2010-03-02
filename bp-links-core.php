@@ -323,6 +323,10 @@ function bp_links_setup_nav() {
 	$subnav_name_mylinks = apply_filters( 'bp_links_subnav_item_name_mylinks', __( 'My Links', 'buddypress-links' ) );
 	bp_core_new_subnav_item( array( 'name' => $subnav_name_mylinks, 'slug' => 'my-links', 'parent_url' => $links_link, 'parent_slug' => $bp->links->slug, 'screen_function' => 'bp_links_screen_personal_links', 'position' => 10, 'item_css_id' => 'links-my-links' ) );
 
+	// TODO enable link creation from profile
+//	$subnav_name_create = apply_filters( 'bp_links_subnav_item_name_create', __( 'Create', 'buddypress-links' ) );
+//	bp_core_new_subnav_item( array( 'name' => $subnav_name_create, 'slug' => 'create', 'parent_url' => $links_link, 'parent_slug' => $bp->links->slug, 'screen_function' => 'bp_links_screen_personal_links', 'position' => 11, 'item_css_id' => 'links-create' ) );
+
 	if ( $bp->current_component == $bp->links->slug ) {
 		
 		if ( bp_is_my_profile() && !$bp->is_single_item ) {
@@ -839,17 +843,21 @@ function bp_links_action_create_link() {
 
 		// Are we at domain.org/links/create ???
 		case $bp->links->slug:
-			if ( 'create' == $bp->current_action )
+			if ( 'create' == $bp->current_action ) {
+				$load_template = $bp->links->id;
 				break;
-			else
+			} else {
 				return false;
+			}
 
 		// Are we at domain.org/groups/foobar/links/create ???
 		case $bp->groups->slug:
-			if ( $bp->current_action == $bp->links->slug && 'create' == $bp->action_variables[0] )
+			if ( $bp->current_action == $bp->links->slug && 'create' == $bp->action_variables[0] ) {
+				$load_template = $bp->groups->id;
 				break;
-			else
+			} else {
 				return false;
+			}
 		
 		// do nothing
 		default:
@@ -912,7 +920,11 @@ function bp_links_action_create_link() {
 		}
 	}
 
- 	bp_links_load_template( apply_filters( 'bp_links_template_create_link', 'create' ) );
+	// only load the template for native links component.
+	// the group plugin will load the correct template for us.
+	if ( $bp->links->id == $load_template ) {
+		bp_links_load_template( apply_filters( 'bp_links_template_create_link', 'create' ) );
+	}
 }
 add_action( 'wp', 'bp_links_action_create_link', 3 );
 
@@ -1074,7 +1086,7 @@ function bp_links_manage_link( $args = '' ) {
 	global $bp;
 
 	extract( $args );
-	
+
 	/**
 	 * Possible parameters (pass as assoc array):
 	 *	'link_id'
@@ -1346,9 +1358,12 @@ function bp_links_profile_link_exists( $link_id, $user_id ) {
 }
 
 function bp_links_group_link_create( $link_id, $group_id ) {
+	global $bp;
+
 	$group_link = new BP_Links_Group_Link();
 	$group_link->link_id = $link_id;
 	$group_link->group_id = $group_id;
+	$group_link->user_id = $bp->loggedin_user->id;
 	return $group_link->save();
 }
 
