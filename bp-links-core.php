@@ -1599,7 +1599,7 @@ function bp_links_post_update( $args = '' ) {
 	$bp->links->current_link = new BP_Links_Link( $link_id );
 
 	/* Record this in activity streams */
-	$activity_action = sprintf( __( '%s posted a comment on the link %s:', 'buddypress'), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_link_permalink( $bp->links->current_link ) . '">' . attribute_escape( $bp->links->current_link->name ) . '</a>' );
+	$activity_action = sprintf( __( '%s posted a comment on the link %s:', 'buddypress-links'), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_link_permalink( $bp->links->current_link ) . '">' . attribute_escape( $bp->links->current_link->name ) . '</a>' );
 
 	$activity_id = bp_links_record_activity( array(
 		'user_id' => $user_id,
