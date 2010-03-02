@@ -636,7 +636,7 @@ class BP_Links_Link {
 
 		$status_sql = self::get_status_sql( $user_id, ' AND %s' );
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->links->table_name} WHERE user_id = %d{$status_sql}", $user_id ) );
+		return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->links->table_name} AS l LEFT JOIN {$bp->links->table_name_share_prlink} sp ON l.id = sp.link_id WHERE ( l.user_id = %1\$d OR sp.user_id = %1\$d ){$status_sql}", $user_id ) );
 	}
 
 	// TODO make this a static method
