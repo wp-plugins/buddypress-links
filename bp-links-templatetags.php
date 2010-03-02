@@ -560,6 +560,19 @@ function bp_link_vote_count() {
 		return apply_filters( 'bp_get_link_vote_count', $link->vote_count );
 	}
 
+function bp_link_vote_count_text() {
+	echo bp_get_link_vote_count_text();
+}
+	function bp_get_link_vote_count_text( $link = false ) {
+
+		$vote_count = bp_get_link_vote_count( $link );
+
+		if ( 1 == $vote_count )
+			return apply_filters( 'bp_get_link_vote_count_text', sprintf( __( '%s vote', 'buddypress-links' ), $vote_count ) );
+		else
+			return apply_filters( 'bp_get_link_vote_count_text', sprintf( __( '%s votes', 'buddypress-links' ), $vote_count ) );
+	}
+
 function bp_link_vote_total() {
 	echo bp_get_link_vote_total();
 }

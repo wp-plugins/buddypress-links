@@ -71,7 +71,7 @@
 	<div class="action">
 	<?php do_action( 'bp_before_links_list_item_action_content' ) ?>
 	<?php bp_links_dtheme_share_button() ?>
-		<div class="meta"><?php bp_link_type() ?></div>
+		<div class="meta"><?php bp_link_type() ?> / <?php bp_link_vote_count_text() ?></div>
 	<?php do_action( 'bp_after_links_list_item_action_content' ) ?>
 	</div>
 
