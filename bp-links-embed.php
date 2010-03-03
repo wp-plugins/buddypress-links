@@ -219,10 +219,12 @@ function bp_links_auto_embed_panel( $embed_service = null, $display = false ) {
 
 		$clear_html =
 			sprintf(
-				'<span id="link-url-embed-clear"%1$s><a href="#clear">%2$s</a></span>%3$s',
+				'<span id="link-url-embed-clear"%1$s><a href="#clear">%2$s</a></span>%4$s
+				<input type="submit" name="link-url-embed-enter" value="%3$s" onclick="return false;">%4$s',
 				$attr_display, // arg 1
 				__( 'Clear', 'buddypress-links' ), // arg 2
-				PHP_EOL // arg 3
+				__( 'Fetch Page Details', 'buddypress-links' ), // arg 3
+				PHP_EOL // arg 4
 			);
 
 		$wrapper_html =
