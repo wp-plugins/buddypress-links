@@ -630,7 +630,19 @@ function bp_link_share_has_profile_link() {
 		if ( !$link )
 			$link =& $links_template->link;
 
-		return apply_filters( 'bp_get_link_share_has_profile_link', !empty( $link->prlink_date_created ) );
+		return apply_filters( 'bp_get_link_share_has_profile_link', (boolean) bp_get_link_share_profile_link_user_id() );
+	}
+
+function bp_link_share_profile_link_user_id() {
+	echo bp_get_link_share_profile_link_user_id();
+}
+	function bp_get_link_share_profile_link_user_id( $link = false ) {
+		global $links_template;
+
+		if ( !$link )
+			$link =& $links_template->link;
+
+		return apply_filters( 'bp_get_link_share_profile_link_user_id', $link->prlink_user_id );
 	}
 
 function bp_link_share_profile_link_date_created() {

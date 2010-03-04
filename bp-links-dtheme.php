@@ -144,9 +144,6 @@ function bp_links_dtheme_share_button( $link = false, $group = false ) {
 	global $bp, $links_template, $groups_template;
 
 	if ( is_user_logged_in() ) {
-		
-		$anchor_id = $bp->loggedin_user->id;
-		$anchor_id_where = 'profile';
 
 		if ( !$link )
 			$link = $links_template->link;
@@ -155,6 +152,11 @@ function bp_links_dtheme_share_button( $link = false, $group = false ) {
 			$group = $groups_template->group;
 			$anchor_id = $group->id;
 			$anchor_id_where = 'group';
+			$show_shared_icon = ( $bp->is_item_admin || $bp->is_item_mod );
+		} else {
+			$anchor_id = $bp->loggedin_user->id;
+			$anchor_id_where = 'profile';
+			$show_shared_icon = ( bp_get_link_share_has_profile_link( $link ) && bp_get_link_share_profile_link_user_id( $link ) == $bp->loggedin_user->id );
 		}
 
 		printf(
@@ -164,7 +166,7 @@ function bp_links_dtheme_share_button( $link = false, $group = false ) {
 			</div>',
 			$link->id, // arg 1
 			wp_nonce_url( bp_get_link_permalink( $link ) . '/share-link', 'link_share' ), // arg 2
-			( bp_get_link_share_has_profile_link( $link ) ) ? '<span class="link-share-active"></span> ' : null, // arg 3
+			( $show_shared_icon ) ? '<span class="link-share-active"></span> ' : null, // arg 3
 			__( 'Share', 'buddypress-links' ), // arg 4
 			$anchor_id_where,
 			$anchor_id

@@ -110,7 +110,7 @@ class BP_Links_Link {
 	
 	function populate() {
 		global $wpdb, $bp;
-		$sql = $wpdb->prepare( "SELECT l.*, sp.date_created AS prlink_date_created, sp.date_updated AS prlink_date_updated FROM {$bp->links->table_name} AS l LEFT JOIN {$bp->links->table_name_share_prlink} sp ON l.id = sp.link_id and sp.user_id = %d WHERE id = %d", $bp->loggedin_user->id, $this->id );
+		$sql = $wpdb->prepare( "SELECT l.*, sp.user_id AS prlink_user_id, sp.date_created AS prlink_date_created, sp.date_updated AS prlink_date_updated FROM {$bp->links->table_name} AS l LEFT JOIN {$bp->links->table_name_share_prlink} sp ON l.id = sp.link_id and sp.user_id = %d WHERE id = %d", $bp->loggedin_user->id, $this->id );
 		$link = $wpdb->get_row($sql);
 
 		if ( $link ) {
@@ -134,6 +134,7 @@ class BP_Links_Link {
 			$this->date_created = strtotime( $link->date_created );
 			$this->date_updated = strtotime( $link->date_updated );
 			// link profile share data
+			$this->prlink_user_id = $link->prlink_user_id;
 			$this->prlink_date_created = strtotime( $link->prlink_date_created );
 			$this->prlink_date_updated = strtotime( $link->prlink_date_updated );
 		}
