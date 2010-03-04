@@ -488,7 +488,7 @@ function bp_links_screen_personal_links_content() {
 	
 	do_action( 'bp_links_screen_personal_links_content' );
 
-	bp_links_locate_template( array( 'member.php' ), true );
+	bp_links_locate_template( array( 'members/single/links-list.php' ), true );
 }
 add_action( 'bp_template_content', 'bp_links_screen_personal_links_content' );
 
