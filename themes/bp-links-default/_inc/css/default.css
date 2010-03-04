@@ -88,7 +88,11 @@ ul#link-list div.link-list-left {
 ul#link-list div.link-list-right {
 	/* no styles yet */
 }
-
+	ul#link-list div.link-list-right a.link-external {
+		padding-left: 16px;
+		margin-left: 6px;
+		background: url(../images/icons/link.png) 0% no-repeat;
+	}
 ul#link-list div.link-list-footer {
 	clear: left;
 	padding-top: 5px;

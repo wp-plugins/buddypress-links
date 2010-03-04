@@ -315,9 +315,7 @@ function bp_link_url() {
 		if ( !$link )
 			$link =& $links_template->link;
 
-		$url = $link->url;
-
-		return apply_filters( 'bp_get_link_url', $url );
+		return apply_filters( 'bp_get_link_url', $link->url );
 	}
 
 function bp_link_url_domain() {
@@ -539,13 +537,6 @@ function bp_link_description_excerpt( $length = 55 ) {
 			$link =& $links_template->link;
 
 		return apply_filters( 'bp_get_link_description_excerpt', bp_create_excerpt( $link->description, $length ) );
-	}
-
-function bp_link_continue() {
-	echo bp_get_link_continue();
-}
-	function bp_get_link_continue( $link = false ) {
-		return apply_filters( 'bp_get_link_continue', __( 'more...', 'buddypress-links' ) );
 	}
 
 function bp_link_vote_count() {
@@ -1656,11 +1647,50 @@ function bp_link_list_item_avatar() {
 		}
 	}
 
+function bp_link_list_item_name() {
+	echo bp_get_link_list_item_name();
+}
+	function bp_get_link_list_item_name() {
+		return apply_filters( 'bp_get_link_list_item_name', bp_link_name() );
+	}
+
+function bp_link_list_item_category_name() {
+	echo bp_get_link_list_item_category_name();
+}
+	function bp_get_link_list_item_category_name() {
+		return apply_filters( 'bp_get_link_list_item_category_name', bp_link_category_name() );
+	}
+
+function bp_link_list_item_description() {
+	echo bp_get_link_list_item_description();
+}
+	function bp_get_link_list_item_description() {
+		return apply_filters( 'bp_get_link_list_item_description', bp_link_description() );
+	}
+
+function bp_link_list_item_url() {
+	echo bp_get_link_list_item_url();
+}
+	function bp_get_link_list_item_url() {
+		return apply_filters( 'bp_get_link_list_item_url', bp_link_permalink() );
+	}
+
+function bp_link_list_item_url_domain() {
+	echo bp_get_link_list_item_url_domain();
+}
+	function bp_get_link_list_item_url_domain() {
+		return apply_filters( 'bp_get_link_list_item_url_domain', bp_link_url_domain() );
+	}
+
 function bp_link_list_item_url_target() {
 	echo bp_get_link_list_item_url_target();
 }
 	function bp_get_link_list_item_url_target() {
-		return apply_filters( 'bp_get_link_list_item_url_target', '_blank' );
+		$target = apply_filters( 'bp_get_link_list_item_url_target', '' );
+
+		if ( !empty( $target ) ) {
+			return sprintf( ' target="%s"', $target );
+		}
 	}
 
 function bp_link_list_item_url_rel() {
@@ -1672,8 +1702,75 @@ function bp_link_list_item_url_rel() {
 		if ( !empty( $rel ) ) {
 			return sprintf( ' rel="%s"', $rel );
 		}
+	}
 
-		return null;
+function bp_link_list_item_external() {
+	echo bp_get_link_list_item_external();
+}
+	function bp_get_link_list_item_external() {
+		return apply_filters( 'bp_get_link_list_item_external', __( 'External Link', 'buddypress-links' ) );
+	}
+
+function bp_link_list_item_external_url() {
+	echo bp_get_link_list_item_external_url();
+}
+	function bp_get_link_list_item_external_url() {
+		return apply_filters( 'bp_get_link_list_item_external_url', bp_link_url() );
+	}
+
+function bp_link_list_item_external_url_rel() {
+	echo bp_get_link_list_item_external_url_rel();
+}
+	function bp_get_link_list_item_external_url_rel() {
+		$rel = apply_filters( 'bp_get_link_list_item_external_url_rel', '' );
+
+		if ( !empty( $rel ) )
+			return sprintf( ' rel="%s"', $rel );
+	}
+
+function bp_link_list_item_external_url_target() {
+	echo bp_get_link_list_item_external_url_target();
+}
+	function bp_get_link_list_item_external_url_target() {
+		$target = apply_filters( 'bp_get_link_list_item_external_url_target', '' );
+
+		if ( !empty( $target ) ) {
+			return sprintf( ' target="%s"', $target );
+		}
+	}
+
+function bp_link_list_item_continue() {
+	echo bp_get_link_list_item_continue();
+}
+	function bp_get_link_list_item_continue() {
+		return apply_filters( 'bp_get_link_list_item_continue', __( 'more...', 'buddypress-links' ) );
+	}
+
+function bp_link_list_item_continue_url() {
+	echo bp_get_link_list_item_continue_url();
+}
+	function bp_get_link_list_item_continue_url( $link = false ) {
+		return apply_filters( 'bp_get_link_list_item_continue_url', bp_link_permalink() );
+	}
+
+function bp_link_list_item_continue_url_rel() {
+	echo bp_get_link_list_item_continue_url_rel();
+}
+	function bp_get_link_list_item_continue_url_rel() {
+		$rel = apply_filters( 'bp_get_link_list_item_continue_url_rel', '' );
+		
+		if ( !empty( $rel ) )
+			return sprintf( ' rel="%s"', $rel );
+	}
+
+function bp_link_list_item_continue_url_target() {
+	echo bp_get_link_list_item_continue_url_target();
+}
+	function bp_get_link_list_item_continue_url_target() {
+		$target = apply_filters( 'bp_get_link_list_item_continue_url_target', '' );
+
+		if ( !empty( $target ) )
+			return sprintf( ' target="%s"', $target );
 	}
 
 function bp_link_list_item_xtrabar_comments() {

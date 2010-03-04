@@ -21,7 +21,8 @@
 		<?php do_action( 'bp_before_links_list_item_title' ) ?>
 		<div class="item-title">
 			<?php do_action( 'bp_before_links_list_item_title_content' ) ?>
-			<?php bp_link_category_name() ?>: <a href="<?php bp_link_url() ?>" target="<?php bp_link_list_item_url_target() ?>"<?php bp_link_list_item_url_rel() ?>><?php bp_link_name() ?></a>
+			<?php bp_link_list_item_category_name() ?>: <a href="<?php bp_link_list_item_url() ?>"<?php bp_link_list_item_url_target() ?><?php bp_link_list_item_url_rel() ?>><?php bp_link_list_item_name() ?></a>
+			<a class="link-external" href="<?php bp_link_list_item_external_url() ?>" title="<?php bp_link_list_item_external() ?>"<?php bp_link_list_item_external_url_target() ?><?php bp_link_list_item_external_url_rel() ?>></a>
 			<?php do_action( 'bp_after_links_list_item_title_content' ) ?>
 		</div>
 		<?php do_action( 'bp_after_links_list_item_title' ) ?>
@@ -30,9 +31,9 @@
 			<?php do_action( 'bp_before_links_list_item_description_content' ) ?>
 			<p>
 				<?php do_action( 'bp_before_links_list_item_description_domain' ) ?>
-				<span class="domain"><?php bp_link_url_domain() ?> --</span>
+				<span class="domain"><?php bp_link_list_item_url_domain() ?> --</span>
 				<?php do_action( 'bp_before_links_list_item_description_text' ) ?>
-				<?php bp_link_description() ?> <a href="<?php bp_link_permalink() ?>"><?php bp_link_continue() ?></a>
+				<?php bp_link_list_item_description() ?> <a href="<?php bp_link_list_item_continue_url() ?>"<?php bp_link_list_item_continue_url_target() ?><?php bp_link_list_item_continue_url_rel() ?>><?php bp_link_list_item_continue() ?></a>
 				<?php do_action( 'bp_after_links_list_item_description_text' ) ?>
 			</p>
 			<?php do_action( 'bp_after_links_list_item_description_content' ) ?>
@@ -59,10 +60,10 @@
 					<?php do_action( 'bp_after_links_list_item_xtrabar_comments' ) ?>
 					<?php do_action( 'bp_before_links_list_item_xtrabar_userlink' ) ?>
 					<div class="owner"><?php bp_link_user_avatar_mini() ?>&nbsp;<?php bp_link_userlink() ?> <?php bp_link_list_item_xtrabar_userlink_created() ?></div>
+					<?php do_action( 'bp_after_links_list_item_xtrabar_userlink' ) ?>
 					<?php if ( bp_get_link_share_has_profile_link() || bp_is_group() ): ?>
 						<div class="link-shared">&nbsp;</div>
 					<?php endif; ?>
-					<?php do_action( 'bp_after_links_list_item_xtrabar_userlink' ) ?>
 					<?php do_action( 'bp_after_links_list_item_xtrabar_content' ) ?>
 				</div>
 				<?php do_action( 'bp_after_links_list_item_xtrabar' ) ?>
