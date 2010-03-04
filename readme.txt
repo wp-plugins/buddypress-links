@@ -95,6 +95,10 @@ This version contains the first support for rich media embedding. *Please make s
 * Initial group integration support added
 * Added profile and group sharing features
 * Moved link list update/error messages to inside the current link's li block
+* Added external link icon next to main link URL on the link list
+* All link list targets and rels are no longer set by default and must be explicitly set with a filter
+* All link list content is now separately filterable for finer control over URLs and content
+* Load members profile links using plugins template instead of members home action
 * Heavy duty javascript refactoring
 
 = 0.3.2 =

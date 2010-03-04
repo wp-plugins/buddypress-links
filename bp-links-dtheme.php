@@ -180,6 +180,25 @@ function bp_links_dtheme_share_button( $link = false, $group = false ) {
 //
 
 /**
+ * Links Directory Hook
+ */
+function bp_links_dtheme_template_loader() {
+	bp_links_locate_template( array( 'links-loop.php' ), true );
+}
+add_action( 'wp_ajax_links_filter', 'bp_links_dtheme_template_loader' );
+
+/**
+ * Augment profile Links page sub-navigation
+ */
+function bp_links_dtheme_personal_links_subnav( $html ) {
+	$html .= bp_links_dtheme_link_order_options_list();
+	$html .= bp_links_dtheme_link_category_filter_options_list();
+
+	return $html;
+}
+add_filter( 'bp_get_options_nav_links-my-links', 'bp_links_dtheme_personal_links_subnav' );
+
+/**
  * Helper function to return selected category cookie
  */
 function bp_links_dtheme_selected_category() {
@@ -192,14 +211,6 @@ function bp_links_dtheme_selected_category() {
 
 	return null;
 }
-
-/**
- * Links Directory Hook
- */
-function bp_links_dtheme_template_loader() {
-	bp_links_locate_template( array( 'links-loop.php' ), true );
-}
-add_action( 'wp_ajax_links_filter', 'bp_links_dtheme_template_loader' );
 
 /**
  * Filter all AJAX bp_filter_request() calls for the category filter

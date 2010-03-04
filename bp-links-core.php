@@ -461,7 +461,7 @@ add_action( 'wp_head', 'bp_links_add_meta' );
 //
 
 /**
- * Load profile Links page outer template
+ * Load profile Links page outer (plugins) template
  */
 function bp_links_screen_personal_links() {
 	global $bp;
@@ -474,7 +474,7 @@ function bp_links_screen_personal_links() {
 
 	do_action( 'bp_links_screen_personal_links' );
 	
-	bp_core_load_template( apply_filters( 'bp_links_template_personal_links', 'members/single/home' ) );
+	bp_core_load_template( apply_filters( 'bp_links_template_personal_links', 'members/single/plugins' ) );
 }
 
 /**
@@ -490,7 +490,7 @@ function bp_links_screen_personal_links_content() {
 
 	bp_links_locate_template( array( 'member.php' ), true );
 }
-add_action( 'bp_before_member_body', 'bp_links_screen_personal_links_content' );
+add_action( 'bp_template_content', 'bp_links_screen_personal_links_content' );
 
 /**
  * Load profile Links personal activity page
