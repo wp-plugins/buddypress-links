@@ -260,7 +260,7 @@ function bp_links_dtheme_ajax_querystring_directory_filter( $query_string, $obje
 			parse_str( $query_string, $args );
 
 			// inject user id
-			$args['user_id'] = $bp->loggedin_user->id;
+			$args['user_id'] = ( bp_is_member() ) ? $bp->displayed_user->id : $bp->loggedin_user->id;
 
 			return http_build_query( $args );
 		}
