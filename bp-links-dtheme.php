@@ -320,14 +320,14 @@ function bp_links_dtheme_ajax_querystring_activity_filter( $query_string, $objec
 	// only filter activity.
 	if ( $bp->activity->id == $object ) {
 
-		if ( bp_is_my_profile() ) {
-			// handle filtering for profile
+		if ( bp_is_member() ) {
+			// handle filtering for profile pages
 			// this nav does not use AJAX so don't rely on $scope
 			if ( $bp->activity->id == $bp->current_component && $bp->links->slug == $bp->current_action ) {
 				$do_filter = 1;
 			}
 		} else {
-			// handle filtering for all non-profile pages
+			// handle filtering for all non-profile, non-links pages
 			if ( empty( $bp->current_component ) || $bp->activity->id == $bp->current_component ) {
 				// filter under 'activity' component with 'links' scope
 				if ( $bp->links->id == $scope ) {
@@ -353,8 +353,8 @@ function bp_links_dtheme_ajax_querystring_activity_filter( $query_string, $objec
 		
 		switch ( $do_filter ) {
 			case 1:
-				// set user id
-				$args['user_id'] = $bp->loggedin_user->id;
+				// user_id must be empty to show OTHER user's actions for this user's links
+				$args['user_id'] = false;
 				$recent_ids = bp_links_recent_activity_item_ids_for_user();
 				if ( count( $recent_ids ) )
 					$args['primary_id'] = join( ',', $recent_ids );
