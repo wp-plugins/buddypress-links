@@ -9,13 +9,13 @@
 
 	switch ( bp_links_admin_current_action_variable() ) {
 		case 'edit-details':
-			require_once( bp_links_locate_template( array( 'single/forms/details.php' ) ) );
+			bp_links_locate_template( array( 'single/forms/details.php' ), true );
 			break;
 		case 'link-avatar':
-			require_once( bp_links_locate_template( array( 'single/forms/avatar.php' ) ) );
+			bp_links_locate_template( array( 'single/forms/avatar.php' ), true );
 			break;
 		case 'delete-link':
-			require_once( bp_links_locate_template( array( 'single/forms/delete.php' ) ) );
+			bp_links_locate_template( array( 'single/forms/delete.php' ), true );
 			break;
 		default:
 			die('Invalid admin action!');

@@ -8,7 +8,7 @@
 
 <?php
 	do_action( 'bp_before_group_link_creation_content' );
-	require_once BP_LINKS_THEME_DIR . '/single/forms/details.php';
+	bp_links_locate_template( array( 'single/forms/details.php' ), true );
 	do_action( 'bp_after_group_link_creation_content' );
 ?>
 
