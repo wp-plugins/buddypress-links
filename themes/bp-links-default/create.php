@@ -14,7 +14,7 @@
 			<?php
 				do_action( 'template_notices' ); // (error/success feedback)
 				do_action( 'bp_before_link_creation_content' );
-				require_once 'single/forms/details.php';
+				require_once( bp_links_locate_template( array( 'single/forms/details.php' ) ) );
 				do_action( 'bp_after_link_creation_content' );
 			?>
 		</div>
