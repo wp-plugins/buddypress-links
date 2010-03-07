@@ -479,27 +479,27 @@ function bp_links_screen_personal_links() {
 /**
  * Load profile Links page content template
  */
-function bp_links_screen_personal_links_content() {
+function bp_links_screen_personal_links_template_content() {
 	global $bp;
 
 	if ( BP_LINKS_SLUG != $bp->current_component )
 		return false;
 
-	do_action( 'bp_links_screen_personal_links_content' );
+	do_action( 'bp_links_screen_personal_links_template_content' );
 
 	switch ( $bp->current_action ) {
 		default:
 		case 'my-links':
-			do_action( 'bp_links_screen_personal_links_content_my_links' );
+			do_action( 'bp_links_screen_personal_links_template_content' );
 			bp_links_locate_template( array( 'members/single/links-list.php' ), true );
 			break;
 		case 'create':
-			do_action( 'bp_links_screen_personal_links_content_create' );
+			do_action( 'bp_links_screen_personal_links_creation_template_content' );
 			bp_links_locate_template( array( 'members/single/links-create.php' ), true );
 			break;
 	}
 }
-add_action( 'bp_template_content', 'bp_links_screen_personal_links_content' );
+add_action( 'bp_template_content', 'bp_links_screen_personal_links_template_content' );
 
 /**
  * Load profile Links personal activity page

@@ -6,6 +6,7 @@
 	</ul>
 </div>
 
+<?php do_action( 'bp_before_group_body' ) ?>
 <?php do_action( 'bp_before_group_links_content' ) ?>
 
 <div id="links-mylinks" class="links mylinks">
@@ -13,3 +14,4 @@
 </div>
 
 <?php do_action( 'bp_after_group_links_content' ) ?>
+<?php do_action( 'bp_after_group_body' ) ?>
