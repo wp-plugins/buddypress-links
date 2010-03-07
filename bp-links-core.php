@@ -323,15 +323,14 @@ function bp_links_setup_nav() {
 	$subnav_name_mylinks = apply_filters( 'bp_links_subnav_item_name_mylinks', __( 'My Links', 'buddypress-links' ) );
 	bp_core_new_subnav_item( array( 'name' => $subnav_name_mylinks, 'slug' => 'my-links', 'parent_url' => $links_link, 'parent_slug' => $bp->links->slug, 'screen_function' => 'bp_links_screen_personal_links', 'position' => 10, 'item_css_id' => 'links-my-links' ) );
 
-	// TODO enable link creation from profile
-//	$subnav_name_create = apply_filters( 'bp_links_subnav_item_name_create', __( 'Create', 'buddypress-links' ) );
-//	bp_core_new_subnav_item( array( 'name' => $subnav_name_create, 'slug' => 'create', 'parent_url' => $links_link, 'parent_slug' => $bp->links->slug, 'screen_function' => 'bp_links_screen_personal_links', 'position' => 11, 'item_css_id' => 'links-create' ) );
-
 	if ( $bp->current_component == $bp->links->slug ) {
 		
 		if ( bp_is_my_profile() && !$bp->is_single_item ) {
 			
 			$bp->bp_options_title = __( 'My Links', 'buddypress-links' );
+
+			$subnav_name_create = apply_filters( 'bp_links_subnav_item_name_create', __( 'Create', 'buddypress-links' ) );
+			bp_core_new_subnav_item( array( 'name' => $subnav_name_create, 'slug' => 'create', 'parent_url' => $links_link, 'parent_slug' => $bp->links->slug, 'screen_function' => 'bp_links_screen_personal_links', 'position' => 20, 'item_css_id' => 'links-create' ) );
 
 		} else if ( !bp_is_my_profile() && !$bp->is_single_item ) {
 
@@ -485,10 +484,20 @@ function bp_links_screen_personal_links_content() {
 
 	if ( BP_LINKS_SLUG != $bp->current_component )
 		return false;
-	
+
 	do_action( 'bp_links_screen_personal_links_content' );
 
-	bp_links_locate_template( array( 'members/single/links-list.php' ), true );
+	switch ( $bp->current_action ) {
+		default:
+		case 'my-links':
+			do_action( 'bp_links_screen_personal_links_content_my_links' );
+			bp_links_locate_template( array( 'members/single/links-list.php' ), true );
+			break;
+		case 'create':
+			do_action( 'bp_links_screen_personal_links_content_create' );
+			bp_links_locate_template( array( 'members/single/links-create.php' ), true );
+			break;
+	}
 }
 add_action( 'bp_template_content', 'bp_links_screen_personal_links_content' );
 
