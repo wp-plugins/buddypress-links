@@ -515,18 +515,6 @@ function bp_links_screen_personal_links_activity() {
 }
 
 /**
- * Load group Links page content template
- */
-function bp_links_screen_group_links() {
-	global $bp;
-
-	if ( BP_GROUPS_SLUG == $bp->current_component && $bp->is_single_item ) {
-		do_action( 'bp_links_screen_group_links' );
-		bp_links_load_template( 'group' );
-	}
-}
-
-/**
  * Load Link home page
  */
 function bp_links_screen_link_home() {
