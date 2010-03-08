@@ -646,8 +646,10 @@ class BP_Links_Link {
 			$status_opts = array(self::STATUS_PUBLIC);
 
 			// if logged in user is a friend, show friends only links too
-			if ( $link_owner_user_id && $link_owner_user_id != $bp->loggedin_user->id && friends_check_friendship( $link_owner_user_id, $bp->loggedin_user->id ) ) {
-				$status_opts[] = self::STATUS_FRIENDS;
+			if ( function_exists('friends_install') ) {
+				if ( $link_owner_user_id && $link_owner_user_id != $bp->loggedin_user->id && friends_check_friendship( $link_owner_user_id, $bp->loggedin_user->id ) ) {
+					$status_opts[] = self::STATUS_FRIENDS;
+				}
 			}
 
 			// return the sql string

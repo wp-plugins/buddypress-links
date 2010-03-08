@@ -1115,7 +1115,7 @@ function bp_links_is_link_visibile( $link_id_or_obj, $user_id = null ) {
 		case BP_Links_Link::STATUS_HIDDEN:
 			return false;
 		case BP_Links_Link::STATUS_FRIENDS:
-			return ( $user_id ) ? friends_check_friendship( $user_id, $link->user_id ) : false;
+			return ( $user_id && function_exists( 'friends_install' ) ) ? friends_check_friendship( $user_id, $link->user_id ) : false;
 		default:
 			return false;
 	}
