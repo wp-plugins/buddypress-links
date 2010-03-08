@@ -245,7 +245,7 @@ function bp_link_is_visible( $link = false ) {
 	if ( !$link )
 		$link =& $links_template->link;
 
-	return bp_links_is_link_visibile( $link, $bp->loggedin_user->id );
+	return bp_links_is_link_visibile( $link );
 }
 
 function bp_link_is_admin_page() {

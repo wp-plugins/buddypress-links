@@ -308,9 +308,6 @@ function bp_links_setup_nav() {
 		} else {
 			$bp->is_item_admin = ( $bp->loggedin_user->id == $bp->links->current_link->user_id ) ? true : false;
 		}
-
-		/* Should this link be visible to the logged in user? */
-		$bp->links->current_link->is_link_visible_to_member = bp_links_is_link_visibile( $bp->links->current_link, $bp->loggedin_user->id );
 	}
 
 	/* Add 'Links' to the main navigation */
@@ -352,13 +349,6 @@ function bp_links_setup_nav() {
 			$bp->bp_options_avatar = bp_links_fetch_avatar( array( 'type' => 'thumb' ), $bp->links->current_link );
 			
 			$link_link = $bp->root_domain . '/' . $bp->links->slug . '/' . $bp->links->current_link->slug . '/';
-			
-			// If this is a friends only or hidden link, does the user have access?
-			if ( $bp->links->current_link->is_link_visible_to_member ) {
-				$bp->links->current_link->user_has_access = true;
-			} else {
-				$bp->links->current_link->user_has_access = false;
-			}
 
 			/* Reset the existing subnav items */
 			bp_core_reset_subnav_items($bp->links->slug);
@@ -373,13 +363,13 @@ function bp_links_setup_nav() {
 			/* If the user is a link mod or more, then show the link admin nav item */
 			if ( $bp->is_item_admin ) {
 				$subnav_name_admin = apply_filters( 'bp_links_subnav_item_name_admin', __( 'Admin', 'buddypress-links' ) );
-				bp_core_new_subnav_item( array( 'name' => $subnav_name_admin, 'slug' => 'admin', 'parent_url' => $link_link, 'parent_slug' => $bp->links->slug, 'screen_function' => 'bp_links_screen_link_admin', 'position' => 20, 'user_has_access' => ( $bp->is_item_admin + (int)$bp->is_item_mod ), 'item_css_id' => 'link-admin' ) );
+				bp_core_new_subnav_item( array( 'name' => $subnav_name_admin, 'slug' => 'admin', 'parent_url' => $link_link, 'parent_slug' => $bp->links->slug, 'screen_function' => 'bp_links_screen_link_admin', 'position' => 20, 'user_has_access' => $bp->is_item_admin, 'item_css_id' => 'link-admin' ) );
 			}
 
 		}
 	}
 	
-	do_action( 'bp_links_setup_nav', $bp->links->current_link->user_has_access );
+	do_action( 'bp_links_setup_nav', $bp->is_item_admin );
 }
 add_action( 'bp_setup_nav', 'bp_links_setup_nav' );
 
@@ -1232,19 +1222,19 @@ function bp_links_is_link_admin_page() {
 function bp_links_is_link_visibile( $link_id_or_obj, $user_id = null ) {
 	global $bp;
 
+	// owners and site admins can always see the link
+	if ( $bp->is_item_admin ) {
+		return true;
+	}
+
 	if ( $link_id_or_obj instanceof BP_Links_Link ) {
 		$link = $link_id_or_obj;
 	} else {
 		$link = new BP_Links_Link( $link_id_or_obj );
 	}
 
-	if ( null == $user_id) {
+	if ( empty( $user_id ) && is_user_logged_in() ) {
 		$user_id = $bp->loggedin_user->id;
-	}
-
-	// owners and site admins can always see the link
-	if ( $bp->is_item_admin ) {
-		return true;
 	}
 
 	// who else can see this link?
@@ -1255,7 +1245,7 @@ function bp_links_is_link_visibile( $link_id_or_obj, $user_id = null ) {
 		case BP_Links_Link::STATUS_HIDDEN:
 			return false;
 		case BP_Links_Link::STATUS_FRIENDS:
-			return friends_check_friendship( $user_id, $link->user_id );
+			return ( $user_id ) ? friends_check_friendship( $user_id, $link->user_id ) : false;
 		default:
 			return false;
 	}
