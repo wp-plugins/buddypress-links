@@ -335,6 +335,10 @@ class BP_Links_Link {
 		// Finally remove the link entry from the DB
 		if ( !$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->links->table_name} WHERE id = %d", $this->id ) ) )
 			return false;
+			
+		// Remove all link share associations
+		BP_Links_Profile_Link::delete_all_for_link( $this->id );
+		BP_Links_Group_Link::delete_all_for_link( $this->id );
 
 		return true;
 	}
@@ -496,6 +500,12 @@ class BP_Links_Link {
 		global $bp, $wpdb;
 
 		return $wpdb->get_var( $wpdb->prepare( "SELECT date_created FROM {$bp->links->table_name} ORDER BY date_created DESC LIMIT 1" ) );
+	}
+
+	function delete_all_for_user( $user_id ) {
+		global $bp, $wpdb;
+
+		return $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->links->table_name} WHERE user_id = %d", $user_id ) );
 	}
 
 	//
@@ -1385,6 +1395,36 @@ class BP_Links_Profile_Link {
 
 		return (boolean) $wpdb->get_var( $wpdb->prepare( "SELECT 1 AS found FROM {$bp->links->table_name_share_prlink} WHERE link_id = %d AND user_id = %d", $link_id, $user_id ) );
 	}
+
+	/**
+	 * Delete all profile link shares for a link id
+	 *
+	 * @static
+	 * @global wpdb $wpdb
+	 * @global stdClass $bp
+	 * @param integer $link_id
+	 * @return integer
+	 */
+	function delete_all_for_link( $link_id ) {
+		global $bp, $wpdb;
+
+		return $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->links->table_name_share_prlink} WHERE link_id = %d", $link_id ) );
+	}
+
+	/**
+	 * Delete all profile link shares for a user id
+	 *
+	 * @static
+	 * @global wpdb $wpdb
+	 * @global stdClass $bp
+	 * @param integer $user_id
+	 * @return integer
+	 */
+	function delete_all_for_user( $user_id ) {
+		global $bp, $wpdb;
+
+		return $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->links->table_name_share_prlink} WHERE user_id = %d", $user_id ) );
+	}
 }
 
 
@@ -1732,6 +1772,36 @@ class BP_Links_Group_Link {
 		global $bp, $wpdb;
 
 		return (integer) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->links->table_name_share_grlink} AS g JOIN {$bp->links->table_name} AS l ON g.link_id = l.id WHERE g.group_id = %d AND l.user_id = %d", $group_id, $user_id ) );
+	}
+
+	/**
+	 * Delete all group link shares for a group id
+	 *
+	 * @static
+	 * @global wpdb $wpdb
+	 * @global stdClass $bp
+	 * @param integer $group_id
+	 * @return integer
+	 */
+	function delete_all_for_group( $group_id ) {
+		global $bp, $wpdb;
+
+		return $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->links->table_name_share_grlink} WHERE group_id = %d", $group_id ) );
+	}
+
+	/**
+	 * Delete all group link shares for a link id
+	 *
+	 * @static
+	 * @global wpdb $wpdb
+	 * @global stdClass $bp
+	 * @param integer $link_id
+	 * @return integer
+	 */
+	function delete_all_for_link( $link_id ) {
+		global $bp, $wpdb;
+
+		return $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->links->table_name_share_grlink} WHERE link_id = %d", $link_id ) );
 	}
 }
 

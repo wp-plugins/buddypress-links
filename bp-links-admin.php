@@ -46,8 +46,7 @@ function bp_links_admin_manage_links() {
 
 		$errors = false;
 		foreach ( $_POST['alllinks'] as $link_id ) {
-			$link = new BP_Links_Link( $link_id );
-			if ( !$link->delete() ) {
+			if ( !bp_links_delete_link( $link_id ) ) {
 				$errors = true;
 			}
 		}

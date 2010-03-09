@@ -1836,14 +1836,24 @@ function bp_links_delete_existing_avatar( $args ) {
 add_action( 'bp_core_delete_existing_avatar', 'bp_links_delete_existing_avatar' );
 
 function bp_links_remove_data_for_user( $user_id ) {
-//  TODO add this data cleanup method
-//	BP_Links_Link::delete_all_for_user($user_id);
+	// remove all links for deleted user
+	BP_Links_Link::delete_all_for_user($user_id);
+	// remove all profile link associations for deleted user
+	BP_Links_Profile_Link::delete_all_for_user( $user_id );
 
 	do_action( 'bp_links_remove_data_for_user', $user_id );
 }
 add_action( 'wpmu_delete_user', 'bp_links_remove_data_for_user', 1 );
 add_action( 'delete_user', 'bp_links_remove_data_for_user', 1 );
 add_action( 'make_spam_user', 'bp_links_remove_data_for_user', 1 );
+
+function bp_links_remove_data_for_group( $group_id ) {
+	// remove all group link associations
+	BP_Links_Group_Link::delete_all_for_group( $group_id );
+
+	do_action( 'bp_links_remove_data_for_group', $group_id );
+}
+add_action( 'groups_delete_group', 'bp_links_remove_data_for_group' );
 
 function bp_links_clear_link_object_cache( $link_id ) {
 	wp_cache_delete( 'bp_links_link_nouserdata_' . $link_id, 'bp' );
