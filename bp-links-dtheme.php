@@ -114,7 +114,7 @@ function bp_links_dtheme_creation_tabs() {
 
 	$href = sprintf( '%s/%s/create/', $bp->root_domain, $bp->links->slug ); ?>
 
-	<li class="current"<a href="<?php echo $href ?>"><?php _e( 'Create', 'buddypress-links' ) ?></a></li>
+	<li class="current"><a href="<?php echo $href ?>"><?php _e( 'Create', 'buddypress-links' ) ?></a></li>
 	<li><a href="<?php echo $href ?>"><?php _e( 'Start Over', 'buddypress-links' ) ?></a></li> <?php
 	do_action( 'bp_links_dtheme_creation_tabs' );
 }
