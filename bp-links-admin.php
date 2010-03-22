@@ -6,6 +6,7 @@
 /**
  * Admin styles action
  */
+// TODO rename this function!
 function bp_core_admin_menu_css() {
 	wp_enqueue_style( 'bp-links-admin-style', BP_LINKS_ADMIN_THEME_URL . '/style.css' );
 }

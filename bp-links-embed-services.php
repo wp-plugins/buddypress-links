@@ -11,7 +11,7 @@
  * YouTube*, Flickr*, MetaCafe*, Hulu (no api), Veoh, Vimeo, ustream.tv, BlinkX, Revver
  *
  * Photo sites by reach:
- * Flickr*, PhotoBucket, PicasaWeb, TwitPic, BuzzNet, twitgoo
+ * Flickr*, PhotoBucket, PicasaWeb, TwitPic, BuzzNet, twitgoo, imageshack.us?
  *
  * Just keeping track of thumb sizes here...
  * (so far the sweet spot is 100 to 120 pixels)
