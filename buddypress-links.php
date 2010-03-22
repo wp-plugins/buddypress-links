@@ -67,6 +67,11 @@ if ( !defined( 'BP_LINKS_MAX_CHARACTERS_NAME' ) )
 if ( !defined( 'BP_LINKS_MAX_CHARACTERS_DESCRIPTION' ) )
 	define( 'BP_LINKS_MAX_CHARACTERS_DESCRIPTION', 500 );
 
+// By default the link description is required.
+// You can override this constant to change that behavior.
+if ( !defined( 'BP_LINKS_IS_REQUIRED_DESCRIPTION' ) )
+	define( 'BP_LINKS_IS_REQUIRED_DESCRIPTION', true );
+
 //
 // If you have a Fotoglif account you may want to change this so
 // you get credit for any revenue generated from embedded images.
@@ -83,7 +88,7 @@ if ( !defined( 'BP_LINKS_EMBED_FOTOGLIF_PUBID' ) )
 
 // Configuration
 define( 'BP_LINKS_VERSION', '0.4' );
-define( 'BP_LINKS_DB_VERSION', '5' );
+define( 'BP_LINKS_DB_VERSION', '6' );
 define( 'BP_LINKS_PLUGIN_NAME', 'buddypress-links' );
 define( 'BP_LINKS_THEMES_PATH', 'themes' );
 define( 'BP_LINKS_DEFAULT_THEME', 'bp-links-default' );

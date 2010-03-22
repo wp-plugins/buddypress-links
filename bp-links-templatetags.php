@@ -515,6 +515,18 @@ function bp_link_slug() {
 		return apply_filters( 'bp_get_link_slug', $link->slug );
 	}
 
+function bp_link_has_description() {
+	echo bp_get_link_has_description();
+}
+	function bp_get_link_has_description( $link = false ) {
+		global $links_template;
+
+		if ( !$link )
+			$link =& $links_template->link;
+
+		return apply_filters( 'bp_get_link_has_description', ( strlen( $link->description ) >= 1 ), $link->description );
+	}
+
 function bp_link_description() {
 	echo bp_get_link_description();
 }

@@ -28,8 +28,10 @@
 <?php do_action( 'bp_before_link_header_meta' ) ?>
 
 <div id="item-meta">
+	<?php if ( bp_get_link_has_description() ): ?>
 	<span class="domain"><?php bp_link_url_domain() ?> --</span>
 	<?php bp_link_description() ?>
+	<?php endif; ?>
 
 	<?php do_action( 'bp_link_header_meta' ) ?>
 </div>

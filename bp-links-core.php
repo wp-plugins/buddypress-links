@@ -24,7 +24,7 @@ function bp_links_install() {
 				`rel` varchar(25) default NULL,
 				`slug` varchar(255) NOT NULL,
 				`name` varchar(255) NOT NULL,
-				`description` text NOT NULL,
+				`description` text,
 				`status` tinyint(1) NOT NULL default '1',
 				`vote_count` smallint NOT NULL default '0',
 				`vote_total` smallint NOT NULL default '0',
@@ -779,7 +779,7 @@ function bp_links_validate_create_form_input() {
 
 		$return_data['link-desc'] = $bp_new_link_description;
 
-	} else {
+	} elseif ( true == BP_LINKS_IS_REQUIRED_DESCRIPTION ) {
 		bp_core_add_message( $message_required, 'error' );
 		return false;
 	}

@@ -26,6 +26,7 @@
 			<?php do_action( 'bp_after_links_list_item_title_content' ) ?>
 		</div>
 		<?php do_action( 'bp_after_links_list_item_title' ) ?>
+		<?php if ( bp_get_link_has_description() ): ?>
 		<?php do_action( 'bp_before_links_list_item_description' ) ?>
 		<div class="item-desc">
 			<?php do_action( 'bp_before_links_list_item_description_content' ) ?>
@@ -38,6 +39,7 @@
 			</p>
 			<?php do_action( 'bp_after_links_list_item_description_content' ) ?>
 		</div>
+		<?php endif; ?>
 		<?php do_action( 'bp_after_links_list_item_description' ) ?>
 		<?php do_action( 'bp_after_links_list_item_right_content' ) ?>
 	</div>
