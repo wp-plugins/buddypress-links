@@ -142,7 +142,8 @@ add_filter( 'cron_schedules', 'bp_links_add_cron_schedules' );
  * @return string
  */
 function bp_links_filter_template( $located_template, $template_names ) {
-
+	global $bp;
+	
 	// template already located, skip
 	if ( !empty( $located_template ) )
 		return $located_template;
