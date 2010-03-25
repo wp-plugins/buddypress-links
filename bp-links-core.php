@@ -10,16 +10,17 @@ require ( BP_LINKS_PLUGIN_DIR . '/bp-links-dtheme.php' );
 
 function bp_links_install() {
 	global $wpdb, $bp;
-	
+
 	if ( !empty($wpdb->charset) )
 		$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
 	
 	$sql[] = "CREATE TABLE `{$bp->links->table_name}` (
 				`id` bigint unsigned NOT NULL auto_increment,
+				`cloud_id` char(32) NOT NULL,
 				`user_id` bigint unsigned NOT NULL,
 				`category_id` tinyint NOT NULL,
 				`url` varchar(255) NOT NULL default '',
-				`url_hash` varchar(32) NOT NULL,
+				`url_hash` char(32) NOT NULL,
 				`target` varchar(25) default NULL,
 				`rel` varchar(25) default NULL,
 				`slug` varchar(255) NOT NULL,
@@ -35,6 +36,7 @@ function bp_links_install() {
 				`date_created` datetime NOT NULL,
 				`date_updated` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
 			PRIMARY KEY  (`id`),
+			UNIQUE `cloud_id` (`cloud_id`),
 			KEY `user_id` (`user_id`),
 			KEY `category_id` (`category_id`),
 			KEY `url_hash` (`url_hash`),
@@ -118,8 +120,17 @@ function bp_links_install() {
 	require_once(ABSPATH . 'wp-admin/upgrade-functions.php');
 	dbDelta($sql);
 
-	// update site version
-	update_site_option( 'bp-links-db-version', BP_LINKS_DB_VERSION );
+	//
+	// Perform upgrades if necessary
+	//
+	require_once( 'bp-links-upgrade.php' );
+
+	if ( bp_links_upgrade( get_site_option( 'bp-links-db-version' ) ) ) {
+		// update site version
+		update_site_option( 'bp-links-db-version', BP_LINKS_DB_VERSION );
+	} else {
+		// TODO record some kind of error to display in dashboard?
+	}
 }
 
 function bp_links_add_cron_schedules() {
@@ -887,7 +898,7 @@ function bp_links_action_create_link() {
 				bp_links_update_linkmeta( $bp->links->current_link->id, 'last_activity', time() );
 
 				bp_links_record_activity( array(
-					'item_id' => $bp->links->current_link->id,
+					'item_id' => $bp->links->current_link->cloud_id,
 					'action' => apply_filters( 'bp_links_activity_created_link', sprintf( __( '%1$s created the link %2$s', 'buddypress-links'), bp_core_get_userlink( $bp->loggedin_user->id ), '<a href="' . bp_get_link_permalink( $bp->links->current_link ) . '">' . attribute_escape( $bp->links->current_link->name ) . '</a>' ) ),
 					'content' => apply_filters( 'bp_links_activity_created_link_content', bp_get_link_description_excerpt( $bp->links->current_link ) ),
 					'primary_link' => apply_filters( 'bp_links_activity_created_link_primary_link', bp_get_link_permalink( $bp->links->current_link ) ),
@@ -1190,7 +1201,7 @@ function bp_links_delete_link( $link_id ) {
 
 	/* Delete all link activity from activity streams */
 	if ( function_exists( 'bp_activity_delete_by_item_id' ) ) {
-		bp_activity_delete_by_item_id( array( 'item_id' => $link_id, 'component_name' => $bp->links->id ) );
+		bp_activity_delete_by_item_id( array( 'item_id' => $link->cloud_id, 'component_name' => $bp->links->id ) );
 	}	
  
 	// Remove all notifications for any user belonging to this link
@@ -1609,7 +1620,7 @@ function bp_links_post_update( $args = '' ) {
 		'action' => apply_filters( 'bp_links_activity_new_update_action', $activity_action ),
 		'content' => apply_filters( 'bp_links_activity_new_update_content', $content ),
 		'type' => $type,
-		'item_id' => $link_id
+		'item_id' => $bp->links->current_link->cloud_id
 	) );
 
  	/* Require the notifications code so email notifications can be set on the 'bp_activity_posted_update' action. */
@@ -1697,7 +1708,7 @@ function bp_links_cast_vote( $link_id, $up_or_down ) {
 					'action' => apply_filters( 'bp_links_activity_voted', $activity_action ),
 					'primary_link' => apply_filters( 'bp_links_activity_voted_primary_link', bp_get_link_permalink( $bp->links->current_link ) ),
 					'type' => BP_LINKS_ACTIVITY_ACTION_VOTE,
-					'item_id' => $bp->links->current_link->id
+					'item_id' => $bp->links->current_link->cloud_id
 				) );
 
 			}

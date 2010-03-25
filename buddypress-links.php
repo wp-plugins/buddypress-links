@@ -88,7 +88,7 @@ if ( !defined( 'BP_LINKS_EMBED_FOTOGLIF_PUBID' ) )
 
 // Configuration
 define( 'BP_LINKS_VERSION', '0.4' );
-define( 'BP_LINKS_DB_VERSION', '6' );
+define( 'BP_LINKS_DB_VERSION', '7' );
 define( 'BP_LINKS_PLUGIN_NAME', 'buddypress-links' );
 define( 'BP_LINKS_THEMES_PATH', 'themes' );
 define( 'BP_LINKS_DEFAULT_THEME', 'bp-links-default' );

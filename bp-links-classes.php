@@ -52,6 +52,7 @@ class BP_Links_Link {
 
 	// data members
 	var $id;
+	var $cloud_id;
 	var $user_id;
 	var $category_id;
 	var $url;
@@ -118,6 +119,7 @@ class BP_Links_Link {
 
 		if ( $link ) {
 			// link data
+			$this->cloud_id = $link->cloud_id;
 			$this->user_id = $link->user_id;
 			$this->category_id = $link->category_id;
 			$this->url = $link->url;
@@ -146,6 +148,22 @@ class BP_Links_Link {
 	function populate_meta() {
 		if ( $this->id ) {
 			// unused for now
+		}
+	}
+
+	/**
+	 * Return an id that is hopefully universally unique across any install
+	 *
+	 * @return string An MD5 hash
+	 */
+	private function generate_cloud_id() {
+		global $bp;
+		
+		if ( $bp->root_domain && $this->url && $this->name ) {
+			// hash this site's url, link url, link name, and microtime
+			return md5( $bp->root_domain . $this->url . $this->name . microtime(true) );
+		} else {
+			return false;
 		}
 	}
 
@@ -254,6 +272,7 @@ class BP_Links_Link {
 			// prepare query
 			$sql = $wpdb->prepare( 
 				"INSERT INTO {$bp->links->table_name} (
+					cloud_id,
 					user_id,
 					category_id,
 					url,
@@ -272,8 +291,9 @@ class BP_Links_Link {
 					embed_data,
 					date_created
 				) VALUES (
-					%d, %d, %s, MD5(%s), %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %d, %s, %s
+					%s, %d, %d, %s, MD5(%s), %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %d, %s, %s
 				)",
+					$this->generate_cloud_id(),
 					$this->user_id,
 					$this->category_id,
 					$this->url,
@@ -671,7 +691,7 @@ class BP_Links_Link {
 		if ( !$show_hidden )
 			$hidden_sql = " AND a.hide_sitewide = 0";
 
-		return $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT l.id FROM {$bp->links->table_name} AS l JOIN {$bp->activity->table_name} AS a ON l.id = a.item_id WHERE l.user_id = %d AND a.component = %s{$hidden_sql} ORDER BY a.date_recorded DESC LIMIT %d", $user_id, $bp->links->id, BP_LINKS_PERSONAL_ACTIVITY_HISTORY ) );
+		return $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT l.cloud_id FROM {$bp->links->table_name} AS l JOIN {$bp->activity->table_name} AS a ON l.cloud_id = a.item_id WHERE l.user_id = %d AND a.component = %s{$hidden_sql} ORDER BY a.date_recorded DESC LIMIT %d", $user_id, $bp->links->id, BP_LINKS_PERSONAL_ACTIVITY_HISTORY ) );
 	}
 
 	function get_status_sql( $link_owner_user_id = false, $format_string = '%s' ){

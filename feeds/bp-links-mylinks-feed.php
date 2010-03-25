@@ -32,7 +32,7 @@ header('Status: 200 OK');
 		$links = bp_links_get_active( 20, 1, $bp->loggedin_user->id );
 		$link_ids = array();
 		foreach ( $links as $link ) {
-			$link_ids[] = $link['id'];
+			$link_ids[] = $link['cloud_id'];
 		}
 		$link_ids_str = implode( ',', $link_ids );
 	 */
