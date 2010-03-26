@@ -358,8 +358,6 @@ function bp_links_dtheme_ajax_querystring_activity_filter( $query_string, $objec
 				$recent_ids = bp_links_recent_activity_item_ids_for_user();
 				if ( count( $recent_ids ) )
 					$args['primary_id'] = join( ',', $recent_ids );
-
-				var_dump($args);
 				break;
 			case 2:
 				// set primary id to current link id if applicable
