@@ -56,6 +56,11 @@ if ( !defined( 'BP_LINKS_VOTE_RECORD_ACTIVITY' ) )
 if ( !defined( 'BP_LINKS_PERSONAL_ACTIVITY_HISTORY' ) )
 	define( 'BP_LINKS_PERSONAL_ACTIVITY_HISTORY', 100 );
 
+// This option is very similar to the above, except that it applies to links
+// that have been shared with a group.
+if ( !defined( 'BP_LINKS_GROUP_ACTIVITY_HISTORY' ) )
+	define( 'BP_LINKS_GROUP_ACTIVITY_HISTORY', 100 );
+
 // The following three constants are used by the create/edit link validation
 // code to limit the number of characters allowed for url, name and description.
 // Any value over 255 (varchar limit) for url and name will be truncated by MySQL. UTF8 string

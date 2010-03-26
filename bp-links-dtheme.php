@@ -320,23 +320,25 @@ function bp_links_dtheme_ajax_querystring_activity_filter( $query_string, $objec
 	// only filter activity.
 	if ( $bp->activity->id == $object ) {
 
-		if ( bp_is_member() ) {
+		if ( bp_is_group_home() ) {
+			$do_filter = 'group';
+		} elseif ( bp_is_member() ) {
 			// handle filtering for profile pages
 			// this nav does not use AJAX so don't rely on $scope
 			if ( $bp->activity->id == $bp->current_component && $bp->links->slug == $bp->current_action ) {
-				$do_filter = 1;
+				$do_filter = 'user';
 			}
 		} else {
 			// handle filtering for all non-profile, non-links pages
 			if ( empty( $bp->current_component ) || $bp->activity->id == $bp->current_component ) {
 				// filter under 'activity' component with 'links' scope
 				if ( $bp->links->id == $scope ) {
-					$do_filter = 1;
+					$do_filter = 'user';
 				}
 			} elseif ( $bp->links->id == $bp->current_component ) {
 				// filter 'links' component home pages
 				if ( $bp->is_single_item ) {
-					$do_filter = 2;
+					$do_filter = 'default';
 				}
 			}
 		}
@@ -348,18 +350,33 @@ function bp_links_dtheme_ajax_querystring_activity_filter( $query_string, $objec
 		$args = array();
 		parse_str( $query_string, $args );
 
-		// override with links object
-		$args['object'] = $bp->links->id;
-		
 		switch ( $do_filter ) {
-			case 1:
+			case 'group':
+				// send groups AND links objects
+				$args['object'] = sprintf( '%s,%s', $bp->groups->id, $bp->links->id );
+				// get recent link cloud ids for this group
+				$recent_ids = bp_links_recent_activity_item_ids_for_group();
+				// if there is activity, merge the ids with the current group id
+				if ( count( $recent_ids ) ) {
+					$primary_ids = $recent_ids;
+					$primary_ids[] = $bp->groups->current_group->id;
+					$args['primary_id'] = join( ',', $primary_ids );
+				}
+				break;
+			case 'user':
+				// override with links object
+				$args['object'] = $bp->links->id;
 				// user_id must be empty to show OTHER user's actions for this user's links
 				$args['user_id'] = false;
+				// get recent link cloud ids for this user
 				$recent_ids = bp_links_recent_activity_item_ids_for_user();
+				// if there is activity, send the ids
 				if ( count( $recent_ids ) )
 					$args['primary_id'] = join( ',', $recent_ids );
 				break;
-			case 2:
+			case 'default':
+				// override with links object
+				$args['object'] = $bp->links->id;
 				// set primary id to current link id if applicable
 				if ( $bp->links->current_link ) {
 					$args['primary_id'] = $bp->links->current_link->cloud_id;

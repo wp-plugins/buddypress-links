@@ -694,6 +694,16 @@ class BP_Links_Link {
 		return $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT l.cloud_id FROM {$bp->links->table_name} AS l JOIN {$bp->activity->table_name} AS a ON l.cloud_id = a.item_id WHERE l.user_id = %d AND a.component = %s{$hidden_sql} ORDER BY a.date_recorded DESC LIMIT %d", $user_id, $bp->links->id, BP_LINKS_PERSONAL_ACTIVITY_HISTORY ) );
 	}
 
+	function get_activity_recent_ids_for_group( $group_id, $show_hidden = false ) {
+		global $wpdb, $bp;
+
+		// Hide Hidden Items?
+		if ( !$show_hidden )
+			$hidden_sql = " AND a.hide_sitewide = 0";
+
+		return $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT l.cloud_id FROM {$bp->links->table_name} AS l JOIN {$bp->links->table_name_share_grlink} AS sg ON l.id = sg.link_id JOIN {$bp->activity->table_name} AS a ON l.cloud_id = a.item_id WHERE sg.group_id = %d AND a.component = %s{$hidden_sql} ORDER BY a.date_recorded DESC LIMIT %d", $group_id, $bp->links->id, BP_LINKS_GROUP_ACTIVITY_HISTORY ) );
+	}
+	
 	function get_status_sql( $link_owner_user_id = false, $format_string = '%s' ){
 		global $bp;
 		
