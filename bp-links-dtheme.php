@@ -87,6 +87,7 @@ function bp_links_dtheme_activity_filter_options_setup() {
 }
 add_action( 'bp_activity_filter_options', 'bp_links_dtheme_activity_filter_options_setup' );
 add_action( 'bp_link_activity_filter_options', 'bp_links_dtheme_activity_filter_options_setup' );
+add_action( 'bp_group_activity_filter_options', 'bp_links_dtheme_activity_filter_options_setup' );
 
 function bp_links_dtheme_screen_notification_settings() {
 
