@@ -264,6 +264,9 @@ class BP_Links_Link {
 		} else {
 			// new record
 
+			// generate a cloud id
+			$this->cloud_id = $this->generate_cloud_id();
+
 			// these hooks allow changing the default values on new record creation
 			$this->vote_count = apply_filters( 'bp_links_link_vote_count_before_insert_save', 0 );
 			$this->vote_total = apply_filters( 'bp_links_link_vote_total_before_insert_save', 0 );
@@ -293,7 +296,7 @@ class BP_Links_Link {
 				) VALUES (
 					%s, %d, %d, %s, MD5(%s), %s, %s, %s, %s, %s, %d, %d, %d, %d, %s, %d, %s, %s
 				)",
-					$this->generate_cloud_id(),
+					$this->cloud_id,
 					$this->user_id,
 					$this->category_id,
 					$this->url,
