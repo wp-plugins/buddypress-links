@@ -125,11 +125,17 @@ function bp_links_install() {
 	//
 	require_once( 'bp-links-upgrade.php' );
 
-	if ( bp_links_upgrade( get_site_option( 'bp-links-db-version' ) ) ) {
-		// update site version
-		update_site_option( 'bp-links-db-version', BP_LINKS_DB_VERSION );
+	if ( get_site_option( 'bp-links-db-version' ) ) {
+		// this is an upgrade
+		if ( bp_links_upgrade( get_site_option( 'bp-links-db-version' ) ) ) {
+			// update site version
+			update_site_option( 'bp-links-db-version', BP_LINKS_DB_VERSION );
+		} else {
+			// TODO record some kind of error to display in dashboard?
+		}
 	} else {
-		// TODO record some kind of error to display in dashboard?
+		// this is a new install
+		update_site_option( 'bp-links-db-version', BP_LINKS_DB_VERSION );
 	}
 }
 
