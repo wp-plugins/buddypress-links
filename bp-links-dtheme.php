@@ -419,11 +419,9 @@ add_filter( 'bp_dtheme_activity_feed_url', 'bp_links_dtheme_activity_feed_url', 
  * @return integer|false Activity id that was created
  */
 function bp_links_dtheme_activity_custom_update( $object, $item_id, $content ) {
-	// object MUST be links
+	// if object is links, try a custom update
 	if ( 'links' == $object ) {
 		return bp_links_post_update( array( 'type' => BP_LINKS_ACTIVITY_ACTION_COMMENT, 'link_id' => $item_id, 'content' => $content ) );
-	} else {
-		return false;
 	}
 }
 add_filter( 'bp_activity_custom_update', 'bp_links_dtheme_activity_custom_update', 10, 3 );
