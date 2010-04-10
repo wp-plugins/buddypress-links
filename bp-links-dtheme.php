@@ -29,7 +29,7 @@ function bp_links_add_js() {
 		}
 	}
 }
-add_action( 'wp', 'bp_links_add_js');
+add_action( 'wp_print_scripts', 'bp_links_add_js');
 
 function bp_links_add_css() {
 

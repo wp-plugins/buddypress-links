@@ -180,7 +180,7 @@ function bp_links_setup_theme() {
 		} else {
 			switch ( basename( TEMPLATEPATH ) ) {
 				case 'bp-classic':
-					die('Only the BuddyPress 1.2 default theme is supported!');
+					die('Only the BuddyPress 1.2 and higher default theme is supported!');
 				case 'bp-default':
 				default:
 					define( 'BP_LINKS_THEME', BP_LINKS_DEFAULT_THEME );
@@ -194,7 +194,7 @@ function bp_links_setup_theme() {
 		define( 'BP_LINKS_THEME_URL_INC', BP_LINKS_THEME_URL . '/_inc' );
 	}
 }
-add_filter( 'wp', 'bp_links_setup_theme' );
+add_action( 'bp_init', 'bp_links_setup_theme' );
 
 /**
  * Check if template exists in style path, then check custom plugin location
@@ -380,7 +380,7 @@ function bp_links_setup_nav() {
 
 		}
 	}
-	
+
 	do_action( 'bp_links_setup_nav', $bp->is_item_admin );
 }
 add_action( 'bp_setup_nav', 'bp_links_setup_nav' );
