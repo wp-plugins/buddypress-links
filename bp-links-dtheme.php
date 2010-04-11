@@ -448,12 +448,12 @@ function bp_dtheme_ajax_link_share() {
 			<form action="<?php echo bp_get_link_permalink( $link ) . '/share-link' ?>" method="post" id="link-share-form">
 				<fieldset id="link-share-where-set">
 					<legend><?php _e( 'Share this link in:', 'buddypress-links' ) ?></legend>
-					<input type="radio" name="link-share-where" id="link-share-who-profile" value="1" checked="checked"> My Profile
-					<input type="radio" name="link-share-where" id="link-share-who-group" value="2"> A Group
+					<input type="radio" name="link-share-where" id="link-share-where-profile" value="profile" checked="checked"> My Profile
+					<input type="radio" name="link-share-where" id="link-share-where-group" value="group"> A Group
 				</fieldset>
 				<fieldset id="link-share-group-set">
 					<legend><?php _e( 'Select a group:', 'buddypress' ) ?></legend>
-					<select name="link-share-group" id="link-share-group">
+					<select name="link-share-group" id="link-share-group" class="link-share-object-select">
 						<option value="-1"><?php _e( 'Please Choose', 'buddypress-links' ) ?> ---&gt;</option>
 						<?php bp_link_user_group_options() ?>
 					</select>
@@ -477,7 +477,7 @@ add_action( 'wp_ajax_link_share', 'bp_dtheme_ajax_link_share' );
 /**
  * Handle AJAX action from clicking of link share save button (personal share)
  */
-function bp_dtheme_ajax_link_share_save() {
+function bp_dtheme_ajax_link_share_save_profile() {
 	global $bp;
 
 	check_ajax_referer( 'link_share_save' );
@@ -522,7 +522,7 @@ function bp_dtheme_ajax_link_share_save() {
 	// something went horribly wrong
 	bp_links_ajax_response_string( -1, __( 'Sharing this link has failed.', 'buddypress-links' ) );
 }
-add_action( 'wp_ajax_link_share_save', 'bp_dtheme_ajax_link_share_save' );
+add_action( 'wp_ajax_link_share_save_profile', 'bp_dtheme_ajax_link_share_save_profile' );
 
 /**
  * Handle AJAX action from clicking of link share save button (group share)

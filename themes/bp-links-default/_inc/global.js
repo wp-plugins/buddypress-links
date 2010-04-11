@@ -151,20 +151,28 @@ jQuery(document).ready( function() {
 				button.fadeOut(400, function () {
 					panel.fadeIn(400, function() {
 
+						var object, object_id, object_action;
+
+						function setup( obj, obj_id ) {
+							object = obj;
+							object_id = obj_id;
+							object_action = 'link_share_save_' + obj;
+						}
+						setup('profile', null);
+
+						// handle object select change
+						j('select.link-share-object-select').change( function() {
+							setup( j(this).attr('id').split('-')[2], j(this).val() );
+						});
+
 						// handle submit button
 						j('input[name=link-share-save]').click( function() {
-
-							// determine group and action
-							// TODO make it so group is not hard coded here
-							var group_id = j('select#link-share-group').val();
-							var save_action = 'link_share_save' + ((group_id >= 1) ? '_group' : '');
-
-							// send request
+							
 							j.post( ajaxurl, {
-								action: save_action,
+								action: object_action,
 								'cookie': encodeURIComponent(document.cookie),
 								'link_id': link_id,
-								'object_id': group_id,
+								'object_id': object_id,
 								'_wpnonce': j('input[name=link-share-nonce]').val()
 							},
 							function(response)
@@ -228,12 +236,12 @@ jQuery(document).ready( function() {
 						
 						// handle share toggle radio
 						j('input[name=link-share-where]').change( function() {
-							if ( j(this).val() == 2 ) {
-								j('fieldset#link-share-group-set').fadeIn(400);
-							} else {
-								j('select#link-share-group').val(-1);
-								j('fieldset#link-share-group-set').fadeOut(400);
-							}
+							// remove current panel
+							j('select#link-share-' + object).val(-1);
+							j('fieldset#link-share-' + object + '-set').fadeOut(400);
+							// show new object
+							setup( j(this).val(), null );
+							j('fieldset#link-share-' + object + '-set').fadeIn(400);
 						});
 					});
 				});
