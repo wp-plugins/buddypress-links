@@ -633,7 +633,7 @@ function bp_link_share_has_profile_link() {
 		if ( !$link )
 			$link =& $links_template->link;
 
-		return apply_filters( 'bp_get_link_share_has_profile_link', (boolean) bp_get_link_share_profile_link_user_id() );
+		return apply_filters( 'bp_get_link_share_has_profile_link', (boolean) bp_get_link_share_profile_link_user_id( $link ) );
 	}
 
 function bp_link_share_profile_link_user_id() {
