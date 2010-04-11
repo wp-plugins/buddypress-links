@@ -458,6 +458,7 @@ function bp_dtheme_ajax_link_share() {
 						<?php bp_link_user_group_options() ?>
 					</select>
 				</fieldset>
+				<?php do_action( 'bp_links_share_panel_fieldset' ) ?>
 				<input type="hidden" name="link-share-id" id="link-share-id" value="<?php echo bp_get_link_id( $link ) ?>">
 				<input type="submit" name="link-share-save" id="link-share-save" value="<?php _e( 'Share Now', 'buddypress-links' ) ?>">
 				<input type="submit" name="link-share-cancel" id="link-share-cancel" value="<?php _e( 'Cancel', 'buddypress-links' ) ?>">
