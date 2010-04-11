@@ -151,15 +151,27 @@ jQuery(document).ready( function() {
 				button.fadeOut(400, function () {
 					panel.fadeIn(400, function() {
 
-						var object, object_id, object_action;
+						// local vars
+						var pnl_object, pnl_object_id, pnl_object_action;
 
+						// re/setup local vars
 						function setup( obj, obj_id ) {
-							object = obj;
-							object_id = obj_id;
-							object_action = 'link_share_save_' + obj;
+							pnl_object = obj;
+							pnl_object_id = obj_id;
+							pnl_object_action = 'link_share_save_' + obj;
 						}
 						setup('profile', null);
 
+						// handle share toggle radio
+						j('input[name=link-share-where]').change( function() {
+							// remove current panel
+							j('select#link-share-' + pnl_object).val(-1);
+							j('fieldset#link-share-' + pnl_object + '-set').fadeOut(400);
+							// show new object
+							setup( j(this).val(), null );
+							j('fieldset#link-share-' + pnl_object + '-set').fadeIn(400);
+						});
+						
 						// handle object select change
 						j('select.link-share-object-select').change( function() {
 							setup( j(this).attr('id').split('-')[2], j(this).val() );
@@ -167,12 +179,11 @@ jQuery(document).ready( function() {
 
 						// handle submit button
 						j('input[name=link-share-save]').click( function() {
-							
 							j.post( ajaxurl, {
-								action: object_action,
+								action: pnl_object_action,
 								'cookie': encodeURIComponent(document.cookie),
 								'link_id': link_id,
-								'object_id': object_id,
+								'object_id': pnl_object_id,
 								'_wpnonce': j('input[name=link-share-nonce]').val()
 							},
 							function(response)
@@ -196,8 +207,17 @@ jQuery(document).ready( function() {
 							return false;
 						});
 
+						// handle cancel button
+						j('input[name=link-share-cancel]').click( function() {
+							panel.fadeOut(400, function() {
+								button.fadeIn(400);
+								panel.remove();
+							});
+							return false;
+						});
+
+						// handle remove button
 						j('input[name=link-share-remove]').click( function() {
-							
 							j.post( ajaxurl, {
 								action: 'share_link_remove_' + object,
 								'cookie': encodeURIComponent(document.cookie),
@@ -224,25 +244,6 @@ jQuery(document).ready( function() {
 							});
 							return false;
 						} );
-
-						// handle cancel button
-						j('input[name=link-share-cancel]').click( function() {
-							panel.fadeOut(400, function() {
-								button.fadeIn(400);
-								panel.remove();
-							});
-							return false;
-						});
-						
-						// handle share toggle radio
-						j('input[name=link-share-where]').change( function() {
-							// remove current panel
-							j('select#link-share-' + object).val(-1);
-							j('fieldset#link-share-' + object + '-set').fadeOut(400);
-							// show new object
-							setup( j(this).val(), null );
-							j('fieldset#link-share-' + object + '-set').fadeIn(400);
-						});
 					});
 				});
 			} else {
