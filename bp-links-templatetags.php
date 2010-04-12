@@ -1826,9 +1826,9 @@ function bp_links_group_links_tabs( $group = false ) {
 	$current_tab = $bp->action_variables[0];
 	?>
 
-	<li<?php if ( '' == $current_tab ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->root_domain . '/' . $bp->groups->slug ?>/<?php echo $group->slug ?>/links/"><?php printf( __('All Group Links (%s)', 'buddypress-links'), bp_links_total_links_for_group() ) ?></a></li>
-	<li<?php if ( 'my-links' == $current_tab ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->root_domain . '/' . $bp->groups->slug ?>/<?php echo $group->slug ?>/links/my-links/"><?php printf( __('My Group Links (%s)', 'buddypress-links'), bp_links_total_links_for_group_member() ) ?></a></li>
-	<li<?php if ( 'create' == $current_tab ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->root_domain . '/' . $bp->groups->slug ?>/<?php echo $group->slug ?>/links/create/"><?php _e('Create Group Link', 'buddypress-links') ?></a></li>
+	<li<?php if ( '' == $current_tab ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->root_domain . '/' . $bp->groups->slug ?>/<?php echo $group->slug ?>/<?php echo $bp->links->slug ?>/"><?php printf( __('All Group Links (%s)', 'buddypress-links'), bp_links_total_links_for_group() ) ?></a></li>
+	<li<?php if ( 'my-links' == $current_tab ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->root_domain . '/' . $bp->groups->slug ?>/<?php echo $group->slug ?>/<?php echo $bp->links->slug ?>/my-links/"><?php printf( __('My Group Links (%s)', 'buddypress-links'), bp_links_total_links_for_group_member() ) ?></a></li>
+	<li<?php if ( 'create' == $current_tab ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->root_domain . '/' . $bp->groups->slug ?>/<?php echo $group->slug ?>/<?php echo $bp->links->slug ?>/create/"><?php _e('Create Group Link', 'buddypress-links') ?></a></li>
 
 	<?php
 	do_action( 'bp_links_group_links_tabs', $current_tab, $group->slug );
