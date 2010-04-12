@@ -98,6 +98,7 @@ This version contains the first support for rich media embedding. *Please make s
 
 * Initial group integration support added
 * Added profile and group sharing features
+* Create link directly from user profile and group pages
 * Moved link list update/error messages to inside the current link's li block
 * Added external link icon next to main link URL on the link list
 * All link list targets and rels are no longer set by default and must be explicitly set with a filter
