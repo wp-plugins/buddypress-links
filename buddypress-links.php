@@ -19,7 +19,6 @@ Site Wide Only: true
 //
 
 // Define the slug for the component
-// At this time, it is not recommended that you try to override this!
 if ( !defined( 'BP_LINKS_SLUG' ) )
 	define( 'BP_LINKS_SLUG', 'links' );
 
