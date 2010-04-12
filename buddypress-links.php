@@ -4,11 +4,11 @@ Plugin Name: BuddyPress Links
 Plugin URI: http://wordpress.org/extend/plugins/buddypress-links/
 Description: BuddyPress Links is a link sharing component for BuddyPress.
 Author: Marshall Sorenson (MrMaz)
-Author URI: http://buddypress.org/developers/mrmaz/
+Author URI: http://marshallsorenson.com
 License: GNU GENERAL PUBLIC LICENSE 3.0 http://www.gnu.org/licenses/gpl.txt
-Version: 0.4-bleeding
+Version: 0.4-beta
 Text Domain: buddypress-links
-Site Wide Only: false
+Site Wide Only: true
 */
 
 //
