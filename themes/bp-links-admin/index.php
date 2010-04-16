@@ -18,7 +18,7 @@
 
 	<p>Where to get support:</p>
 	<ul>
-		<li><a href="http://buddypress.org/forums/" target="_blank">BuddyPress.org Forums</a></li>
+		<li><a href="http://buddypress.org/forums/topic/buddypress-links-04x-releases-and-support" target="_blank">BuddyPress.org Forums</a></li>
 		<li><a href="http://buddypress.org/groups/buddypress-links" target="_blank">Official BuddyPress Links Group</a></li>
 		<li><a href="http://plugins.trac.wordpress.org/log/buddypress-links" target="_blank">Trac Revision Log</a></li>
 		<li><a href="http://plugins.trac.wordpress.org/browser/buddypress-links/" target="_blank">Trac Browser</a></li>

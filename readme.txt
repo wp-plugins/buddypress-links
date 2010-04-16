@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: wpmu, buddypress, social, networking, links, rich media, embed, youtube, flickr, metacafe
 Requires at least: PHP 5.2, WordPress 2.9.1, BuddyPress 1.2.x
 Tested up to: PHP 5.2.x, WordPress 2.9.1, BuddyPress 1.2.x
-Stable tag: 0.3.2
+Stable tag: 0.4
 
 BuddyPress Links is a drop in link and rich media sharing component for BuddyPress 1.2.x
 
@@ -104,8 +104,9 @@ This version contains the first support for rich media embedding. *Please make s
 * All link list targets and rels are no longer set by default and must be explicitly set with a filter
 * All link list content is now separately filterable for finer control over URLs and content
 * Load members profile links using plugins template instead of members home action
-* Link description can be configured as optional with a constant.
+* Link description can be configured as optional with a constant
 * Usability fixes to the link create/admin form (props Mike Pratt)
+* Changing the component slug is now officially supported
 * Heavy duty javascript refactoring
 
 = 0.3.2 =
@@ -195,7 +196,7 @@ To find out which template files are required to exist, do a recursive search fo
 
 = Where can I get support? =
 
-The support forums can be found here: http://buddypress.org/forums
+The support forum for the 0.4 branch can be found here: http://buddypress.org/forums/topic/buddypress-links-04x-releases-and-support
 
 = Where can I find documentation? =
 
