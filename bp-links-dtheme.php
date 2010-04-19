@@ -464,11 +464,11 @@ function bp_dtheme_ajax_link_share() {
 			<form action="<?php echo bp_get_link_permalink( $link ) . '/share-link' ?>" method="post" id="link-share-form">
 				<fieldset id="link-share-where-set">
 					<legend><?php _e( 'Share this link in:', 'buddypress-links' ) ?></legend>
-					<input type="radio" name="link-share-where" id="link-share-where-profile" value="profile" checked="checked"> My Profile
-					<input type="radio" name="link-share-where" id="link-share-where-group" value="group"> A Group
+					<input type="radio" name="link-share-where" id="link-share-where-profile" value="profile" checked="checked"> <?php _e( 'My Profile', 'buddypress' ) ?>
+					<input type="radio" name="link-share-where" id="link-share-where-group" value="group"> <?php _e( 'A Group', 'buddypress-links' ) ?>
 				</fieldset>
 				<fieldset id="link-share-group-set">
-					<legend><?php _e( 'Select a group:', 'buddypress' ) ?></legend>
+					<legend><?php _e( 'Select a group:', 'buddypress-links' ) ?></legend>
 					<select name="link-share-group" id="link-share-group" class="link-share-object-select">
 						<option value="-1"><?php _e( 'Please Choose', 'buddypress-links' ) ?> ---&gt;</option>
 						<?php bp_link_user_group_options() ?>
