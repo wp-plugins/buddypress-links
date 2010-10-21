@@ -1802,7 +1802,8 @@ function bp_links_get_linkmeta( $link_id, $meta_key = '') {
 			return '';
 	}
 
-	$metas = array_map('maybe_unserialize', $metas);
+	if ( is_array( $metas ) )
+		$metas = array_map('maybe_unserialize', $metas);
 
 	if ( 1 == count($metas) )
 		return $metas[0];
