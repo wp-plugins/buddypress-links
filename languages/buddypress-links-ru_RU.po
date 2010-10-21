@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyPress Links v0.21\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/buddypress-links\n"
-"POT-Creation-Date: 2010-04-12 14:12+0000\n"
-"PO-Revision-Date: 2010-04-19 14:21+0200\n"
+"POT-Creation-Date: 2010-04-19 15:10+0000\n"
+"PO-Revision-Date: 2010-04-21 22:08+0200\n"
 "Last-Translator: slaFFik <slaffik@list.ru>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Poedit-Basepath: C:\\Users\\slaFFik\\Загрузки\\temp\\buddypress-links\n"
 "X-Poedit-SearchPath-0: C:\\Users\\slaFFik\\Загрузки\\temp\\buddypress-links\n"
 
-#. #-#-#-#-#  plugin.pot (BuddyPress Links 0.4-bleeding)  #-#-#-#-#
+#. #-#-#-#-#  plugin.pot (BuddyPress Links 0.4)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: bp-links-admin.php:23
 #: themes/bp-links-admin/category-edit.php:9
@@ -403,6 +403,14 @@ msgstr "Вы должны быть авторизованы для этого д
 msgid "Share this link in:"
 msgstr "Поделиться ссылкой в:"
 
+#: bp-links-dtheme.php:467
+msgid "My Profile"
+msgstr "Профиль"
+
+#: bp-links-dtheme.php:468
+msgid "A Group"
+msgstr "Группу"
+
 #: bp-links-dtheme.php:471
 msgid "Select a group:"
 msgstr "Выберите группу:"
@@ -770,12 +778,12 @@ msgstr "Оцененные высоко"
 msgid "All Group Links (%s)"
 msgstr "Все ссылки группы (%s)"
 
-#: bp-links-templatetags.php:1830
+#: bp-links-templatetags.php:1831
 #, php-format
 msgid "My Group Links (%s)"
 msgstr "Мои ссылки группы (%s)"
 
-#: bp-links-templatetags.php:1831
+#: bp-links-templatetags.php:1832
 msgid "Create Group Link"
 msgstr "Создать ссылку группы"
 
@@ -1130,9 +1138,11 @@ msgid "Marshall Sorenson (MrMaz)"
 msgstr "Marshall Sorenson (MrMaz)"
 
 #. Author URI of the plugin/theme
-msgid "http://buddypress.org/developers/mrmaz/"
-msgstr "http://buddypress.org/developers/mrmaz/"
+msgid "http://marshallsorenson.com"
+msgstr "http://marshallsorenson.com"
 
+#~ msgid "http://buddypress.org/developers/mrmaz/"
+#~ msgstr "http://buddypress.org/developers/mrmaz/"
 #~ msgid "New wire post on link: %1$s"
 #~ msgstr "Новое сообщение в сети ссылки: %1$s"
 #~ msgid "Recently Active"
