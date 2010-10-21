@@ -46,6 +46,11 @@ if ( !defined( 'BP_LINKS_VOTE_ALLOW_CHANGE' ) )
 if ( !defined( 'BP_LINKS_VOTE_RECORD_ACTIVITY' ) )
 	define( 'BP_LINKS_VOTE_RECORD_ACTIVITY', true );
 
+// The default behavior is to enable links integration with the groups component.
+// Override and set this constant to false to disable all integration with groups.
+if ( !defined( 'BP_LINKS_ENABLE_GROUPS_INTEGRATION' ) )
+	define( 'BP_LINKS_ENABLE_GROUPS_INTEGRATION', true );
+
 // Limitations of the activity API require that we pass all item ids that we want to
 // display activity for if we are limiting results to links owned by a single user.
 // Passing the ids of all links that a user owns could get out of control. This
@@ -125,7 +130,7 @@ define( 'BP_LINKS_ADMIN_THEME_URL_INC', BP_LINKS_ADMIN_THEME_URL . '/_inc' );
  * @return boolean
  */
 function bp_links_is_groups_enabled() {
-	return function_exists('groups_install');
+	return ( function_exists('groups_install') && BP_LINKS_ENABLE_GROUPS_INTEGRATION );
 }
 
 //
