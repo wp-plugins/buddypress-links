@@ -102,9 +102,7 @@ function bp_links_dtheme_activity_filter_options_setup() {
 }
 add_action( 'bp_activity_filter_options', 'bp_links_dtheme_activity_filter_options_setup' );
 add_action( 'bp_link_activity_filter_options', 'bp_links_dtheme_activity_filter_options_setup' );
-if ( bp_links_is_groups_enabled() ) {
-	add_action( 'bp_group_activity_filter_options', 'bp_links_dtheme_activity_filter_options_setup' );
-}
+add_action( 'bp_group_activity_filter_options', 'bp_links_dtheme_activity_filter_options_setup' );
 
 function bp_links_dtheme_screen_notification_settings() {
 
@@ -297,6 +295,9 @@ add_filter( 'bp_dtheme_ajax_querystring', 'bp_links_dtheme_ajax_querystring_dire
 function bp_links_dtheme_ajax_querystring_group_filter( $query_string ) {
 	global $bp;
 
+	if ( !bp_links_is_groups_enabled() )
+		return $query_string;
+
 	// look for groups component and links action
 	if ( $bp->groups->slug == $bp->current_component && $bp->current_action == $bp->links->slug ) {
 
@@ -316,9 +317,7 @@ function bp_links_dtheme_ajax_querystring_group_filter( $query_string ) {
 
 	return $query_string;
 }
-if ( bp_links_is_groups_enabled() ) {
-	add_filter( 'bp_dtheme_ajax_querystring', 'bp_links_dtheme_ajax_querystring_group_filter', 1 );
-}
+add_filter( 'bp_dtheme_ajax_querystring', 'bp_links_dtheme_ajax_querystring_group_filter', 1 );
 
 /**
  * Filter all AJAX bp_activity_request() calls for the 'activity' object with the 'links' scope
@@ -558,6 +557,9 @@ add_action( 'wp_ajax_link_share_save_profile', 'bp_dtheme_ajax_link_share_save_p
 function bp_dtheme_ajax_link_share_save_group() {
 	global $bp;
 
+	if ( !bp_links_is_groups_enabled() )
+		return false;
+
 	check_ajax_referer( 'link_share_save' );
 
 	if ( is_user_logged_in() ) {
@@ -624,9 +626,7 @@ function bp_dtheme_ajax_link_share_save_group() {
 	// something went horribly, horribly wrong
 	bp_links_ajax_response_string( -1, __( 'Sharing with a group has failed.', 'buddypress-links' ) );
 }
-if ( bp_links_is_groups_enabled() ) {
-	add_action( 'wp_ajax_link_share_save_group', 'bp_dtheme_ajax_link_share_save_group' );
-}
+add_action( 'wp_ajax_link_share_save_group', 'bp_dtheme_ajax_link_share_save_group' );
 
 /**
  * Handle AJAX action from clicking of remove share from profile button
@@ -673,6 +673,9 @@ add_action( 'wp_ajax_share_link_remove_profile', 'bp_dtheme_ajax_link_share_remo
 function bp_dtheme_ajax_link_share_remove_group() {
 	global $bp;
 
+	if ( !bp_links_is_groups_enabled() )
+		return false;
+
 	check_ajax_referer( 'link_share_save' );
 
 	if ( is_user_logged_in() ) {
@@ -710,8 +713,7 @@ function bp_dtheme_ajax_link_share_remove_group() {
 	// something went wrong
 	bp_links_ajax_response_string( -1, __( 'Removing this link from this group has failed.', 'buddypress-links' ) );
 }
-if ( bp_links_is_groups_enabled() ) {
-	add_action( 'wp_ajax_share_link_remove_group', 'bp_dtheme_ajax_link_share_remove_group' );
-}
+add_action( 'wp_ajax_share_link_remove_group', 'bp_dtheme_ajax_link_share_remove_group' );
+
 
 ?>
