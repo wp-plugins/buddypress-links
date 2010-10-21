@@ -27,9 +27,12 @@
 					<?php bp_links_locate_template( array( 'single/admin.php' ), true ) ?>
 
 				<?php elseif ( bp_link_is_visible() ) : ?>
-					<?php bp_links_locate_template( array( 'single/activity.php' ), true ) ?>
-
-				<?php else : ?>
+					<?php
+						if ( bp_links_is_activity_enabled() ):
+							bp_links_locate_template( array( 'single/activity.php' ), true );
+						endif;
+					?>
+				<?php else: ?>
 					<?php /* The link is not visible, show the status message */ ?>
 
 					<?php do_action( 'bp_before_link_status_message' ) ?>

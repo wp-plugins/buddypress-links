@@ -57,9 +57,11 @@
 				<?php do_action( 'bp_before_links_list_item_xtrabar' ) ?>
 				<div class="xtrabar">
 					<?php do_action( 'bp_before_links_list_item_xtrabar_content' ) ?>
+					<?php if ( bp_links_is_activity_enabled() ): ?>
 					<?php do_action( 'bp_before_links_list_item_xtrabar_comments' ) ?>
 					<a href="<?php bp_link_permalink() ?>" class="comments"><?php bp_link_activity_post_count() ?>&nbsp;<?php bp_link_list_item_xtrabar_comments() ?></a>
 					<?php do_action( 'bp_after_links_list_item_xtrabar_comments' ) ?>
+					<?php endif; ?>
 					<?php do_action( 'bp_before_links_list_item_xtrabar_userlink' ) ?>
 					<div class="owner"><?php bp_link_user_avatar_mini() ?>&nbsp;<?php bp_link_userlink() ?> <?php bp_link_list_item_xtrabar_userlink_created() ?></div>
 					<?php do_action( 'bp_after_links_list_item_xtrabar_userlink' ) ?>

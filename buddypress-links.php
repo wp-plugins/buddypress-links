@@ -133,6 +133,15 @@ function bp_links_is_groups_enabled() {
 	return ( function_exists('groups_install') && BP_LINKS_ENABLE_GROUPS_INTEGRATION );
 }
 
+/**
+ * Check if activity component is enabled
+ *
+ * @return boolean
+ */
+function bp_links_is_activity_enabled() {
+	return ( function_exists('bp_activity_install') );
+}
+
 //
 // Plugin Bootstrap Functions
 //

@@ -334,6 +334,9 @@ add_filter( 'bp_dtheme_ajax_querystring', 'bp_links_dtheme_ajax_querystring_grou
 function bp_links_dtheme_ajax_querystring_activity_filter( $query_string, $object, $filter, $scope, $page, $search_terms, $extras ) {
 	global $bp;
 
+	if ( !bp_links_is_activity_enabled() )
+		return $query_string;
+
 	$do_filter = false;
 
 	// only filter activity.
@@ -422,7 +425,7 @@ add_filter( 'bp_dtheme_ajax_querystring', 'bp_links_dtheme_ajax_querystring_acti
 function bp_links_dtheme_activity_feed_url( $feed_url, $scope ) {
 	global $bp;
 
-	if ( empty( $scope ) || $scope != $bp->links->id )
+	if ( !bp_links_is_activity_enabled() || empty( $scope ) || $scope != $bp->links->id )
 		return $feed_url;
 
 	return $bp->loggedin_user->domain . BP_ACTIVITY_SLUG . '/my-links/feed/';
