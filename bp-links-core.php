@@ -330,7 +330,7 @@ function bp_links_setup_nav() {
 
 	/* Add 'Links' to the main navigation */
 	$nav_item_name = sprintf( apply_filters( 'bp_links_nav_item_name', __( 'Links <span>(%d)</span>', 'buddypress-links' ) ), bp_links_total_links_for_user() );
-	bp_core_new_nav_item( array( 'name' => $nav_item_name, 'slug' => $bp->links->slug, 'position' => 75, 'screen_function' => 'bp_links_screen_personal_links', 'default_subnav_slug' => 'my-links', 'item_css_id' => $bp->links->id ) );
+	bp_core_new_nav_item( array( 'name' => $nav_item_name, 'slug' => $bp->links->slug, 'position' => 1, 'screen_function' => 'bp_links_screen_personal_links', 'default_subnav_slug' => 'my-links', 'item_css_id' => $bp->links->id ) );
 
 	$links_link = $bp->loggedin_user->domain . $bp->links->slug . '/';
 	
@@ -1337,7 +1337,7 @@ function bp_links_current_link_embed_service() {
 /*** General Link Functions ***************************************************/
 
 function bp_links_is_url_valid( $url ) {
-	return ( preg_match('/^https?:\/\/(([a-z0-9-]+\.)+[a-z]{2,6}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:[0-9]+)?(\/?|\/\S+)$/iu', $url ) === 1 ) ? true : false;
+	return ( apply_filters( 'bp_links_is_url_valid', ( preg_match('/^https?:\/\/(([a-z0-9-]+\.)+[a-z]{2,6}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:[0-9]+)?(\/?|\/\S+)$/iu', $url ) === 1 ) ? true : false, $url ) );
 }
 
 function bp_links_check_link_exists( $link_id ) {
