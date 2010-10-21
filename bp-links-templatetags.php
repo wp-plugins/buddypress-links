@@ -1183,11 +1183,16 @@ function bp_link_feed_item_link() {
 		return apply_filters( 'bp_get_link_feed_item_link', bp_get_link_permalink() );
 	}
 
-function bp_link_feed_item_date() {
-	echo bp_get_link_feed_item_date();
+function bp_link_feed_item_date( $link = false ) {
+	echo bp_get_link_feed_item_date( $link );
 }
-	function bp_get_link_feed_item_date() {
-		return apply_filters( 'bp_get_link_feed_item_date', bp_get_link_date_created() );
+	function bp_get_link_feed_item_date( $link = false ) {
+		global $links_template;
+
+		if ( !$link )
+			$link =& $links_template->link;
+
+		return apply_filters( 'bp_get_link_feed_item_date', date('D, d M Y H:i:s O', $link->date_created ) );
 	}
 
 function bp_link_feed_item_description() {

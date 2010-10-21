@@ -35,7 +35,7 @@ header('Status: 200 OK');
 				<guid><?php bp_link_feed_item_guid() ?></guid>
 				<title><?php bp_link_feed_item_title() ?></title>
 				<link><?php bp_link_feed_item_link() ?></link>
-				<pubDate><?php echo date('D, d M Y H:i:s O', bp_get_link_feed_item_date() ); ?></pubDate>
+				<pubDate><?php bp_link_feed_item_date() ?></pubDate>
 
 				<description><?php bp_link_feed_item_description() ?></description>
 			<?php do_action('bp_directory_links_feed_item'); ?>
