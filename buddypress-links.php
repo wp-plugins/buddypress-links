@@ -26,9 +26,8 @@ if ( !defined( 'BP_LINKS_SLUG' ) )
 // For example, if your active WordPress theme is 'bluesky', and you wanted
 // to define your links theme as 'links-custom', you would put your files in:
 // /../../wp-content/themes/bluesky/links-custom
-if ( !defined( 'BP_LINKS_CUSTOM_THEME' ) ) {
+if ( !defined( 'BP_LINKS_CUSTOM_THEME' ) )
 	define( 'BP_LINKS_CUSTOM_THEME', false );
-}
 
 // Define the default avatar size for link lists
 // Allowed values are 50, 60, 70, 80, 90, 100, 110, 120, 130
@@ -80,6 +79,11 @@ if ( !defined( 'BP_LINKS_MAX_CHARACTERS_DESCRIPTION' ) )
 // You can override this constant to change that behavior.
 if ( !defined( 'BP_LINKS_IS_REQUIRED_DESCRIPTION' ) )
 	define( 'BP_LINKS_IS_REQUIRED_DESCRIPTION', true );
+
+// The default behavior is to use radio buttons to display categories on the create form.
+// Override this constant and set to true to use a select box instead.
+if ( !defined( 'BP_LINKS_CREATE_CATEGORY_SELECT' ) )
+	define( 'BP_LINKS_CREATE_CATEGORY_SELECT', false );
 
 //
 // If you have a Fotoglif account you may want to change this so

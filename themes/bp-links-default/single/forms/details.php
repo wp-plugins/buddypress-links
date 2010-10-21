@@ -13,7 +13,13 @@
 		<label for="link-category">
 			<?php _e('Category', 'buddypress-links') ?>
 		</label>
-		<?php bp_links_category_radio_options( bp_get_link_details_form_category_id(), 'link-category', '' ) ?>
+		<?php if ( BP_LINKS_CREATE_CATEGORY_SELECT ): ?>
+			<select name="link-category">
+				<?php bp_links_category_select_options( bp_get_link_details_form_category_id() ); ?>
+			</select>
+		<?php else: ?>
+			<?php bp_links_category_radio_options( bp_get_link_details_form_category_id(), 'link-category', '' ) ?>
+		<?php endif; ?>
 
 		<label for="link-url">
 			<?php _e('URL', 'buddypress-links') ?>&nbsp;
