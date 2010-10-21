@@ -115,6 +115,18 @@ define( 'BP_LINKS_ADMIN_THEME_URL_INC', BP_LINKS_ADMIN_THEME_URL . '/_inc' );
 // ***************************
 ///////////////////////////////
 
+//
+// Plugin Compatibility Functions
+//
+
+/**
+ * Check if groups component is enabled
+ *
+ * @return boolean
+ */
+function bp_links_is_groups_enabled() {
+	return function_exists('groups_install');
+}
 
 //
 // Plugin Bootstrap Functions
@@ -159,7 +171,9 @@ function bp_links_setup_globals() {
 function bp_links_init() {
 	// If we ever need to execute BP code outside of
 	// any WP action or filter scope, it should go here!
-	require_once 'bp-links-groupext.php';
+	if ( bp_links_is_groups_enabled() ) {
+		require_once 'bp-links-groupext.php';
+	}
 }
 
 //

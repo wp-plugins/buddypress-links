@@ -102,7 +102,9 @@ function bp_links_dtheme_activity_filter_options_setup() {
 }
 add_action( 'bp_activity_filter_options', 'bp_links_dtheme_activity_filter_options_setup' );
 add_action( 'bp_link_activity_filter_options', 'bp_links_dtheme_activity_filter_options_setup' );
-add_action( 'bp_group_activity_filter_options', 'bp_links_dtheme_activity_filter_options_setup' );
+if ( bp_links_is_groups_enabled() ) {
+	add_action( 'bp_group_activity_filter_options', 'bp_links_dtheme_activity_filter_options_setup' );
+}
 
 function bp_links_dtheme_screen_notification_settings() {
 
@@ -314,7 +316,9 @@ function bp_links_dtheme_ajax_querystring_group_filter( $query_string ) {
 
 	return $query_string;
 }
-add_filter( 'bp_dtheme_ajax_querystring', 'bp_links_dtheme_ajax_querystring_group_filter', 1 );
+if ( bp_links_is_groups_enabled() ) {
+	add_filter( 'bp_dtheme_ajax_querystring', 'bp_links_dtheme_ajax_querystring_group_filter', 1 );
+}
 
 /**
  * Filter all AJAX bp_activity_request() calls for the 'activity' object with the 'links' scope
@@ -336,7 +340,7 @@ function bp_links_dtheme_ajax_querystring_activity_filter( $query_string, $objec
 	// only filter activity.
 	if ( $bp->activity->id == $object ) {
 
-		if ( bp_is_group_home() ) {
+		if ( bp_links_is_groups_enabled() && bp_is_group_home() ) {
 			$do_filter = 'group';
 		} elseif ( bp_is_member() ) {
 			// handle filtering for profile pages
@@ -463,10 +467,16 @@ function bp_dtheme_ajax_link_share() {
 		1[[split]]<div class="link-share-panel">
 			<form action="<?php echo bp_get_link_permalink( $link ) . '/share-link' ?>" method="post" id="link-share-form">
 				<fieldset id="link-share-where-set">
+					<?php if ( bp_links_is_groups_enabled() ): ?>
 					<legend><?php _e( 'Share this link in:', 'buddypress-links' ) ?></legend>
 					<input type="radio" name="link-share-where" id="link-share-where-profile" value="profile" checked="checked"> <?php _e( 'My Profile', 'buddypress' ) ?>
 					<input type="radio" name="link-share-where" id="link-share-where-group" value="group"> <?php _e( 'A Group', 'buddypress-links' ) ?>
+					<?php else: ?>
+					<legend><?php _e( 'Share this link in:', 'buddypress-links' ) ?> <?php _e( 'My Profile', 'buddypress' ) ?></legend>
+					<input type="hidden" name="link-share-where" id="link-share-where-profile" value="profile">
+					<?php endif; ?>
 				</fieldset>
+				<?php if ( bp_links_is_groups_enabled() ): ?>
 				<fieldset id="link-share-group-set">
 					<legend><?php _e( 'Select a group:', 'buddypress-links' ) ?></legend>
 					<select name="link-share-group" id="link-share-group" class="link-share-object-select">
@@ -474,6 +484,7 @@ function bp_dtheme_ajax_link_share() {
 						<?php bp_link_user_group_options() ?>
 					</select>
 				</fieldset>
+				<?php endif; ?>
 				<?php do_action( 'bp_links_share_panel_fieldset' ) ?>
 				<input type="hidden" name="link-share-id" id="link-share-id" value="<?php echo bp_get_link_id( $link ) ?>">
 				<input type="submit" name="link-share-save" id="link-share-save" value="<?php _e( 'Share Now', 'buddypress-links' ) ?>">
@@ -613,7 +624,9 @@ function bp_dtheme_ajax_link_share_save_group() {
 	// something went horribly, horribly wrong
 	bp_links_ajax_response_string( -1, __( 'Sharing with a group has failed.', 'buddypress-links' ) );
 }
-add_action( 'wp_ajax_link_share_save_group', 'bp_dtheme_ajax_link_share_save_group' );
+if ( bp_links_is_groups_enabled() ) {
+	add_action( 'wp_ajax_link_share_save_group', 'bp_dtheme_ajax_link_share_save_group' );
+}
 
 /**
  * Handle AJAX action from clicking of remove share from profile button
@@ -697,6 +710,8 @@ function bp_dtheme_ajax_link_share_remove_group() {
 	// something went wrong
 	bp_links_ajax_response_string( -1, __( 'Removing this link from this group has failed.', 'buddypress-links' ) );
 }
-add_action( 'wp_ajax_share_link_remove_group', 'bp_dtheme_ajax_link_share_remove_group' );
+if ( bp_links_is_groups_enabled() ) {
+	add_action( 'wp_ajax_share_link_remove_group', 'bp_dtheme_ajax_link_share_remove_group' );
+}
 
 ?>

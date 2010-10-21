@@ -215,7 +215,7 @@ function bp_has_links( $args = '' ) {
 		}
 
 		// Auto set group_id if we are on a group home page
-		if ( $bp->groups->current_group->id ) {
+		if ( bp_links_is_groups_enabled() && $bp->groups->current_group->id ) {
 			$group_id = $bp->groups->current_group->id;
 		}
 	}
