@@ -2,18 +2,13 @@
 Contributors: MrMaz
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8591311
 Tags: wpmu, buddypress, social, networking, links, rich media, embed, youtube, flickr, metacafe
-Requires at least: PHP 5.2, WordPress 2.9.1, BuddyPress 1.2.x
-Tested up to: PHP 5.2.x, WordPress 2.9.1, BuddyPress 1.2.x
-Stable tag: 0.4.1
+Requires at least: PHP 5.2, WordPress 3.x, BuddyPress 1.2.6
+Tested up to: PHP 5.2.x, WordPress 3.x, BuddyPress 1.2.6
+Stable tag: 0.5
 
 BuddyPress Links is a drop in link and rich media sharing component for BuddyPress 1.2.x
 
 == Description ==
-
-#### Warning!
-
-The 0.3.x and 0.4.x branches are not backwards compatible with the BuddyPress 1.1.x branch, or compatible with the 1.2.x classic theme.
-The links data from the 0.2.x branch is compatible with 0.3.x and higher, except that all links wire posts will be lost.
 
 #### What is BuddyPress Links?
 
@@ -36,7 +31,7 @@ Members can:
 * Embed a PicApp.com or Fotoglif.com image and use as the avatar
 * Vote on other member's links
 * Comment on other member's links
-* @mentions support added in version 3.0
+* @mentions support added in version 0.3
 
 Administrators can:
 
@@ -60,11 +55,10 @@ Other features include:
 
 == Installation ==
 
-**Notice: This plugin is under heavy development, and is not recommended for production environments!**
-
-BuddyPress Links 0.4.x requires WordPress 2.9.2 or higher with BuddyPress 1.2.x installed.
-BuddyPress Links 0.3.x requires WordPress 2.9.1 or higher with BuddyPress 1.2.x installed.
-BuddyPress Links 0.2.x requires WordPress 2.8.4 or higher with BuddyPress 1.1.x installed.
+* BuddyPress Links 0.5.x requires WordPress 3.0 or higher with BuddyPress 1.2.6 or higher installed.
+* BuddyPress Links 0.4.x requires WordPress 2.9.2 or higher with BuddyPress 1.2.x installed.
+* BuddyPress Links 0.3.x requires WordPress 2.9.1 or higher with BuddyPress 1.2.x installed.
+* BuddyPress Links 0.2.x requires WordPress 2.8.4 or higher with BuddyPress 1.1.x installed.
 
 ####Plugin:
 
@@ -78,7 +72,16 @@ BuddyPress Links 0.2.x requires WordPress 2.8.4 or higher with BuddyPress 1.1.x 
 1. The wire has been deprecated as of 0.3. ALL LINKS WIRE POSTS WILL BE LOST!
 1. This version can use data created by previous versions, assuming you are porting your site to the new BP 1.2 default theme!
 
+####Warning!
+
+The 0.3.x and higher branches are not backwards compatible with the BuddyPress 1.1.x branch, or compatible with the 1.2.x classic theme.
+The links data from the 0.2.x branch is compatible with 0.3.x and higher, except that all links wire posts will be lost.
+
 == Upgrade Notice ==
+
+= 0.5 =
+
+No changes that affect data were made, however it is always a good idea to back up your data just in case!
 
 = 0.4 =
 
@@ -93,6 +96,18 @@ DO NOT attempt to install version 0.3 or higher on BP 1.1.X!  DO NOT try to use 
 This version contains the first support for rich media embedding. *Please make sure that you update the "links" directory in your theme (see Installation).*
 
 == Changelog ==
+
+= 0.5 =
+
+* Tested with WordPress 3.x and BuddyPress 1.2.6
+* Improved compatibility when groups component is disabled
+* Improved compatibility when activity component is disabled
+* Added configuration constant for disabling groups integration
+* Added configuration constant for using select box for categories on create form
+* Added filter to bp_links_is_url_valid() to allow extended validation
+* Fixed pubdate bug in feed generator
+* Fixed linkmeta bug where empty values where being passed to array_map()
+* Updated RU translation, props SlaFFik
 
 = 0.4.1 =
 
@@ -213,7 +228,7 @@ Coming soon
 
 Look for MrMaz in #buddypress-dev
 
-Or on buddypress.org http://buddypress.org/developers/mrmaz/
+Or on buddypress.org http://buddypress.org/community/members/MrMaz/
 
 Or on his website http://marshallsorenson.com/
 
