@@ -218,7 +218,7 @@ add_filter( 'bp_get_options_nav_links-my-links', 'bp_links_dtheme_personal_links
  * Helper function to return selected category cookie
  */
 function bp_links_dtheme_selected_category() {
-	if ( isset( $_COOKIE['bp-links-extras'] ) && preg_match('/^category-\d$/', $_COOKIE['bp-links-extras'] ) ) {
+	if ( isset( $_COOKIE['bp-links-extras'] ) && preg_match('/^category-\d+$/', $_COOKIE['bp-links-extras'] ) ) {
 		$parts = split( '-', $_COOKIE['bp-links-extras'] );
 		if ( $parts[1] > 0 ) {
 			return $parts[1];
