@@ -405,7 +405,7 @@ add_action( 'bp_activity_setup_nav', 'bp_links_setup_activity_nav' );
 function bp_links_directory_links_setup() {
 	global $bp;
 
-	if ( $bp->current_component == $bp->links->slug && empty( $bp->current_action ) && empty( $bp->current_item ) ) {
+	if ( ( $bp->current_component ) && $bp->current_component == $bp->links->slug && empty( $bp->current_action ) && empty( $bp->current_item ) ) {
 		$bp->is_directory = true;
 
 		do_action( 'bp_links_directory_links_setup' );
