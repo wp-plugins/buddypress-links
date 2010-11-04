@@ -294,6 +294,7 @@ function bp_links_load_textdomain() {
 		}
 	}
 }
+add_action ( 'bp_setup_nav', 'bp_links_load_textdomain', 1 );
 add_action ( 'bp_init', 'bp_links_load_textdomain', 2 );
 
 function bp_links_check_installed() {
