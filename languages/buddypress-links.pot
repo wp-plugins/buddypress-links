@@ -1,4 +1,4 @@
-# Translation of the WordPress plugin BuddyPress Links 0.4 by Marshall Sorenson (MrMaz).
+# Translation of the WordPress plugin BuddyPress Links 0.5 by Marshall Sorenson (MrMaz).
 # Copyright (C) 2010 Marshall Sorenson (MrMaz)
 # This file is distributed under the same license as the BuddyPress Links package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyPress Links 0.4\n"
+"Project-Id-Version: BuddyPress Links 0.5\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/buddypress-links\n"
-"POT-Creation-Date: 2010-04-19 15:10+0000\n"
+"POT-Creation-Date: 2010-11-04 14:31+0000\n"
 "PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. #-#-#-#-#  plugin.pot (BuddyPress Links 0.4)  #-#-#-#-#
+#. #-#-#-#-#  plugin.pot (BuddyPress Links 0.5)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: bp-links-admin.php:23 themes/bp-links-admin/category-edit.php:9
 #: themes/bp-links-admin/category-list.php:16
@@ -24,7 +24,8 @@ msgstr ""
 msgid "BuddyPress Links"
 msgstr ""
 
-#: bp-links-admin.php:24 themes/bp-links-admin/link-manager.php:15
+#: bp-links-admin.php:24 themes/bp-links-admin/index.php:15
+#: themes/bp-links-admin/link-manager.php:15
 msgid "Manage Links"
 msgstr ""
 
@@ -33,6 +34,7 @@ msgid "Manage Categories"
 msgstr ""
 
 #: bp-links-admin.php:25 themes/bp-links-admin/category-list.php:16
+#: themes/bp-links-admin/index.php:16
 msgid "Edit Categories"
 msgstr ""
 
@@ -183,7 +185,7 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
-#: bp-links-core.php:400 bp-links-dtheme.php:67 bp-links-templatetags.php:1548
+#: bp-links-core.php:400 bp-links-dtheme.php:67 bp-links-templatetags.php:1553
 #: bp-links-widgets.php:13 themes/bp-links-admin/category-list.php:68
 msgid "Links"
 msgstr ""
@@ -362,7 +364,7 @@ msgstr ""
 msgid "Category:"
 msgstr ""
 
-#: bp-links-dtheme.php:152 bp-links-templatetags.php:1504
+#: bp-links-dtheme.php:152 bp-links-templatetags.php:1509
 msgid "All"
 msgstr ""
 
@@ -370,119 +372,119 @@ msgstr ""
 msgid "Share"
 msgstr ""
 
-#: bp-links-dtheme.php:454 bp-links-dtheme.php:505 bp-links-dtheme.php:555
+#: bp-links-dtheme.php:460 bp-links-dtheme.php:518 bp-links-dtheme.php:571
 msgid "You must be logged in to share links."
 msgstr ""
 
-#: bp-links-dtheme.php:466
+#: bp-links-dtheme.php:473 bp-links-dtheme.php:477
 msgid "Share this link in:"
 msgstr ""
 
-#: bp-links-dtheme.php:467
+#: bp-links-dtheme.php:474 bp-links-dtheme.php:477
 msgid "My Profile"
 msgstr ""
 
-#: bp-links-dtheme.php:468
+#: bp-links-dtheme.php:475
 msgid "A Group"
 msgstr ""
 
-#: bp-links-dtheme.php:471
+#: bp-links-dtheme.php:483
 msgid "Select a group:"
 msgstr ""
 
-#: bp-links-dtheme.php:473
+#: bp-links-dtheme.php:485
 msgid "Please Choose"
 msgstr ""
 
-#: bp-links-dtheme.php:479
+#: bp-links-dtheme.php:492
 msgid "Share Now"
 msgstr ""
 
-#: bp-links-dtheme.php:480
+#: bp-links-dtheme.php:493
 msgid "Cancel"
 msgstr ""
 
-#: bp-links-dtheme.php:490
+#: bp-links-dtheme.php:503
 msgid "Loading sharing options has failed."
 msgstr ""
 
-#: bp-links-dtheme.php:517
+#: bp-links-dtheme.php:530
 msgid "Sharing a link with yourself is not allowed."
 msgstr ""
 
-#: bp-links-dtheme.php:522
+#: bp-links-dtheme.php:535
 msgid "This link has already been shared in your profile."
 msgstr ""
 
-#: bp-links-dtheme.php:532
+#: bp-links-dtheme.php:545
 msgid "This link has been shared in your profile."
 msgstr ""
 
-#: bp-links-dtheme.php:534
+#: bp-links-dtheme.php:547
 msgid "Sharing this link in your profile has failed."
 msgstr ""
 
-#: bp-links-dtheme.php:540
+#: bp-links-dtheme.php:553
 msgid "Sharing this link has failed."
 msgstr ""
 
-#: bp-links-dtheme.php:582
+#: bp-links-dtheme.php:598
 #, php-format
 msgid "Sharing this link with the %s group was re-enabled."
 msgstr ""
 
-#: bp-links-dtheme.php:584
+#: bp-links-dtheme.php:600
 #, php-format
 msgid "Failed to re-enable sharing this link with the %s group."
 msgstr ""
 
-#: bp-links-dtheme.php:586
+#: bp-links-dtheme.php:602
 #, php-format
 msgid ""
 "This link was previously removed from the %s group by an admin or moderator."
 msgstr ""
 
-#: bp-links-dtheme.php:591
+#: bp-links-dtheme.php:607
 #, php-format
 msgid "This link has already been shared with the %s group."
 msgstr ""
 
-#: bp-links-dtheme.php:602
+#: bp-links-dtheme.php:618
 #, php-format
 msgid "This link has been shared with the %s group."
 msgstr ""
 
-#: bp-links-dtheme.php:604
+#: bp-links-dtheme.php:620
 #, php-format
 msgid "Sharing this link with the %s group has failed."
 msgstr ""
 
-#: bp-links-dtheme.php:609
+#: bp-links-dtheme.php:625
 #, php-format
 msgid "You are not a member of the %s group."
 msgstr ""
 
-#: bp-links-dtheme.php:614
+#: bp-links-dtheme.php:630
 msgid "Sharing with a group has failed."
 msgstr ""
 
-#: bp-links-dtheme.php:631 bp-links-dtheme.php:668
+#: bp-links-dtheme.php:647 bp-links-dtheme.php:687
 msgid "You must be logged in to remove links."
 msgstr ""
 
-#: bp-links-dtheme.php:645
+#: bp-links-dtheme.php:661
 msgid "This link has been removed from your profile."
 msgstr ""
 
-#: bp-links-dtheme.php:651
+#: bp-links-dtheme.php:667
 msgid "Removing this link from your profile has failed."
 msgstr ""
 
-#: bp-links-dtheme.php:686 bp-links-dtheme.php:692
+#: bp-links-dtheme.php:705 bp-links-dtheme.php:711
 msgid "This link has been removed from this group."
 msgstr ""
 
-#: bp-links-dtheme.php:698
+#: bp-links-dtheme.php:717
 msgid "Removing this link from this group has failed."
 msgstr ""
 
@@ -492,7 +494,7 @@ msgid "Downloading content details from %1$s failed."
 msgstr ""
 
 #: bp-links-embed-classes.php:349
-#: themes/bp-links-default/single/forms/details.php:19
+#: themes/bp-links-default/single/forms/details.php:25
 msgid "URL"
 msgstr ""
 
@@ -669,75 +671,75 @@ msgstr ""
 msgid "Remove from Group"
 msgstr ""
 
-#: bp-links-templatetags.php:1359
+#: bp-links-templatetags.php:1364
 #, php-format
 msgid "Viewing category %1$d to %2$d (of %3$d categories)"
 msgstr ""
 
-#: bp-links-templatetags.php:1549
+#: bp-links-templatetags.php:1554
 msgid "Yes"
 msgstr ""
 
-#: bp-links-templatetags.php:1550
+#: bp-links-templatetags.php:1555
 msgid "No"
 msgstr ""
 
-#: bp-links-templatetags.php:1554
+#: bp-links-templatetags.php:1559
 msgid "A member posts a comment on a link you created"
 msgstr ""
 
-#: bp-links-templatetags.php:1622 bp-links-widgets.php:36
+#: bp-links-templatetags.php:1627 bp-links-widgets.php:36
 msgid "Votes"
 msgstr ""
 
-#: bp-links-templatetags.php:1723
+#: bp-links-templatetags.php:1728
 msgid "External Link"
 msgstr ""
 
-#: bp-links-templatetags.php:1758
+#: bp-links-templatetags.php:1763
 msgid "more..."
 msgstr ""
 
-#: bp-links-templatetags.php:1792
+#: bp-links-templatetags.php:1797
 msgid "Comments"
 msgstr ""
 
-#: bp-links-templatetags.php:1799 bp-links-widgets.php:127
+#: bp-links-templatetags.php:1804 bp-links-widgets.php:127
 #, php-format
 msgid "created %s ago"
 msgstr ""
 
-#: bp-links-templatetags.php:1807 themes/bp-links-admin/link-manager.php:69
+#: bp-links-templatetags.php:1812 themes/bp-links-admin/link-manager.php:69
 msgid "Last Active"
 msgstr ""
 
-#: bp-links-templatetags.php:1808
+#: bp-links-templatetags.php:1813
 msgid "Most Popular"
 msgstr ""
 
-#: bp-links-templatetags.php:1809
+#: bp-links-templatetags.php:1814
 msgid "Newly Created"
 msgstr ""
 
-#: bp-links-templatetags.php:1810
+#: bp-links-templatetags.php:1815
 msgid "Most Votes"
 msgstr ""
 
-#: bp-links-templatetags.php:1811
+#: bp-links-templatetags.php:1816
 msgid "Highest Rated"
 msgstr ""
 
-#: bp-links-templatetags.php:1829
+#: bp-links-templatetags.php:1834
 #, php-format
 msgid "All Group Links (%s)"
 msgstr ""
 
-#: bp-links-templatetags.php:1831
+#: bp-links-templatetags.php:1836
 #, php-format
 msgid "My Group Links (%s)"
 msgstr ""
 
-#: bp-links-templatetags.php:1832
+#: bp-links-templatetags.php:1837
 msgid "Create Group Link"
 msgstr ""
 
@@ -838,12 +840,12 @@ msgid "Categories matching:"
 msgstr ""
 
 #: themes/bp-links-admin/category-list.php:56
-#: themes/bp-links-default/single/forms/details.php:29
+#: themes/bp-links-default/single/forms/details.php:35
 msgid "Name"
 msgstr ""
 
 #: themes/bp-links-admin/category-list.php:59
-#: themes/bp-links-default/single/forms/details.php:33
+#: themes/bp-links-default/single/forms/details.php:39
 msgid "Description"
 msgstr ""
 
@@ -871,6 +873,22 @@ msgstr ""
 
 #: themes/bp-links-admin/category-list.php:105
 msgid "No categories found."
+msgstr ""
+
+#: themes/bp-links-admin/index.php:11
+msgid "Thank you for installing BuddyPress Links!"
+msgstr ""
+
+#: themes/bp-links-admin/index.php:13
+msgid "Administrative options:"
+msgstr ""
+
+#: themes/bp-links-admin/index.php:19
+msgid "Where to get support:"
+msgstr ""
+
+#: themes/bp-links-admin/index.php:26
+msgid "About the author:"
 msgstr ""
 
 #: themes/bp-links-admin/link-manager.php:19
@@ -998,80 +1016,80 @@ msgstr ""
 msgid "I understand the consequences of deleting this link."
 msgstr ""
 
-#: themes/bp-links-default/single/forms/details.php:46
+#: themes/bp-links-default/single/forms/details.php:52
 msgid "Edit Avatar Options"
 msgstr ""
 
-#: themes/bp-links-default/single/forms/details.php:52
+#: themes/bp-links-default/single/forms/details.php:58
 msgid "Current"
 msgstr ""
 
-#: themes/bp-links-default/single/forms/details.php:62
+#: themes/bp-links-default/single/forms/details.php:68
 msgid "Customize"
 msgstr ""
 
-#: themes/bp-links-default/single/forms/details.php:64
+#: themes/bp-links-default/single/forms/details.php:70
 msgid ""
 "After saving this link you will be directed to a page where you can "
 "customize the avatar."
 msgstr ""
 
-#: themes/bp-links-default/single/forms/details.php:75
+#: themes/bp-links-default/single/forms/details.php:81
 msgid "Edit Advanced Settings"
 msgstr ""
 
-#: themes/bp-links-default/single/forms/details.php:79
+#: themes/bp-links-default/single/forms/details.php:85
 msgid "Privacy Options"
 msgstr ""
 
-#: themes/bp-links-default/single/forms/details.php:83
+#: themes/bp-links-default/single/forms/details.php:89
 msgid "This is a public link"
 msgstr ""
 
-#: themes/bp-links-default/single/forms/details.php:86
+#: themes/bp-links-default/single/forms/details.php:92
 msgid "Any site member can see this link, and comment on it."
 msgstr ""
 
-#: themes/bp-links-default/single/forms/details.php:87
+#: themes/bp-links-default/single/forms/details.php:93
 msgid "This link will be listed in the links directory and in search results."
 msgstr ""
 
-#: themes/bp-links-default/single/forms/details.php:88
+#: themes/bp-links-default/single/forms/details.php:94
 msgid "Link content and activity will be visible to any site member."
 msgstr ""
 
-#: themes/bp-links-default/single/forms/details.php:93
+#: themes/bp-links-default/single/forms/details.php:99
 msgid "This is a friends-only link"
 msgstr ""
 
-#: themes/bp-links-default/single/forms/details.php:96
+#: themes/bp-links-default/single/forms/details.php:102
 msgid ""
 "Only users who are in your friends list can see the link and comment on it."
 msgstr ""
 
-#: themes/bp-links-default/single/forms/details.php:97
-#: themes/bp-links-default/single/forms/details.php:107
+#: themes/bp-links-default/single/forms/details.php:103
+#: themes/bp-links-default/single/forms/details.php:113
 msgid ""
 "This link will NOT be listed in the links directory or in search results."
 msgstr ""
 
-#: themes/bp-links-default/single/forms/details.php:98
+#: themes/bp-links-default/single/forms/details.php:104
 msgid "Link content and activity will only be visible to your friends."
 msgstr ""
 
-#: themes/bp-links-default/single/forms/details.php:103
+#: themes/bp-links-default/single/forms/details.php:109
 msgid "This is a hidden link"
 msgstr ""
 
-#: themes/bp-links-default/single/forms/details.php:106
+#: themes/bp-links-default/single/forms/details.php:112
 msgid "Only you can see the link."
 msgstr ""
 
-#: themes/bp-links-default/single/forms/details.php:108
+#: themes/bp-links-default/single/forms/details.php:114
 msgid "Link content and activity will only be visible to you."
 msgstr ""
 
-#: themes/bp-links-default/single/forms/details.php:119
+#: themes/bp-links-default/single/forms/details.php:125
 msgid "Save Link"
 msgstr ""
 
