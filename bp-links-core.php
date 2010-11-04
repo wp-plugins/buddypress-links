@@ -337,7 +337,7 @@ function bp_links_setup_nav() {
 	
 	/* Add the subnav items to the links nav item */
 	$subnav_name_mylinks = apply_filters( 'bp_links_subnav_item_name_mylinks', __( 'My Links', 'buddypress-links' ) );
-	bp_core_new_subnav_item( array( 'name' => $subnav_name_mylinks, 'slug' => 'my-links', 'parent_url' => $links_link, 'parent_slug' => $bp->links->slug, 'screen_function' => 'bp_links_screen_personal_links', 'position' => BP_LINKS_SUBNAV_POSITION, 'item_css_id' => 'links-my-links' ) );
+	bp_core_new_subnav_item( array( 'name' => $subnav_name_mylinks, 'slug' => 'my-links', 'parent_url' => $links_link, 'parent_slug' => $bp->links->slug, 'screen_function' => 'bp_links_screen_personal_links', 'position' => 10, 'item_css_id' => 'links-my-links' ) );
 
 	if ( $bp->current_component == $bp->links->slug ) {
 		
