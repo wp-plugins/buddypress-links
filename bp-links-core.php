@@ -331,13 +331,13 @@ function bp_links_setup_nav() {
 
 	/* Add 'Links' to the main navigation */
 	$nav_item_name = sprintf( apply_filters( 'bp_links_nav_item_name', __( 'Links <span>(%d)</span>', 'buddypress-links' ) ), bp_links_total_links_for_user() );
-	bp_core_new_nav_item( array( 'name' => $nav_item_name, 'slug' => $bp->links->slug, 'position' => 1, 'screen_function' => 'bp_links_screen_personal_links', 'default_subnav_slug' => 'my-links', 'item_css_id' => $bp->links->id ) );
+	bp_core_new_nav_item( array( 'name' => $nav_item_name, 'slug' => $bp->links->slug, 'position' => BP_LINKS_NAV_POSITION, 'screen_function' => 'bp_links_screen_personal_links', 'default_subnav_slug' => 'my-links', 'item_css_id' => $bp->links->id ) );
 
 	$links_link = $bp->loggedin_user->domain . $bp->links->slug . '/';
 	
 	/* Add the subnav items to the links nav item */
 	$subnav_name_mylinks = apply_filters( 'bp_links_subnav_item_name_mylinks', __( 'My Links', 'buddypress-links' ) );
-	bp_core_new_subnav_item( array( 'name' => $subnav_name_mylinks, 'slug' => 'my-links', 'parent_url' => $links_link, 'parent_slug' => $bp->links->slug, 'screen_function' => 'bp_links_screen_personal_links', 'position' => 10, 'item_css_id' => 'links-my-links' ) );
+	bp_core_new_subnav_item( array( 'name' => $subnav_name_mylinks, 'slug' => 'my-links', 'parent_url' => $links_link, 'parent_slug' => $bp->links->slug, 'screen_function' => 'bp_links_screen_personal_links', 'position' => BP_LINKS_SUBNAV_POSITION, 'item_css_id' => 'links-my-links' ) );
 
 	if ( $bp->current_component == $bp->links->slug ) {
 		

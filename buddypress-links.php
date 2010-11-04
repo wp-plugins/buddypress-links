@@ -22,6 +22,14 @@ Network: false
 if ( !defined( 'BP_LINKS_SLUG' ) )
 	define( 'BP_LINKS_SLUG', 'links' );
 
+// Define the nav position
+if ( !defined( 'BP_LINKS_NAV_POSITION' ) )
+	define( 'BP_LINKS_NAV_POSITION', 100 );
+
+// Define the options nav position
+if ( !defined( 'BP_LINKS_SUBNAV_POSITION' ) )
+	define( 'BP_LINKS_SUBNAV_POSITION', 100 );
+
 // Define a custom theme name to completely bypass any core links themes
 // For example, if your active WordPress theme is 'bluesky', and you wanted
 // to define your links theme as 'links-custom', you would put your files in:
