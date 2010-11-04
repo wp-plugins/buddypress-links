@@ -8,7 +8,7 @@ Author URI: http://marshallsorenson.com
 License: GNU GENERAL PUBLIC LICENSE 3.0 http://www.gnu.org/licenses/gpl.txt
 Version: 0.5
 Text Domain: buddypress-links
-Site Wide Only: true
+Network: false
 */
 
 //
