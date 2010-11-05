@@ -1186,8 +1186,17 @@ function bp_links_manage_link( $args = '' ) {
 			bp_links_group_link_create( $link->id, $group_id );
 		}
 
+		// successful save event
+		do_action( 'bp_links_manage_link_save_success', $link, $args );
+
 		// all done
 		return $link;
+
+	} else {
+
+		// unsuccessful save event
+		do_action( 'bp_links_manage_link_save_failure', $link, $args );
+
 	}
 	
 	return false;

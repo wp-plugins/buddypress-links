@@ -77,6 +77,13 @@ class BP_Links_Link {
 	private $embed_data;
 
 	/**
+	 * This will be true if this object is brand new
+	 * 
+	 * @var boolean
+	 */
+	private $_is_new = true;
+
+	/**
 	 * Category object for this link
 	 *
 	 * @var BP_Links_Category
@@ -111,6 +118,8 @@ class BP_Links_Link {
 	
 	function populate() {
 		global $wpdb, $bp;
+
+		$this->_is_new = false;
 
 		$prlink_user_id = ( bp_is_member() ) ? $bp->displayed_user->id : $bp->loggedin_user->id;
 		
@@ -165,6 +174,15 @@ class BP_Links_Link {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Returns true if this object will be or was just inserted
+	 *
+	 * @return boolean
+	 */
+	function is_new() {
+		return $this->_is_new;
 	}
 
 	function save() {
