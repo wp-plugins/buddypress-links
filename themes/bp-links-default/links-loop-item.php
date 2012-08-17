@@ -21,7 +21,7 @@
 		<?php do_action( 'bp_before_links_list_item_title' ) ?>
 		<div class="item-title">
 			<?php do_action( 'bp_before_links_list_item_title_content' ) ?>
-			<?php bp_link_list_item_category_name() ?>: <a href="<?php bp_link_list_item_url() ?>"<?php bp_link_list_item_url_target() ?><?php bp_link_list_item_url_rel() ?>><?php bp_link_list_item_name() ?></a>
+			<span class="item-category"><?php bp_link_list_item_category_name() ?>:</span> <a href="<?php bp_link_list_item_url() ?>"<?php bp_link_list_item_url_target() ?><?php bp_link_list_item_url_rel() ?>><?php bp_link_list_item_name() ?></a>
 			<a class="link-external" href="<?php bp_link_list_item_external_url() ?>" title="<?php bp_link_list_item_external() ?>"<?php bp_link_list_item_external_url_target() ?><?php bp_link_list_item_external_url_rel() ?>></a>
 			<?php do_action( 'bp_after_links_list_item_title_content' ) ?>
 		</div>
@@ -65,9 +65,6 @@
 					<?php do_action( 'bp_before_links_list_item_xtrabar_userlink' ) ?>
 					<div class="owner"><?php bp_link_user_avatar_mini() ?>&nbsp;<?php bp_link_userlink() ?> <?php bp_link_list_item_xtrabar_userlink_created() ?></div>
 					<?php do_action( 'bp_after_links_list_item_xtrabar_userlink' ) ?>
-					<?php if ( bp_get_link_share_has_profile_link() || bp_is_group() ): ?>
-						<div class="link-shared">&nbsp;</div>
-					<?php endif; ?>
 					<?php do_action( 'bp_after_links_list_item_xtrabar_content' ) ?>
 				</div>
 				<?php do_action( 'bp_after_links_list_item_xtrabar' ) ?>
@@ -77,10 +74,9 @@
 	<?php do_action( 'bp_after_links_list_item_footer' ) ?>	
 
 	<div class="action">
-	<?php do_action( 'bp_before_links_list_item_action_content' ) ?>
-	<?php bp_links_dtheme_share_button() ?>
+		<?php do_action( 'bp_before_links_list_item_action_content' ) ?>
 		<div class="meta"><?php bp_link_type() ?> / <?php bp_link_vote_count_text() ?></div>
-	<?php do_action( 'bp_after_links_list_item_action_content' ) ?>
+		<?php do_action( 'bp_after_links_list_item_action_content' ) ?>
 	</div>
 
 	<?php do_action( 'bp_after_links_list_item_content' ) ?>

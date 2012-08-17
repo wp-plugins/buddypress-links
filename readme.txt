@@ -1,18 +1,19 @@
 === Plugin Name ===
 Contributors: MrMaz
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8591311
-Tags: wpmu, buddypress, social, networking, links, rich media, embed, youtube, flickr, metacafe
-Requires at least: PHP 5.2, WordPress 3.x, BuddyPress 1.2.6
-Tested up to: PHP 5.2.x, WordPress 3.x, BuddyPress 1.2.6
+Tags: buddypress, social, networking, links, rich media, embed, youtube, flickr, metacafe
+Requires at least: 3.3
+Tested up to: 3.4.1
 Stable tag: 0.5
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-BuddyPress Links is a drop in link and rich media sharing component for BuddyPress 1.2.x
+BuddyPress Links is a drop in link and rich media sharing component for BuddyPress 1.5 and higher
 
 == Description ==
 
 #### What is BuddyPress Links?
 
-BuddyPress Links is a drop in link and rich media sharing component for BuddyPress 1.2.x
+BuddyPress Links is a drop in link and rich media sharing component for BuddyPress 1.5 and higher
 
 It supports complete integration with...
 
@@ -23,15 +24,13 @@ Members can:
 * Create and manage links from their profile
 * Assign links to a category
 * Control the visibility of their links (public, friends only, and hidden)
-* Share other member's links on their profile
-* Share any link with a group they are a member of
 * Upload an image "avatar" to show with a link
 * Auto embed rich media from URLs (YouTube, Flickr, and metacafe are supported)
 * Automatic thumbnail picker available as of 0.2.1
 * Embed a PicApp.com or Fotoglif.com image and use as the avatar
 * Vote on other member's links
 * Comment on other member's links
-* @mentions support added in version 0.3
+* @mentions support
 
 Administrators can:
 
@@ -55,6 +54,7 @@ Other features include:
 
 == Installation ==
 
+* BuddyPress Links 0.6.x requires WordPress 3.3 or higher with BuddyPress 1.5 or higher installed.
 * BuddyPress Links 0.5.x requires WordPress 3.0 or higher with BuddyPress 1.2.6 or higher installed.
 * BuddyPress Links 0.4.x requires WordPress 2.9.2 or higher with BuddyPress 1.2.x installed.
 * BuddyPress Links 0.3.x requires WordPress 2.9.1 or higher with BuddyPress 1.2.x installed.
@@ -79,6 +79,10 @@ The links data from the 0.2.x branch is compatible with 0.3.x and higher, except
 
 == Upgrade Notice ==
 
+= 0.6 =
+
+No changes that affect data were made, however it is always a good idea to back up your data just in case!
+
 = 0.5 =
 
 No changes that affect data were made, however it is always a good idea to back up your data just in case!
@@ -96,6 +100,43 @@ DO NOT attempt to install version 0.3 or higher on BP 1.1.X!  DO NOT try to use 
 This version contains the first support for rich media embedding. *Please make sure that you update the "links" directory in your theme (see Installation).*
 
 == Changelog ==
+
+= 0.6.4 =
+
+* Removed group integration
+* Removed profile sharing
+
+= 0.6.3 =
+
+* PHP 5.4.x compatibility fixes
+* BuddyPress 1.6.x compatibility fixes
+
+= 0.6.2 =
+
+* Wrap link loop item category with span
+* Clean up style enqueueing
+* Added constant to force external link from directory listing
+
+= 0.6.1 =
+
+* Sidebar widget works again
+* Automatically fix URLs which are entered without http://
+* Fixed link list pagination issues
+* Fixed possible link list filtering issues
+* Fixed AJAX spinner when fetching details
+
+= 0.6 =
+
+* Upgraded to latest version of colorbox
+* Moved dashboard menu to its own top level spot
+* Fixed navigation menu formatting
+* Fixed create/edit form errors not displaying
+* Fixed issue with videos not playing
+* Fixed double link in global navigation
+* Fixed link home sub-navigation not displaying
+* Fixed avatars not displaying properly
+* Fixed broken custom avatar uploading
+* Many additional minor BuddyPress 1.5 compatibility fixes
 
 = 0.5 =
 

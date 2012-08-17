@@ -2,7 +2,6 @@
 jQuery(document).ready( function() {
 
 	// element shortcuts
-	var e_loader = jQuery(".ajax-loader");
 	var e_url = jQuery("input#link-url");
 	var e_url_ro = jQuery("input#link-url-readonly");
 	var e_fields = jQuery("div#link-name-desc-fields");
@@ -148,6 +147,16 @@ jQuery(document).ready( function() {
 		});
 	}
 
+	// fix url
+	function fixUrl()
+	{
+		var url = e_url.val();
+
+		if ( !url.match(/^(ht|f)tps?:[/]{2}/) ) {
+			e_url.val( 'http://' + url.replace( /^[a-z]*[:/]+/, '' ) );
+		}
+	}
+
 	// detect if url is embeddable
 	function detectUrl()
 	{
@@ -176,14 +185,16 @@ jQuery(document).ready( function() {
 	// try to locate an auto embed service for the URL entered
 	e_url.blur( function()
 	{
-		e_loader.toggle();
+		e_url.addClass('loading');
+
+		fixUrl();
 
 		if (detectUrl()) {
 			e_url.attr("readonly", "readonly");
 			e_url_ro.val(1);
 			e_clear.fadeIn(500, bindClearUrlClick);
 		} else {
-			e_loader.toggle();
+			e_url.removeClass('loading');
 			return;
 		}
 
@@ -235,7 +246,7 @@ jQuery(document).ready( function() {
 					e_fields.fadeIn(750);
 				}
 			}
-			e_loader.toggle();
+			e_url.removeClass('loading');
 		});
 	});
 
