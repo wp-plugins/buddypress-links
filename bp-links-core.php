@@ -384,6 +384,12 @@ add_action( 'bp_setup_nav', 'bp_links_setup_nav' );
 function bp_links_setup_admin_bar() {
 	global $bp, $wp_admin_bar;
 
+	// user must be logged in
+	if ( false == is_user_logged_in() ) {
+		// abort
+		return;
+	}
+
 	// base link
 	$links_link = $bp->loggedin_user->domain . bp_links_slug() . '/';
 
@@ -1134,7 +1140,7 @@ function bp_links_manage_link( $args = '' ) {
 	}
 	
 	if ( empty( $link->id ) ) {
-		$link->slug = bp_links_check_slug( sanitize_title_with_dashes( $name ) );
+		$link->slug = bp_links_check_slug( sanitize_title( $name ) );
 	}
 
 	if ( bp_links_is_valid_status( $status ) ) {
@@ -1277,7 +1283,7 @@ function bp_links_is_link_visibile( $link_id_or_obj, $user_id = null ) {
 		case BP_Links_Link::STATUS_HIDDEN:
 			return false;
 		case BP_Links_Link::STATUS_FRIENDS:
-			return ( $user_id && class_exists( 'BP_Friends_Component' ) ) ? friends_check_friendship( $user_id, $link->user_id ) : false;
+			return ( $user_id && bp_links_is_friends_enabled() ) ? friends_check_friendship( $user_id, $link->user_id ) : false;
 		default:
 			return false;
 	}
