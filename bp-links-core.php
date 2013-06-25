@@ -41,6 +41,20 @@ function bp_links_root_slug()
 	return $bp->links->root_slug;
 }
 
+function bp_links_is_admin() {
+	return (
+		true === bp_current_user_can( BP_LINKS_CAPABILITY ) ||
+		true === is_super_admin()
+	);
+}
+
+function bp_links_is_mod() {
+	return (
+		true === bp_current_user_can( 'bp_moderate' ) ||
+		true === bp_links_is_admin()
+	);
+}
+
 /**
  * Returns true if links is the current component
  * 
@@ -103,9 +117,25 @@ function bp_links_init_settings()
 	if ( !defined( 'BP_LINKS_CREATE_CATEGORY_SELECT' ) )
 		define( 'BP_LINKS_CREATE_CATEGORY_SELECT', (boolean) $settings['buddypress_links_content_catselect'] );
 
+	// create avatar options
+	if ( !defined( 'BP_LINKS_CREATE_EDIT_AVATAR' ) )
+		define( 'BP_LINKS_CREATE_EDIT_AVATAR', (boolean) $settings['buddypress_links_content_editavatar'] );
+
+	// create advanced settings
+	if ( !defined( 'BP_LINKS_CREATE_EDIT_ADVANCED' ) )
+		define( 'BP_LINKS_CREATE_EDIT_ADVANCED', (boolean) $settings['buddypress_links_content_editadvanced'] );
+
+	// voting toggle
+	if ( !defined( 'BP_LINKS_VOTE_ENABLED' ) )
+		define( 'BP_LINKS_VOTE_ENABLED', (boolean) $settings['buddypress_links_voting_enabled'] );
+
 	// vote changing
 	if ( !defined( 'BP_LINKS_VOTE_ALLOW_CHANGE' ) )
 		define( 'BP_LINKS_VOTE_ALLOW_CHANGE', (boolean) $settings['buddypress_links_voting_change'] );
+
+	// voting down
+	if ( !defined( 'BP_LINKS_VOTE_ALLOW_DOWN' ) )
+		define( 'BP_LINKS_VOTE_ALLOW_DOWN', (boolean) $settings['buddypress_links_voting_downvote'] );
 
 	// voting activity
 	if ( !defined( 'BP_LINKS_VOTE_RECORD_ACTIVITY' ) )
@@ -126,6 +156,15 @@ function bp_links_init_settings()
 	do_action( 'bp_links_init_settings' );
 }
 add_action( 'bp_links_init', 'bp_links_init_settings', 1 );
+
+/**
+ * Check if link voting is enabled
+ *
+ * @return boolean
+ */
+function bp_links_is_voting_enabled() {
+	return ( true === BP_LINKS_VOTE_ENABLED );
+}
 
 /**
  * Filter located template from bp_core_load_template
@@ -294,17 +333,30 @@ add_action( 'admin_menu', 'bp_links_setup_admin' );
 function bp_links_setup_nav() {
 	global $bp;
 
-	if ( $link_id = BP_Links_Link::link_exists($bp->current_action) ) {
+	// is links component?
+	if ( bp_is_links_component() ) {
 
-		/* This is a single link page. */
-		$bp->is_single_item = true;
-		$bp->links->current_link = &new BP_Links_Link( $link_id );
+		// set some component defaults
+		$bp->is_item_admin = false;
+		$bp->is_single_item = false;
+		$bp->links->current_link = false;
 
-		/* Using "item" not "link" for generic support in other components. */
-		if ( current_user_can( BP_LINKS_CAPABILITY ) ) {
-			$bp->is_item_admin = 1;
-		} else {
-			$bp->is_item_admin = ( $bp->loggedin_user->id == $bp->links->current_link->user_id ) ? true : false;
+		// try to get link id of current action
+		$link_id = BP_Links_Link::link_exists( $bp->current_action );
+
+		// have a link id?
+		if ( $link_id ) {
+
+			// this is a single link page.
+			$bp->is_single_item = true;
+			$bp->links->current_link = new BP_Links_Link( $link_id, true );
+
+			// determine if item admin
+			if ( bp_links_is_admin() ) {
+				$bp->is_item_admin = true;
+			} else {
+				$bp->is_item_admin = ( $bp->loggedin_user->id == $bp->links->current_link->user_id ) ? true : false;
+			}
 		}
 	}
 
@@ -517,7 +569,7 @@ function bp_links_setup_adminbar_menu() {
 		return false;
 
 	/* Don't show this menu to non site admins or if you're viewing your own profile */
-	if ( !is_super_admin() )
+	if ( false === bp_links_is_admin() )
 		return false;
 	?>
 	<li id="bp-adminbar-adminoptions-menu">
@@ -612,7 +664,7 @@ add_action( 'bp_template_content', 'bp_links_screen_personal_links_template_cont
 function bp_links_screen_personal_links_activity() {
 	global $bp;
 
-	if ( !is_super_admin() )
+	if ( false === bp_links_is_admin() )
 		$bp->is_item_admin = false;
 
 	do_action( 'bp_links_screen_personal_links_activity' );
@@ -691,7 +743,8 @@ function bp_links_screen_link_admin_edit_details() {
 						'status' => $data_valid['link-status'],
 						'embed_data' => $data_valid['link-url-embed-data'],
 						'embed_thidx' => $data_valid['link-url-embed-thidx'],
-						'group_id' => $data_valid['link-group-id']
+						'group_id' => $data_valid['link-group-id'],
+						'meta' => $data_valid['link-meta']
 					)
 				);
 
@@ -727,6 +780,11 @@ function bp_links_screen_link_admin_avatar() {
 
 	if ( !$bp->is_item_admin || 'link-avatar' != bp_links_admin_current_action_variable() ) {
 		return false;
+	}
+
+	// handle empty avatar admin property
+	if ( false === isset( $bp->avatar_admin ) ) {
+		$bp->avatar_admin = new stdClass();
 	}
 
 	// If the link admin has deleted the admin avatar
@@ -772,7 +830,7 @@ function bp_links_screen_link_admin_avatar() {
 			add_action( 'wp_enqueue_scripts', 'bp_core_add_jquery_cropper' );
 
 		} elseif ( isset( $_POST['upload'] ) && !empty( $_FILES ) ) {
-
+			
 			// Pass the file to the avatar upload handler
 			if ( bp_core_avatar_handle_upload( $_FILES, 'bp_links_avatar_upload_dir' ) ) {
 
@@ -797,7 +855,7 @@ add_action( 'bp_screens', 'bp_links_screen_link_admin_avatar' );
 function bp_links_screen_link_admin_delete_link() {
 	global $bp;
 
-	if ( !$bp->is_item_admin && !is_super_admin() ) {
+	if ( false === bp_link_is_admin() ) {
 		return false;
 	}
 
@@ -930,8 +988,15 @@ function bp_links_validate_create_form_input() {
 	} else {
 		$return_data['link-group-id'] = null;
 	}
+	
+	// process meta data
+	if ( isset( $_POST['link-meta'] ) ) {
+		$return_data['link-meta'] = apply_filters( 'bp_links_validate_create_form_input_meta', $_POST['link-meta'] );
+	} else{
+		$return_data['link-meta'] = array();
+	}
 
-	return $return_data;
+	return apply_filters( 'bp_links_validate_create_form_input', $return_data );
 }
 
 /********************************************************************************
@@ -956,6 +1021,8 @@ function bp_links_action_create_link() {
 	// User must be logged in to create links
 	if ( !is_user_logged_in() )
 		return false;
+
+	$bp->is_directory = true;
 	
 	// If the save, upload or embed button is clicked, lets try to save
 	if ( isset( $_POST['save'] ) ) {
@@ -979,7 +1046,8 @@ function bp_links_action_create_link() {
 						'status' => $data_valid['link-status'],
 						'embed_data' => $data_valid['link-url-embed-data'],
 						'embed_thidx' => $data_valid['link-url-embed-thidx'],
-						'group_id' => $data_valid['link-group-id']
+						'group_id' => $data_valid['link-group-id'],
+						'meta' => $data_valid['link-meta']
 					)
 				);
 
@@ -988,7 +1056,7 @@ function bp_links_action_create_link() {
 				bp_links_update_linkmeta( $bp->links->current_link->id, 'last_activity', time() );
 
 				bp_links_record_activity( array(
-					'item_id' => $bp->links->current_link->cloud_id,
+					'item_id' => $bp->links->current_link->id,
 					'action' => apply_filters( 'bp_links_activity_created_link', sprintf( __( '%1$s created the link %2$s', 'buddypress-links'), bp_core_get_userlink( $bp->loggedin_user->id ), '<a href="' . bp_get_link_permalink( $bp->links->current_link ) . '">' . attribute_escape( $bp->links->current_link->name ) . '</a>' ) ),
 					'content' => apply_filters( 'bp_links_activity_created_link_content', bp_get_link_description_excerpt( $bp->links->current_link ) ),
 					'primary_link' => apply_filters( 'bp_links_activity_created_link_primary_link', bp_get_link_permalink( $bp->links->current_link ) ),
@@ -1190,6 +1258,7 @@ function bp_links_manage_link( $args = '' ) {
 	$status = null;
 	$embed_data = null;
 	$embed_thidx = null;
+	$meta = array();
 
 	extract( $args );
 
@@ -1246,6 +1315,17 @@ function bp_links_manage_link( $args = '' ) {
 
 	if ( $link->save() ) {
 
+		// set meta data
+		if ( !empty( $meta ) ) {
+			// loop all meta data
+			foreach( $meta as $meta_key => $meta_value ) {
+				// try to update each key/value
+				bp_links_update_linkmeta( $link->id, $meta_key, $meta_value );
+			}
+			// refresh meta data cache
+			$link->populate_meta();
+		}
+
 		// successful save event
 		do_action( 'bp_links_manage_link_save_success', $link, $args );
 
@@ -1266,7 +1346,7 @@ function bp_links_delete_link( $link_id ) {
 	global $bp;
 	
 	// Check the user is the link admin.
-	if ( !$bp->is_item_admin && !is_super_admin())
+	if ( false === bp_link_is_admin() )
 		return false;
 	
 	// Get the link object
@@ -1277,7 +1357,7 @@ function bp_links_delete_link( $link_id ) {
 
 	/* Delete all link activity from activity streams */
 	if ( function_exists( 'bp_activity_delete_by_item_id' ) ) {
-		bp_activity_delete_by_item_id( array( 'item_id' => $link->cloud_id, 'component_name' => bp_links_id() ) );
+		bp_activity_delete_by_item_id( array( 'item_id' => $link->id, 'component_name' => bp_links_id() ) );
 	}	
  
 	// Remove all notifications for any user belonging to this link
@@ -1655,7 +1735,7 @@ function bp_links_post_update( $args = '' ) {
 		'action' => apply_filters( 'bp_links_activity_new_update_action', $activity_action ),
 		'content' => apply_filters( 'bp_links_activity_new_update_content', $content ),
 		'type' => $type,
-		'item_id' => $bp->links->current_link->cloud_id
+		'item_id' => $bp->links->current_link->id
 	) );
 
  	/* Require the notifications code so email notifications can be set on the 'bp_activity_posted_update' action. */
@@ -1743,7 +1823,7 @@ function bp_links_cast_vote( $link_id, $up_or_down ) {
 					'action' => apply_filters( 'bp_links_activity_voted', $activity_action ),
 					'primary_link' => apply_filters( 'bp_links_activity_voted_primary_link', bp_get_link_permalink( $bp->links->current_link ) ),
 					'type' => BP_LINKS_ACTIVITY_ACTION_VOTE,
-					'item_id' => $bp->links->current_link->cloud_id
+					'item_id' => $bp->links->current_link->id
 				) );
 
 			}
@@ -1763,7 +1843,9 @@ function bp_links_cast_vote( $link_id, $up_or_down ) {
 }
 
 function bp_links_recalculate_popularity_for_all() {
-	return BP_Links_Link::popularity_recalculate_all();
+	if ( bp_links_is_voting_enabled() ) {
+		return BP_Links_Link::popularity_recalculate_all();
+	}
 }
 add_action( 'bp_links_cron_popularity', 'bp_links_recalculate_popularity_for_all', 1 );
 
@@ -1812,7 +1894,21 @@ function bp_links_get_linkmeta( $link_id, $meta_key = '') {
 			wp_cache_set( 'bp_links_linkmeta_' . $link_id . '_' . $meta_key, $metas, 'bp' );
 		}
 	} else {
-		$metas = $wpdb->get_col( $wpdb->prepare("SELECT meta_value FROM " . $bp->links->table_name_linkmeta . " WHERE link_id = %d", $link_id) );
+		$metas = array();
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT meta_key, meta_value FROM ' .
+				$bp->links->table_name_linkmeta .
+				' WHERE link_id = %d',
+				$link_id
+			),
+			ARRAY_A
+		);
+
+		foreach( $results as $result ) {
+			$metas[ $result['meta_key'] ] = $result['meta_value'];
+		}
 	}
 
 	if ( empty($metas) ) {
@@ -1825,7 +1921,7 @@ function bp_links_get_linkmeta( $link_id, $meta_key = '') {
 	if ( is_array( $metas ) )
 		$metas = array_map('maybe_unserialize', $metas);
 
-	if ( 1 == count($metas) )
+	if ( ($meta_key) && 1 == count($metas) )
 		return $metas[0];
 	else
 		return $metas;

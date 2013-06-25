@@ -165,7 +165,7 @@ class BP_Links_Template {
 		$this->link = $this->next_link();
 
 		if ( !$link = wp_cache_get( 'bp_links_link_nouserdata_' . $this->link->link_id, 'bp' ) ) {
-			$link = new BP_Links_Link( $this->link->link_id, false, false );
+			$link = new BP_Links_Link( $this->link->link_id, true );
 			wp_cache_set( 'bp_links_link_nouserdata_' . $this->link->link_id, $link, 'bp' );
 		}
 
@@ -681,16 +681,18 @@ function bp_link_play_button() {
 	}
 
 function bp_link_is_admin() {
-	global $bp;
-	
-	return $bp->is_item_admin;
+	return (
+		true === bp_is_item_admin() ||
+		true === bp_links_is_admin()
+	);
 }
 
 // this is for future use
 function bp_link_is_mod() {
-	global $bp;
-	
-	return $bp->is_item_mod;
+	return (
+		true === bp_is_item_mod() ||
+		true === bp_links_is_mod()
+	);
 }
 
 function bp_link_show_no_links_message() {
@@ -764,8 +766,11 @@ function bp_link_admin_tabs() {
 		if ( !$bp->is_item_admin )
 			return false;
 	?>
-	<li<?php if ( 'link-avatar' == $current_tab ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->root_domain . '/' . bp_links_root_slug() ?>/<?php echo $link->slug ?>/admin/link-avatar"><?php _e( 'Link Avatar', 'buddypress-links' ) ?></a></li>
 
+	<?php if ( true === BP_LINKS_CREATE_EDIT_AVATAR ): ?>
+	<li<?php if ( 'link-avatar' == $current_tab ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->root_domain . '/' . bp_links_root_slug() ?>/<?php echo $link->slug ?>/admin/link-avatar"><?php _e( 'Link Avatar', 'buddypress-links' ) ?></a></li>
+	<?php endif; ?>
+	
 	<?php do_action( 'bp_link_admin_tabs', $current_tab, $link->slug ) ?>
 	
 	<li<?php if ( 'delete-link' == $current_tab ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->root_domain . '/' . bp_links_root_slug() ?>/<?php echo $link->slug ?>/admin/delete-link"><?php _e( 'Delete Link', 'buddypress-links' ) ?></a></li>
@@ -1478,6 +1483,11 @@ function bp_links_notification_settings() {
 
 function bp_link_vote_panel( $show_count = true ) {
 
+	// abort if voting not enabled
+	if ( true !== bp_links_is_voting_enabled() ) {
+		return;
+	}
+	
 	$show_count = apply_filters( 'bp_get_link_vote_panel_show_count', $show_count );
 	
 	// render tags ?>
@@ -1494,7 +1504,9 @@ function bp_link_vote_panel_clickers() {
 	<div class="clickers">
 		<a href="#vu" id="vote-up-<?php bp_link_id() ?>" class="vote up"></a>
 		<div id="vote-total-<?php bp_link_id() ?>" class="vote-total"><?php printf( '%+d', bp_get_link_vote_total() ) ?></div>
+		<?php if ( true === BP_LINKS_VOTE_ALLOW_DOWN ): ?>
 		<a href="#vd" id="vote-down-<?php bp_link_id() ?>" class="vote down"></a>
+		<?php endif; ?>
 	</div><?php
 }
 
@@ -1510,9 +1522,11 @@ function bp_link_vote_panel_count( $show = true ) {
 }
 	
 function bp_link_vote_panel_form() {
-	printf( '<form action="%s/" method="post" id="link-vote-form">', site_url() );
-	wp_nonce_field( 'link_vote', '_wpnonce-link-vote' );
-	echo '</form>' . PHP_EOL;
+	if ( bp_links_is_voting_enabled() ) {
+		printf( '<form action="%s/" method="post" id="link-vote-form">', site_url() );
+		wp_nonce_field( 'link_vote', '_wpnonce-link-vote' );
+		echo '</form>' . PHP_EOL;
+	}
 }
 
 /*********************************
@@ -1696,10 +1710,13 @@ function bp_link_list_item_xtrabar_userlink_created() {
 function bp_links_link_order_options() { ?>
 
 	<option value="active"><?php _e( 'Last Active', 'buddypress' ) ?></option>
-	<option value="popular"><?php _e( 'Most Popular', 'buddypress-links' ) ?></option>
 	<option value="newest"><?php _e( 'Newly Created', 'buddypress' ) ?></option>
+
+	<?php if ( bp_links_is_voting_enabled() ): ?>
+	<option value="popular"><?php _e( 'Most Popular', 'buddypress-links' ) ?></option>
 	<option value="most-votes"><?php _e( 'Most Votes', 'buddypress-links' ) ?></option>
-	<option value="high-votes"><?php _e( 'Highest Rated', 'buddypress-links' ) ?></option> <?php
+	<option value="high-votes"><?php _e( 'Highest Rated', 'buddypress-links' ) ?></option>
+	<?php endif;
 
 	do_action( 'bp_links_link_order_options' );
 }

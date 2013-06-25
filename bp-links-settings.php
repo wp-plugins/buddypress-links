@@ -97,6 +97,28 @@ $wpsf_settings[] = array(
 				0 => 'Radio',
 				1 => 'Select'
 			)
+        ),
+		array(
+            'id' => 'editavatar',
+            'title' => __( 'Show Avatar Options?', 'buddypress-links' ),
+            'desc' => __( 'Set this to "No" to hide the Edit Avatar Options.', 'buddypress-links' ),
+            'type' => 'radio',
+            'std' => true,
+			'choices' => array(
+				1 => 'Yes',
+				0 => 'No'
+			)
+        ),
+		array(
+            'id' => 'editadvanced',
+            'title' => __( 'Show Advanced Settings?', 'buddypress-links' ),
+            'desc' => __( 'Set this to "No" to hide the Edit Advanced Settings.', 'buddypress-links' ),
+            'type' => 'radio',
+            'std' => true,
+			'choices' => array(
+				1 => 'Yes',
+				0 => 'No'
+			)
         )
     )
 );
@@ -109,6 +131,17 @@ $wpsf_settings[] = array(
     'section_order' => 15,
     'fields' => array(
         array(
+            'id' => 'enabled',
+            'title' => __( 'Allow members to vote on links?', 'buddypress-links' ),
+            'desc' => __( 'Voting is enabled by default.', 'buddypress-links' ),
+            'type' => 'radio',
+            'std' => true,
+			'choices' => array(
+				1 => 'Yes',
+				0 => 'No'
+			)
+        ),
+        array(
             'id' => 'change',
             'title' => __( 'Can members change their vote?', 'buddypress-links' ),
             'desc' => __( 'The default behavior is to allow members to change their vote. Set this to No to prevent vote changing.', 'buddypress-links' ),
@@ -117,6 +150,17 @@ $wpsf_settings[] = array(
 			'choices' => array(
 				1 => 'Yes',
 				0 => 'No'
+			)
+        ),
+        array(
+            'id' => 'downvote',
+            'title' => __( 'What kind of voting would you like?', 'buddypress-links' ),
+            'desc' => __( 'The default behavior is to allow members to vote UP or DOWN. Set this to "Up Only" to disable down votes.', 'buddypress-links' ),
+            'type' => 'radio',
+            'std' => true,
+			'choices' => array(
+				1 => 'Up and Down',
+				0 => 'Up Only'
 			)
         ),
         array(
