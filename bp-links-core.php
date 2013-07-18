@@ -97,6 +97,14 @@ function bp_links_init_settings()
 	if ( !defined( 'BP_LINKS_LIST_ITEM_URL_LOCAL' ) )
 		define( 'BP_LINKS_LIST_ITEM_URL_LOCAL', (boolean) $settings['buddypress_links_global_linklocal'] );
 
+	// link to slug (or ID)?
+	if ( !defined( 'BP_LINKS_PERMALINK_TO_SLUG' ) )
+		define( 'BP_LINKS_PERMALINK_TO_SLUG', (boolean) $settings['buddypress_links_global_linkslug'] );
+
+	// allow duplicate urls?
+	if ( !defined( 'BP_LINKS_CREATE_DUPE_URL' ) )
+		define( 'BP_LINKS_CREATE_DUPE_URL', (boolean) $settings['buddypress_links_content_dupeurl'] );
+
 	// max url characters
 	if ( !defined( 'BP_LINKS_MAX_CHARACTERS_URL' ) )
 		define( 'BP_LINKS_MAX_CHARACTERS_URL', (integer) $settings['buddypress_links_content_maxurl'] );
@@ -117,6 +125,10 @@ function bp_links_init_settings()
 	if ( !defined( 'BP_LINKS_CREATE_CATEGORY_SELECT' ) )
 		define( 'BP_LINKS_CREATE_CATEGORY_SELECT', (boolean) $settings['buddypress_links_content_catselect'] );
 
+	// create page content fetching toggle
+	if ( !defined( 'BP_LINKS_CREATE_PAGE_FETCH' ) )
+		define( 'BP_LINKS_CREATE_PAGE_FETCH', (boolean) $settings['buddypress_links_content_pagefetch'] );
+
 	// create avatar options
 	if ( !defined( 'BP_LINKS_CREATE_EDIT_AVATAR' ) )
 		define( 'BP_LINKS_CREATE_EDIT_AVATAR', (boolean) $settings['buddypress_links_content_editavatar'] );
@@ -124,6 +136,10 @@ function bp_links_init_settings()
 	// create advanced settings
 	if ( !defined( 'BP_LINKS_CREATE_EDIT_ADVANCED' ) )
 		define( 'BP_LINKS_CREATE_EDIT_ADVANCED', (boolean) $settings['buddypress_links_content_editadvanced'] );
+
+	// create suspended by default
+	if ( !defined( 'BP_LINKS_CREATE_MOD_SUSPEND' ) )
+		define( 'BP_LINKS_CREATE_MOD_SUSPEND', (boolean) $settings['buddypress_links_content_modsuspend'] );
 
 	// voting toggle
 	if ( !defined( 'BP_LINKS_VOTE_ENABLED' ) )
@@ -436,8 +452,9 @@ function bp_links_setup_nav() {
 			$bp->bp_options_title = $bp->links->current_link->name;
 
 			$bp->bp_options_avatar = bp_links_fetch_avatar( array( 'type' => 'thumb' ), $bp->links->current_link );
-			
-			$link_link = $bp->root_domain . '/' . bp_links_root_slug() . '/' . $bp->links->current_link->slug . '/';
+
+			$link_link = bp_get_link_permalink( $bp->links->current_link ) . '/';
+			$link_slug = bp_get_link_permalink_slug( $bp->links->current_link );
 
 			/* New HIDDEN nav item */
 			$nav_name_single = apply_filters(
@@ -446,7 +463,7 @@ function bp_links_setup_nav() {
 			);
 			bp_core_new_nav_item( array(
 				'name' => $nav_name_single,
-				'slug' => $bp->links->current_link->slug,
+				'slug' => $link_slug,
 				'position' => -1,
 				'screen_function' => 'bp_links_screen_link_home',
 				'default_subnav_slug' => 'home',
@@ -462,7 +479,7 @@ function bp_links_setup_nav() {
 				'name' => $subnav_name_home,
 				'slug' => 'home',
 				'parent_url' => $link_link,
-				'parent_slug' => $bp->links->current_link->slug,
+				'parent_slug' => $link_slug,
 				'screen_function' => 'bp_links_screen_link_home',
 				'position' => 10,
 				'item_css_id' => 'link-home'
@@ -478,7 +495,7 @@ function bp_links_setup_nav() {
 					'name' => $subnav_name_admin,
 					'slug' => 'admin',
 					'parent_url' => $link_link,
-					'parent_slug' => $bp->links->current_link->slug,
+					'parent_slug' => $link_slug,
 					'screen_function' => 'bp_links_screen_link_admin',
 					'position' => 20,
 					'user_has_access' => $bp->is_item_admin,
@@ -727,7 +744,7 @@ function bp_links_screen_link_admin_edit_details() {
 			return false;
 
 		// validate the data fields
-		$data_valid = bp_links_validate_create_form_input();
+		$data_valid = bp_links_validate_create_form_input( $bp->links->current_link );
 
 		if ( !empty( $data_valid ) ) {
 
@@ -891,7 +908,7 @@ add_action( 'bp_screens', 'bp_links_screen_link_admin_delete_link' );
 /**
  * Validate new/udpate link form data and format errors
  */
-function bp_links_validate_create_form_input() {
+function bp_links_validate_create_form_input( $link = null ) {
 	
 	$message_required = __( 'Please fill in all of the required fields', 'buddypress-links' );
 
@@ -910,7 +927,7 @@ function bp_links_validate_create_form_input() {
 	// link url
 	if ( !empty( $_POST['link-url'] ) ) {
 
-		$bp_new_link_url = trim( stripslashes( $_POST['link-url'] ) );
+		$bp_new_link_url = rtrim( trim( stripslashes( $_POST['link-url'] ) ), '/' );
 
 		if ( strlen( $bp_new_link_url ) > BP_LINKS_MAX_CHARACTERS_URL ) {
 			bp_core_add_message( sprintf( __( 'Link URL must be %1$d characters or less, please make corrections and re-submit.', 'buddypress-links' ), BP_LINKS_MAX_CHARACTERS_URL ), 'error' );
@@ -918,6 +935,15 @@ function bp_links_validate_create_form_input() {
 		} elseif ( bp_links_is_url_valid( $bp_new_link_url ) !== true ) {
 			bp_core_add_message( __( 'The URL you entered is not valid.', 'buddypress-links' ), 'error' );
 			return false;
+		} elseif (
+			( false === BP_LINKS_CREATE_DUPE_URL ) &&
+			( false === $link instanceof BP_Links_Link || $bp_new_link_url != $link->url )
+		) {
+			// check for dupeness
+			if ( bp_links_check_link_url_exists( $bp_new_link_url ) ) {
+				bp_core_add_message( __( 'The URL you entered already exists.', 'buddypress-links' ), 'error' );
+				return false;
+			}
 		}
 
 		$return_data['link-url'] = $bp_new_link_url;
@@ -991,12 +1017,12 @@ function bp_links_validate_create_form_input() {
 	
 	// process meta data
 	if ( isset( $_POST['link-meta'] ) ) {
-		$return_data['link-meta'] = apply_filters( 'bp_links_validate_create_form_input_meta', $_POST['link-meta'] );
+		$return_data['link-meta'] = apply_filters( 'bp_links_validate_create_form_input_meta', $_POST['link-meta'], $link );
 	} else{
 		$return_data['link-meta'] = array();
 	}
 
-	return apply_filters( 'bp_links_validate_create_form_input', $return_data );
+	return apply_filters( 'bp_links_validate_create_form_input', $return_data, $link );
 }
 
 /********************************************************************************
@@ -1096,7 +1122,7 @@ function bp_links_action_redirect_to_random_link() {
 	
 		$link = bp_links_get_random();
 
-		bp_core_redirect( $bp->root_domain . '/' . bp_links_root_slug() . '/' . $link['links'][0]->slug );
+		bp_core_redirect( bp_get_link_permalink( $link['links'][0] ) );
 	}
 }
 add_action( 'bp_screens', 'bp_links_action_redirect_to_random_link' );
@@ -1512,6 +1538,10 @@ function bp_links_check_link_exists( $link_id ) {
 	return BP_Links_Link::link_exists( $link_id );
 }
 
+function bp_links_check_link_url_exists( $link_url ) {
+	return BP_Links_Link::link_url_exists( $link_url );
+}
+
 /*** Link Fetching, Filtering & Searching  *************************************/
 
 function bp_links_get_all( $args ) {
@@ -1623,7 +1653,7 @@ function bp_links_fetch_avatar( $args = '', $link = false ) {
 		$avatar_url = null;
 
 		// check if we can use thumb from embedded content
-		if ( !empty( $link ) && $link->embed_status_enabled() ) {
+		if ( $link instanceof BP_Links_Link && $link->embed_status_enabled() ) {
 
 			$image_thumb_url = $link->embed()->image_thumb_url();
 

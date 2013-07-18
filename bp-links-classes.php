@@ -454,7 +454,7 @@ class BP_Links_Link {
 					$this->user_id,
 					$this->category_id,
 					$this->url,
-					$this->url_hash,
+					$this->url,
 					$this->target,
 					$this->rel,
 					$this->slug,
@@ -646,13 +646,35 @@ class BP_Links_Link {
 		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->links->table_name} SET popularity = {$popularity_sql} WHERE popularity <= %d AND vote_total >= %d", self::POPULARITY_IGNORE, self::POPULARITY_THRESH  ) );
 	}
 		
-	function link_exists( $slug ) {
+	function link_exists( $slug_or_id ) {
 		global $wpdb, $bp;
-		
-		if ( !$slug )
+
+		// clean it up
+		$value = trim( $slug_or_id );
+
+		// empty value?
+		if ( empty( $value ) ) {
+			// yep, don't bother looking it up
 			return false;
-			
-		return $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->links->table_name} WHERE slug = %s", $slug ) );
+		// is it numeric?
+		} elseif ( is_numeric( $value ) ) {
+			// yep, query for id
+			return $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->links->table_name} WHERE id = %d", $value ) );
+		// other value
+		} else {
+			// query for slug
+			return $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->links->table_name} WHERE slug = %s", $value ) );
+		}
+	}
+
+	function link_url_exists( $url ) {
+		global $wpdb, $bp;
+
+		if ( empty( $url ) ) {
+			return false;
+		} else {
+			return $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->links->table_name} WHERE url_hash = MD5(%s)", $url ) );
+		}
 	}
 
 	function get_id_from_slug( $slug ) {
@@ -755,8 +777,6 @@ class BP_Links_Link {
 				$meta_table_num++;
 			}
 		}
-
-		$status_sql = self::get_status_sql( $user_id, ' AND %s' );
 		
 		if ( $search_terms ) {
 			$search_terms = substr($search_terms, 0, 25);
@@ -796,14 +816,16 @@ class BP_Links_Link {
 			$pag_sql = $wpdb->prepare( " LIMIT %d, %d", intval( ( $page - 1 ) * $per_page), intval( $per_page ) );
 
 		if ( $user_id ) {
-			$paged_sql = "SELECT l.id AS link_id, l.slug FROM {$bp->links->table_name} l{$join_sql} WHERE {$profile_sql}{$status_sql}{$filter_sql}{$category_sql}{$meta_sql}{$extra_sql}{$order_by_sql} {$pag_sql}";
+			$status_sql = self::get_status_sql( $user_id );
+			$paged_sql = "SELECT l.id AS link_id, l.slug FROM {$bp->links->table_name} l{$join_sql} WHERE {$status_sql} AND {$profile_sql}{$filter_sql}{$category_sql}{$meta_sql}{$extra_sql}{$order_by_sql} {$pag_sql}";
 			$paged_links = $wpdb->get_results( $paged_sql );
-			$total_sql = "SELECT COUNT(*) FROM {$bp->links->table_name} l{$join_sql} WHERE {$profile_sql}{$status_sql}{$category_sql}{$meta_sql}{$extra_sql}{$filter_sql}";
+			$total_sql = "SELECT COUNT(*) FROM {$bp->links->table_name} l{$join_sql} WHERE {$status_sql} AND {$profile_sql}{$category_sql}{$meta_sql}{$extra_sql}{$filter_sql}";
 			$total_links = $wpdb->get_var( $total_sql );
 		} else {
-			$paged_sql = $wpdb->prepare( "SELECT l.id AS link_id, l.slug FROM {$bp->links->table_name} l{$join_sql} WHERE l.status = %d{$filter_sql}{$category_sql}{$meta_sql}{$extra_sql}{$order_by_sql} {$pag_sql}", self::STATUS_PUBLIC );
+			$status_sql = self::get_status_sql();
+			$paged_sql = "SELECT l.id AS link_id, l.slug FROM {$bp->links->table_name} l{$join_sql} WHERE {$status_sql}{$filter_sql}{$category_sql}{$meta_sql}{$extra_sql}{$order_by_sql} {$pag_sql}";
 			$paged_links = $wpdb->get_results( $paged_sql );
-			$total_sql = $wpdb->prepare( "SELECT COUNT(*) FROM {$bp->links->table_name} l{$join_sql} WHERE l.status = %d{$filter_sql}{$category_sql}{$meta_sql}{$extra_sql}", self::STATUS_PUBLIC );
+			$total_sql = "SELECT COUNT(*) FROM {$bp->links->table_name} l{$join_sql} WHERE {$status_sql}{$filter_sql}{$category_sql}{$meta_sql}{$extra_sql}";
 			$total_links = $wpdb->get_var( $total_sql );
 		}
 
@@ -858,10 +880,7 @@ class BP_Links_Link {
 	function get_total_link_count() {
 		global $wpdb, $bp;
 
-		if ( false === bp_links_is_admin() )
-			$hidden_sql = sprintf( "WHERE status = %s", self::STATUS_PUBLIC );
-
-		return $wpdb->get_var( "SELECT COUNT(id) FROM {$bp->links->table_name} {$hidden_sql}" );
+		return $wpdb->get_var( "SELECT COUNT(id) FROM {$bp->links->table_name} WHERE " . self::get_status_sql() );
 	}
 
 	function get_total_link_count_for_user( $user_id = false ) {
@@ -932,26 +951,26 @@ class BP_Links_Link {
 	
 	function get_status_sql( $link_owner_user_id = false, $format_string = '%s' ){
 		global $bp;
-		
+
+		// everyone can see the public links
+		$status_opts = array( self::STATUS_PUBLIC );
+
 		// if user is the site admin or is logged in and viewing their own links, then no limitations
 		if ( bp_links_is_admin() || bp_is_my_profile() ) {
-			// return an empty string
-			return '';
+			// add all statuses
+			$status_opts[] = self::STATUS_FRIENDS;
+			$status_opts[] = self::STATUS_HIDDEN;
 		} else {
-
-			// everyone can see the public links
-			$status_opts = array(self::STATUS_PUBLIC);
-
 			// if logged in user is a friend, show friends only links too
 			if ( bp_links_is_friends_enabled() ) {
 				if ( $link_owner_user_id && $link_owner_user_id != $bp->loggedin_user->id && friends_check_friendship( $link_owner_user_id, $bp->loggedin_user->id ) ) {
 					$status_opts[] = self::STATUS_FRIENDS;
 				}
 			}
-
-			// return the sql string
-			return sprintf( $format_string, sprintf( 'status IN (%s)', join( ',', $status_opts ) ) );
 		}
+
+		// return the sql string
+		return sprintf( $format_string, sprintf( 'status IN (%s)', join( ',', $status_opts ) ) );
 	}
 }
 

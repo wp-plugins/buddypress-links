@@ -515,8 +515,25 @@ function bp_link_permalink() {
 
 		if ( !$link )
 			$link =& $links_template->link;
+		
+		return apply_filters(
+			'bp_get_link_permalink',
+			$bp->root_domain . '/' .
+			bp_links_root_slug() . '/' .
+			bp_get_link_permalink_slug( $link )
+		);
+	}
 
-		return apply_filters( 'bp_get_link_permalink', $bp->root_domain . '/' . bp_links_root_slug() . '/' . $link->slug );
+function bp_link_permalink_slug() {
+	echo bp_get_link_permalink_slug();
+}
+	function bp_get_link_permalink_slug( $link = false ) {
+		global $links_template, $bp;
+
+		if ( !$link )
+			$link =& $links_template->link;
+
+		return ( true === BP_LINKS_PERMALINK_TO_SLUG ) ? $link->slug : $link->id;
 	}
 
 function bp_link_userlink() {
@@ -759,7 +776,7 @@ function bp_link_admin_tabs() {
 	$current_tab = $bp->action_variables[0];
 ?>
 	<?php if ( $bp->is_item_admin ) { ?>
-		<li<?php if ( 'edit-details' == $current_tab || empty( $current_tab ) ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->root_domain . '/' . bp_links_root_slug() ?>/<?php echo $link->slug ?>/admin/edit-details"><?php _e( 'Edit Details', 'buddypress-links' ) ?></a></li>
+		<li<?php if ( 'edit-details' == $current_tab || empty( $current_tab ) ) : ?> class="current"<?php endif; ?>><a href="<?php bp_link_permalink( $link ) ?>/admin/edit-details"><?php _e( 'Edit Details', 'buddypress-links' ) ?></a></li>
 	<?php } ?>
 	
 	<?php
@@ -768,12 +785,12 @@ function bp_link_admin_tabs() {
 	?>
 
 	<?php if ( true === BP_LINKS_CREATE_EDIT_AVATAR ): ?>
-	<li<?php if ( 'link-avatar' == $current_tab ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->root_domain . '/' . bp_links_root_slug() ?>/<?php echo $link->slug ?>/admin/link-avatar"><?php _e( 'Link Avatar', 'buddypress-links' ) ?></a></li>
+	<li<?php if ( 'link-avatar' == $current_tab ) : ?> class="current"<?php endif; ?>><a href="<?php bp_link_permalink( $link ) ?>/admin/link-avatar"><?php _e( 'Link Avatar', 'buddypress-links' ) ?></a></li>
 	<?php endif; ?>
 	
 	<?php do_action( 'bp_link_admin_tabs', $current_tab, $link->slug ) ?>
 	
-	<li<?php if ( 'delete-link' == $current_tab ) : ?> class="current"<?php endif; ?>><a href="<?php echo $bp->root_domain . '/' . bp_links_root_slug() ?>/<?php echo $link->slug ?>/admin/delete-link"><?php _e( 'Delete Link', 'buddypress-links' ) ?></a></li>
+	<li<?php if ( 'delete-link' == $current_tab ) : ?> class="current"<?php endif; ?>><a href="<?php bp_link_permalink( $link ) ?>/admin/delete-link"><?php _e( 'Delete Link', 'buddypress-links' ) ?></a></li>
 <?php
 }
 
@@ -821,30 +838,40 @@ function bp_link_details_form_link_url_readonly() {
 	echo bp_get_link_details_form_link_url_readonly();
 }
 	function bp_get_link_details_form_link_url_readonly() {
-		global $bp;
 
-		if ( isset( $_POST['link-url-readonly'] ) ) {
-			return ( empty( $_POST['link-url-readonly'] ) ) ? 0 : 1;
-		} elseif ( bp_links_current_link_embed_enabled() )  {
-			return ( bp_links_current_link_embed_service() instanceof BP_Links_Embed_From_Url ) ? 1 : 0;
-		} else {
-			return 0;
+		// page fetching enabled?
+		if ( true === BP_LINKS_CREATE_PAGE_FETCH ) {
+			// yep, determine read only toggle
+			if ( isset( $_POST['link-url-readonly'] ) ) {
+				return ( empty( $_POST['link-url-readonly'] ) ) ? 0 : 1;
+			} elseif ( bp_links_current_link_embed_enabled() )  {
+				return ( bp_links_current_link_embed_service() instanceof BP_Links_Embed_From_Url ) ? 1 : 0;
+			}
 		}
+		
+		// read only is off by default
+		return 0;
 	}
 
 function bp_link_details_form_name_desc_fields_display() {
 	echo bp_get_link_details_form_name_desc_fields_display();
 }
 	function bp_get_link_details_form_name_desc_fields_display() {
-		global $bp;
 
-		if ( isset( $_POST['link-url-embed-data'] ) ) {
-			return ( !empty( $_POST['link-url-embed-data'] ) && empty( $_POST['link-url-embed-edit-text'] ) ) ? 0 : 1;
-		} elseif ( bp_links_current_link_embed_enabled() )  {
-			return ( bp_links_current_link_embed_service() instanceof BP_Links_Embed_From_Url ) ? 0 : 1;
-		} else {
-			return 0;
+		// page fetching enabled?
+		if ( true === BP_LINKS_CREATE_PAGE_FETCH ) {
+			// yep, determing display status
+			if ( isset( $_POST['link-url-embed-data'] ) ) {
+				return ( !empty( $_POST['link-url-embed-data'] ) && empty( $_POST['link-url-embed-edit-text'] ) ) ? 0 : 1;
+			} elseif ( bp_links_current_link_embed_enabled() )  {
+				return ( bp_links_current_link_embed_service() instanceof BP_Links_Embed_From_Url ) ? 0 : 1;
+			} else {
+				return 0;
+			}
 		}
+
+		// display fields by default
+		return 1;
 	}
 
 function bp_link_details_form_avatar_fields_display() {

@@ -44,6 +44,17 @@ $wpsf_settings[] = array(
 				1 => 'Yes',
 				0 => 'No'
 			)
+        ),
+        array(
+            'id' => 'linkslug',
+            'title' => __( 'Link to slug or ID?', 'buddypress-links' ),
+            'desc' => __( 'The default behavior is to use the link\'s unique text slug in permalink URLs. Set this to Numeric ID to use the link ID instead.', 'buddypress-links' ),
+            'type' => 'radio',
+            'std' => true,
+			'choices' => array(
+				1 => __( 'Text Slug', 'buddypress-links' ),
+				0 => __( 'Numeric ID', 'buddypress-links' )
+			)
         )
     )
 );
@@ -55,6 +66,17 @@ $wpsf_settings[] = array(
 //    'section_description' => '',
     'section_order' => 10,
     'fields' => array(
+        array(
+            'id' => 'dupeurl',
+            'title' => __( 'Allow Duplicate URLs?', 'buddypress-links' ),
+            'desc' => __( 'Set this to "No" to prevent duplicate URLs from being added to the directory.', 'buddypress-links' ),
+            'type' => 'radio',
+            'std' => true,
+			'choices' => array(
+				1 => 'Yes',
+				0 => 'No'
+			)
+        ),
         array(
             'id' => 'maxurl',
             'title' => __( 'Max. URL Characters', 'buddypress-links' ),
@@ -99,6 +121,17 @@ $wpsf_settings[] = array(
 			)
         ),
 		array(
+            'id' => 'pagefetch',
+            'title' => __( 'Enable Page Fetching?', 'buddypress-links' ),
+            'desc' => __( 'Set this to "No" to disable page content fetching.', 'buddypress-links' ),
+            'type' => 'radio',
+            'std' => true,
+			'choices' => array(
+				1 => 'Yes',
+				0 => 'No'
+			)
+        ),
+		array(
             'id' => 'editavatar',
             'title' => __( 'Show Avatar Options?', 'buddypress-links' ),
             'desc' => __( 'Set this to "No" to hide the Edit Avatar Options.', 'buddypress-links' ),
@@ -115,6 +148,18 @@ $wpsf_settings[] = array(
             'desc' => __( 'Set this to "No" to hide the Edit Advanced Settings.', 'buddypress-links' ),
             'type' => 'radio',
             'std' => true,
+			'choices' => array(
+				1 => 'Yes',
+				0 => 'No'
+			)
+        ),
+		array(
+            'id' => 'modsuspend',
+            'title' => __( 'Suspend New Links?', 'buddypress-links' ) . $dagger,
+            'desc' => __( 'Set this to "Yes" to mark all new links as suspended when they are first created.', 'buddypress-links' ),
+            'type' => 'radio',
+			'class' => $pro_field_class,
+            'std' => false,
 			'choices' => array(
 				1 => 'Yes',
 				0 => 'No'
