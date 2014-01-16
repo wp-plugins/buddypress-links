@@ -6,7 +6,7 @@ Description: BuddyPress Links is a link sharing component for BuddyPress.
 Author: Marshall Sorenson (MrMaz)
 Author URI: http://marshallsorenson.com
 License: GNU GENERAL PUBLIC LICENSE 3.0 http://www.gnu.org/licenses/gpl.txt
-Version: 0.8.2
+Version: 0.9
 Text Domain: buddypress-links
 */
 
@@ -47,7 +47,7 @@ if ( !defined( 'BP_LINKS_EMBED_FOTOGLIF_PUBID' ) )
 // *** DO NOT MODIFY THESE ***
 
 // Configuration
-define( 'BP_LINKS_VERSION', '0.8.2' );
+define( 'BP_LINKS_VERSION', '0.9' );
 define( 'BP_LINKS_DB_VERSION', '9' );
 define( 'BP_LINKS_PLUGIN_NAME', 'buddypress-links' );
 define( 'BP_LINKS_PLUGIN_TEXTDOMAIN', 'buddypress-links' );
@@ -131,7 +131,29 @@ function bp_links_setup_globals() {
 	/* Register this in the active components array */
 	$bp->active_components[$bp->links->slug] = $bp->links->id;
 
-	$bp->links->forbidden_names = apply_filters( 'bp_links_forbidden_names', array( 'links', 'my-links', 'link-finder', 'create', 'delete', 'add', 'admin', 'popular', 'most-votes', 'high-votes', 'active', 'newest', 'all', 'submit', 'feed' ) );
+	$bp->links->forbidden_names =
+		apply_filters( 'bp_links_forbidden_names',
+			array(
+				// internal
+				'add',
+				'admin',
+				'all',
+				'create',
+				'delete',
+				'feed',
+				'links',
+				'my-links',
+				'submit',
+				// order by filter
+				'active',
+				'high-votes',
+				'most-votes',
+				'newest',
+				'popular',
+				// category url slug
+				BP_LINKS_CAT_URL_SLUG
+			)
+		);
 	
 	do_action( 'bp_links_setup_globals' );
 }

@@ -43,6 +43,14 @@ class BP_Links_Template {
 		// extract 'em
 		extract( $args );
 
+		// handle empty type
+		if ( empty( $type ) ) {
+			// get order options
+			$order_options = bp_links_get_order_options();
+			// default type is first key
+			$type = key( $order_options );
+		}
+
 		// set avatar size
 		$this->avatar_display_size( $avatar_size );
 
@@ -195,28 +203,15 @@ class BP_Links_Template {
 function bp_has_links( $args = array() ) {
 	global $links_template, $bp;
 
-	// default args to use IF args is not empty
-	$defaults = array(
-		'type' => 'active',
-		'page' => 1,
-		'per_page' => 10,
-		'max' => false,
-		'avatar_size' => false,
-		'user_id' => false,
-		'slug' => false,
-		'search_terms' => false,
-		'category_id' => false
-	);
-
-	// args to pass to template class
-	$template_args = wp_parse_args( $args, $defaults );
-
 	if ( empty( $args ) ) {
 		// The following code will auto set parameters based on the page being viewed.
 		// for example on example.com/members/marshall/links/my-links/popular/
 		// $type = 'popular'
 		//
-		if ( 'my-links' == $bp->current_action ) {
+		if (
+			true === bp_is_directory() &&
+			'my-links' == $bp->current_action
+		) {
 			$order = $bp->action_variables[0];
 			if ( 'active' == $order )
 				$type = 'active';
@@ -232,14 +227,47 @@ function bp_has_links( $args = array() ) {
 				$type = 'high-votes';
 		} else if ( $bp->links->current_link->slug ) {
 			$type = 'single-link';
-			$template_args['slug'] = $bp->links->current_link->slug;
+			$args['slug'] = $bp->links->current_link->slug;
 		}
 
-		$template_args['order'] = $order;
-		$template_args['type'] = $type;
-		
+		$args['order'] = $order;
+		$args['type'] = $type;
 	}
-	
+
+	// default args to use IF args is not empty
+	$defaults = array(
+		'type' => false,
+		'page' => 1,
+		'per_page' => 10,
+		'max' => false,
+		'avatar_size' => false,
+		'user_id' => false,
+		'slug' => false,
+		'search_terms' => false,
+		'category_id' => false,
+		'category_slug' => null
+	);
+
+	// args to pass to template class
+	$template_args = wp_parse_args( $args, $defaults );
+
+	// category slug in path overrides any category id that is set
+	if (
+		false === defined( 'DOING_AJAX' ) &&
+		true === bp_is_directory() &&
+		BP_LINKS_CAT_URL_SLUG == bp_current_action()
+	) {
+		// get current item
+		$category_slug = bp_action_variable( 0 );
+		// have a category slug?
+		if ( false === empty( $category_slug ) ) {
+			// yes, set it
+			$template_args['category_slug'] = $category_slug;
+			// ...and kill any category id that is set
+			$template_args['category_id'] = false;
+		}
+	}
+
 	switch ( true ) {
 		case ( isset( $_REQUEST['link-filter-box'] ) ):
 			$template_args['search_terms'] = $_REQUEST['link-filter-box'];
@@ -1734,18 +1762,12 @@ function bp_link_list_item_xtrabar_userlink_created() {
 /****
  * Link list filter template tags
  */
-function bp_links_link_order_options() { ?>
+function bp_links_link_order_options() {
 
-	<option value="active"><?php _e( 'Last Active', 'buddypress' ) ?></option>
-	<option value="newest"><?php _e( 'Newly Created', 'buddypress' ) ?></option>
-
-	<?php if ( bp_links_is_voting_enabled() ): ?>
-	<option value="popular"><?php _e( 'Most Popular', 'buddypress-links' ) ?></option>
-	<option value="most-votes"><?php _e( 'Most Votes', 'buddypress-links' ) ?></option>
-	<option value="high-votes"><?php _e( 'Highest Rated', 'buddypress-links' ) ?></option>
-	<?php endif;
+	// loop all order options
+	foreach ( bp_links_get_order_options() as $slug => $title ) { ?>
+		<option value="<?php echo esc_attr( $slug ) ?>"><?php echo esc_html( $title ) ?></option><?php
+	}
 
 	do_action( 'bp_links_link_order_options' );
 }
-
-?>

@@ -43,7 +43,7 @@ final class WP_SDL
 	 * @param array $class_names
 	 */
 	final static public function init( $class_path, $class_names )
-	{
+	{		
 		// loop all versions
 		foreach ( $class_names as $class_name => $class_ns ) {
 			// already registered?
@@ -171,5 +171,28 @@ interface WP_SDL_Compat
  */
 interface WP_SDL_Helper
 {
+	/**
+	 * Set/Get compat instance.
+	 *
+	 * @param WP_SDL_Compat $wpsdl
+	 * @return WP_SDL_Compat
+	 */
 	public function compat( WP_SDL_Compat $wpsdl = null );
+}
+
+/**
+ * WP-SDL: auxiliary interface
+ *
+ * @internal
+ * @package wp-sdl
+ */
+interface WP_SDL_Auxiliary
+{
+	/**
+	 * Set/Get helper instance.
+	 *
+	 * @param WP_SDL_Helper $helper
+	 * @return WP_SDL_Helper
+	 */
+	public function helper( WP_SDL_Helper $helper = null );
 }

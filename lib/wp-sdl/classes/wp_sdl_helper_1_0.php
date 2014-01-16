@@ -13,7 +13,7 @@
 abstract class WP_SDL_Helper_1_0 implements WP_SDL_Helper
 {
 	/**
-	 * The instance which owns this helper
+	 * The compat which owns this helper
 	 *
 	 * @var WP_SDL_Compat
 	 */

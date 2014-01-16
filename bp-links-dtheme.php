@@ -121,26 +121,58 @@ function bp_links_dtheme_creation_tabs() {
 	do_action( 'bp_links_dtheme_creation_tabs' );
 }
 
-function bp_links_dtheme_link_order_options_list() { ?>
+function bp_links_dtheme_directory_mylinks_tab()
+{
+	if (
+		true === BP_LINKS_ENABLE_MYLINKS_TAB &&
+		true === is_user_logged_in()
+	) {
+		// render tab ?>
+		<li id="links-mylinks"><a href="<?php echo bp_loggedin_user_domain() . bp_links_slug() . '/my-links/' ?>"><?php _e( 'My Links', 'buddypress-links' ) ?> <span><?php echo bp_links_total_links_for_user( bp_loggedin_user_id() ) ?></span></a></li><?php
+	}
+}
+add_action( 'bp_links_directory_link_types', 'bp_links_dtheme_directory_mylinks_tab' );
+
+function bp_links_dtheme_link_order_options_list( $echo = true )
+{	
+	// maybe capture output
+	if ( false === $echo ) ob_start();
+
+	// render list ?>
 	<li id="links-order-select" class="last filter">
 		<?php _e( 'Order By:', 'buddypress' ) ?>
 		<select id="links-order-by">
 			<?php bp_links_link_order_options() ?>
 			<?php do_action( 'bp_links_dtheme_link_order_options_list' ) ?>
 		</select>
-	</li> <?php
-}
+	</li><?php
 
-function bp_links_dtheme_link_category_filter_options_list() { ?>
-		<li id="links-category-select" class="last">
-			<?php _e( 'Category:', 'buddypress-links' ) ?>
-			<select id="links-category-filter">
-				<option value="-1"><?php _e( 'All', 'buddypress' ) ?></option>
-				<?php bp_links_category_select_options() ?>
-				<?php do_action( 'bp_links_category_filter_options' ) ?>
-			</select>
-		</li> <?php
+	// maybe return output
+	if ( false === $echo ) return ob_get_clean();
 }
+add_action( 'bp_links_item_list_tabs', 'bp_links_dtheme_link_order_options_list' );
+add_action( 'bp_links_group_item_list_tabs', 'bp_links_dtheme_link_order_options_list' );
+
+function bp_links_dtheme_link_category_filter_options_list( $echo = true )
+{
+	// maybe capture output
+	if ( false === $echo ) ob_start();
+
+	// render list ?>
+	<li id="links-category-select" class="last">
+		<?php _e( 'Category:', 'buddypress-links' ) ?>
+		<select id="links-category-filter">
+			<option value="-1"><?php _e( 'All', 'buddypress' ) ?></option>
+			<?php bp_links_category_select_options() ?>
+			<?php do_action( 'bp_links_category_filter_options' ) ?>
+		</select>
+	</li><?php
+
+	// maybe return output
+	if ( false === $echo ) return ob_get_clean();
+}
+add_action( 'bp_links_item_list_tabs', 'bp_links_dtheme_link_category_filter_options_list' );
+add_action( 'bp_links_group_item_list_tabs', 'bp_links_dtheme_link_category_filter_options_list' );
 
 //
 // AJAX Actions and Filters
@@ -160,8 +192,8 @@ add_action( 'wp_ajax_nopriv_links_filter', 'bp_links_dtheme_template_loader' );
  * Augment profile Links page sub-navigation
  */
 function bp_links_dtheme_personal_links_subnav( $html ) {
-	$html .= bp_links_dtheme_link_order_options_list();
-	$html .= bp_links_dtheme_link_category_filter_options_list();
+	$html .= bp_links_dtheme_link_order_options_list( false );
+	$html .= bp_links_dtheme_link_category_filter_options_list( false );
 
 	return $html;
 }
@@ -219,6 +251,7 @@ function bp_links_dtheme_category_filter( $query_string, $object, $object_filter
 	return $query_string;
 }
 add_filter( 'bp_dtheme_ajax_querystring', 'bp_links_dtheme_category_filter', 1, 7 );
+add_filter( 'bp_legacy_theme_ajax_querystring', 'bp_links_dtheme_category_filter', 1, 7 );
 
 /**
  * Filter all AJAX bp_filter_request() calls to user ids to profile page calls
@@ -244,12 +277,28 @@ function bp_links_dtheme_directory_filter( $query_string, $object, $filter, $sco
 			$args['user_id'] = ( bp_is_user() ) ? $bp->displayed_user->id : $bp->loggedin_user->id;
 
 			return http_build_query( $args );
+
+		} elseif ( 'cat_' == substr( $scope, 0, 4 ) ) {
+
+			// split at underscore
+			$parts = explode( '_', $scope );
+
+			// parse query string
+			$args = array();
+			parse_str( $query_string, $args );
+
+			// inject category id
+			$args['category_id'] = (integer) $parts[1];
+
+			// return modified query
+			return http_build_query( $args );
 		}
 	}
 
 	return $query_string;
 }
 add_filter( 'bp_dtheme_ajax_querystring', 'bp_links_dtheme_directory_filter', 1, 4 );
+add_filter( 'bp_legacy_theme_ajax_querystring', 'bp_links_dtheme_directory_filter', 1, 4 );
 
 /**
  * Filter all AJAX bp_activity_request() calls for the 'activity' object with the 'links' scope
@@ -330,6 +379,7 @@ function bp_links_dtheme_activity_filter( $query_string, $object, $filter, $scop
 	return $query_string;
 }
 add_filter( 'bp_dtheme_ajax_querystring', 'bp_links_dtheme_activity_filter', 1, 7 );
+add_filter( 'bp_legacy_theme_ajax_querystring', 'bp_links_dtheme_activity_filter', 1, 7 );
 
 /**
  * Return "my links" feed URL on activity home page

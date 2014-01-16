@@ -100,6 +100,18 @@ function bp_links_init_settings()
 	// link to slug (or ID)?
 	if ( !defined( 'BP_LINKS_PERMALINK_TO_SLUG' ) )
 		define( 'BP_LINKS_PERMALINK_TO_SLUG', (boolean) $settings['buddypress_links_global_linkslug'] );
+	
+	// category url slug
+	if ( !defined( 'BP_LINKS_CAT_URL_SLUG' ) )
+		define( 'BP_LINKS_CAT_URL_SLUG', (string) $settings['buddypress_links_global_catslug'] );
+
+	// order by text
+	if ( !defined( 'BP_LINKS_ORDER_BY_TEXT' ) )
+		define( 'BP_LINKS_ORDER_BY_TEXT', (string) $settings['buddypress_links_global_ordertext'] );
+
+	// show my links tab
+	if ( !defined( 'BP_LINKS_ENABLE_MYLINKS_TAB' ) )
+		define( 'BP_LINKS_ENABLE_MYLINKS_TAB', (boolean) $settings['buddypress_links_directory_mylinks'] );
 
 	// allow duplicate urls?
 	if ( !defined( 'BP_LINKS_CREATE_DUPE_URL' ) )
@@ -137,10 +149,6 @@ function bp_links_init_settings()
 	if ( !defined( 'BP_LINKS_CREATE_EDIT_ADVANCED' ) )
 		define( 'BP_LINKS_CREATE_EDIT_ADVANCED', (boolean) $settings['buddypress_links_content_editadvanced'] );
 
-	// create suspended by default
-	if ( !defined( 'BP_LINKS_CREATE_MOD_SUSPEND' ) )
-		define( 'BP_LINKS_CREATE_MOD_SUSPEND', (boolean) $settings['buddypress_links_content_modsuspend'] );
-
 	// voting toggle
 	if ( !defined( 'BP_LINKS_VOTE_ENABLED' ) )
 		define( 'BP_LINKS_VOTE_ENABLED', (boolean) $settings['buddypress_links_voting_enabled'] );
@@ -174,6 +182,35 @@ function bp_links_init_settings()
 add_action( 'bp_links_init', 'bp_links_init_settings', 1 );
 
 /**
+ * Return order by options config.
+ *
+ * @return array
+ */
+function bp_links_get_order_options()
+{
+	// cache statically so we only have to parse text once
+	static $options = null;
+
+	// not parsed yet?
+	if ( null === $options ) {
+		// nope parse it
+		$options = bp_links_settings_parse_order_text( BP_LINKS_ORDER_BY_TEXT );
+		// voting disabled?
+		if ( false === bp_links_is_voting_enabled() ) {
+			// yep, kill voting related options
+			unset(
+				$options['popular'],
+				$options['most-votes'],
+				$options['high-votes']
+			);
+		}
+	}
+
+	// return config
+	return $options;
+}
+
+/**
  * Check if link voting is enabled
  *
  * @return boolean
@@ -193,8 +230,8 @@ function bp_links_is_voting_enabled() {
 function bp_links_filter_template( $located_template, $template_names ) {
 	global $bp;
 	
-	// template already located, skip
-	if ( !empty( $located_template ) )
+	// no theme support or template already located, skip
+	if ( !current_theme_supports( 'buddypress' ) || !empty( $located_template ) )
 		return $located_template;
 
 	// only filter for our component
@@ -233,6 +270,66 @@ function bp_links_setup_theme() {
 	}
 }
 add_action( 'bp_init', 'bp_links_setup_theme' );
+
+/**
+ * Setup WordPress theme compat
+ */
+function bp_links_setup_theme_compat() {
+	// links component and is directory?
+	if ( bp_is_current_component( 'links' ) ) {
+		// no action and no item?
+		if ( !bp_current_action() && !bp_current_item() ) {
+			// set up dummy post
+			bp_theme_compat_reset_post( array(
+				'ID'             => 0,
+				'post_title'     => __( 'Links', 'buddypress' ),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_content'   => '',
+				'post_type'      => 'bp_link',
+				'post_status'    => 'publish',
+				'is_archive'     => true,
+				'comment_status' => 'closed'
+			) );
+			// hook up replace content filter
+			add_filter( 'bp_replace_the_content', 'bp_links_screen_directory_index' );
+
+		} elseif ( bp_is_current_action( 'create' ) ) {
+			// set up dummy post
+			bp_theme_compat_reset_post( array(
+				'ID'             => 0,
+				'post_title'     => __( 'Links', 'buddypress' ),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_content'   => '',
+				'post_type'      => 'bp_link',
+				'post_status'    => 'publish',
+				'is_archive'     => true,
+				'comment_status' => 'closed'
+			) );
+			// hook up replace content filter
+			add_filter( 'bp_replace_the_content', 'bp_links_screen_directory_create' );
+
+		} elseif ( bp_is_single_item() ) {
+
+			// set up dummy post
+			bp_theme_compat_reset_post( array(
+				'ID'             => 0,
+				'post_title'     => __( 'Links', 'buddypress' ),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_content'   => '',
+				'post_type'      => 'bp_link',
+				'post_status'    => 'publish',
+				'is_archive'     => true,
+				'comment_status' => 'closed'
+			) );
+			// hook up replace content filter
+			add_filter( 'bp_replace_the_content', 'bp_links_screen_directory_single' );
+		}
+	}
+}
+add_action( 'bp_setup_theme_compat', 'bp_links_setup_theme_compat' );
 
 /**
  * Check if template exists in style path, then check custom plugin location
@@ -510,6 +607,32 @@ function bp_links_setup_nav() {
 }
 add_action( 'bp_setup_nav', 'bp_links_setup_nav' );
 
+/**
+ * Toggle directory flag on if applicable.
+ */
+function bp_links_setup_directory() {
+
+	// get action and item
+	$action = bp_current_action();
+	$item = bp_current_item();
+
+	// links must be current component
+	if ( bp_is_current_component( 'links' ) ) {
+		// category slug is action, or no action and item?
+		if (
+			BP_LINKS_CAT_URL_SLUG === $action ||
+			true === empty( $action ) &&
+			true === empty( $item )
+		) {
+			// toggle directory on
+			bp_update_is_directory( true, 'links' );
+		}
+	}
+
+	do_action( 'bp_links_setup_directory' );
+}
+add_action( 'bp_links_setup_nav', 'bp_links_setup_directory', 1 );
+
 function bp_links_setup_admin_bar() {
 	global $bp, $wp_admin_bar;
 
@@ -567,18 +690,6 @@ function bp_links_setup_activity_nav() {
 }
 add_action( 'bp_activity_setup_nav', 'bp_links_setup_activity_nav' );
 
-function bp_links_directory_links_setup() {
-	global $bp;
-
-	if ( bp_is_current_component( 'links') && !bp_current_action() && !bp_current_item() ) {
-		bp_update_is_directory( true, 'links' );
-		
-		do_action( 'bp_links_directory_links_setup' );
-		bp_links_load_template( 'index' );
-	}
-}
-add_action( 'bp_screens', 'bp_links_directory_links_setup', 2 );
-
 function bp_links_setup_adminbar_menu() {
 	global $bp;
 
@@ -628,6 +739,37 @@ add_action( 'wp_head', 'bp_links_add_meta' );
  * specific URL is caught. They will first save or manipulate data using business
  * functions, then pass on the user to a template file.
  */
+
+//
+// Directory
+//
+
+function bp_links_screen_directory() {
+	// links component and is directory?
+	if ( bp_is_current_component( 'links' ) && bp_is_directory() ) {
+		// load index template
+		bp_links_load_template( 'index' );
+	}
+}
+add_action( 'bp_screens', 'bp_links_screen_directory', 2 );
+
+function bp_links_screen_directory_index() {
+	ob_start();
+	bp_links_locate_template( array('index.php'), true );
+	return ob_get_clean();
+}
+
+function bp_links_screen_directory_create() {
+	ob_start();
+	bp_links_locate_template( array('create.php'), true );
+	return ob_get_clean();
+}
+
+function bp_links_screen_directory_single() {
+	ob_start();
+	bp_links_locate_template( array('single/home.php'), true );
+	return ob_get_clean();
+}
 
 //
 // Profile Pages
@@ -1587,6 +1729,10 @@ function bp_links_total_links_for_user( $user_id = false ) {
 		$user_id = ( $bp->displayed_user->id ) ? $bp->displayed_user->id : $bp->loggedin_user->id;
 
 	return BP_Links_Link::get_total_link_count_for_user( $user_id );
+}
+
+function bp_links_total_links_for_category( $category_id ) {
+	return BP_Links_Link::get_total_link_count_for_category( $category_id );
 }
 
 function bp_links_recent_activity_item_ids_for_user( $user_id = false ) {

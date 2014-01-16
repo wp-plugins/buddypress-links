@@ -1,7 +1,14 @@
-<?php get_header( 'buddypress' ) ?>
-
-	<div id="content">
-		<div class="padder">
+<?php
+	if ( current_theme_supports( 'buddypress' ) ):
+		get_header( 'buddypress' );
+		// spit out old containers ?>
+		<div id="content">
+			<div class="padder"><?php
+	else:
+		// spit out legacy container ?>
+		<div id="buddypress"><?php
+	endif;
+?>
 
 		<form action="" method="post" id="links-directory-form" class="dir-form">
 
@@ -13,18 +20,10 @@
 				<?php bp_links_dtheme_search_form() ?>
 			</div><!-- #link-dir-search -->
 
-			<div class="item-list-tabs">
+			<div class="item-list-tabs" data-links-role="topnav">
 				<ul>
-					<li class="selected" id="links-all"><a href="<?php bp_root_domain() ?>"><?php _e( 'All Links', 'buddypress-links' ) ?> <span><?php echo bp_get_links_total_link_count() ?></span></a></li>
-
-					<?php if ( is_user_logged_in() && bp_links_total_links_for_user( bp_loggedin_user_id() ) ) : ?>
-						<li id="links-mylinks"><a href="<?php echo bp_loggedin_user_domain() . bp_links_slug() . '/my-links/' ?>"><?php _e( 'My Links', 'buddypress-links' ) ?> <span><?php echo bp_links_total_links_for_user( bp_loggedin_user_id() ) ?></span></a></li>
-					<?php endif; ?>
-
+					<li class="selected" id="links-all"><a href="<?php bp_root_domain() ?>/<?php bp_root_slug( 'links' ) ?>"><?php _e( 'All Links', 'buddypress-links' ) ?> <span><?php echo bp_get_links_total_link_count() ?></span></a></li>
 					<?php do_action( 'bp_links_directory_link_types' ) ?>
-					
-					<?php bp_links_dtheme_link_order_options_list() ?>
-		
 				</ul>
 			</div><!-- .item-list-tabs -->
 
@@ -32,8 +31,7 @@
 				<ul>
 					<li class="feed"><a href="<?php bp_directory_links_feed_link() ?>" title="RSS Feed"><?php _e( 'RSS', 'buddypress' ) ?></a></li>
 					<?php do_action( 'bp_links_syndication_options' ) ?>
-
-					<?php bp_links_dtheme_link_category_filter_options_list() ?>
+					<?php do_action( 'bp_links_item_list_tabs' ) ?>
 				</ul>
 			</div><!-- .item-list-tabs -->
 
@@ -52,5 +50,14 @@
 		</div><!-- .padder -->
 	</div><!-- #content -->
 
-<?php get_sidebar( 'buddypress' ); ?>
-<?php get_footer( 'buddypress' ); ?>
+<?php
+	if ( current_theme_supports( 'buddypress' ) ):
+		// close old containers ?>
+		</div></div><?php	
+		get_sidebar( 'buddypress' );
+		get_footer( 'buddypress' );
+	else:
+		// close legacy container ?>
+		</div><?php
+	endif;
+?>
