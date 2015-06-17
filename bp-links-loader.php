@@ -60,7 +60,7 @@ define( 'BP_LINKS_ACTIVITY_ACTION_VOTE', 'bp_link_vote' );
 define( 'BP_LINKS_ACTIVITY_ACTION_COMMENT', 'bp_link_comment' );
 
 // Core Paths
-define( 'BP_LINKS_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . BP_LINKS_PLUGIN_NAME );
+define( 'BP_LINKS_PLUGIN_DIR', dirname( __FILE__ ) );
 define( 'BP_LINKS_PLUGIN_URL', WP_PLUGIN_URL . '/' . BP_LINKS_PLUGIN_NAME );
 define( 'BP_LINKS_LIB_DIR', BP_LINKS_PLUGIN_DIR . '/lib' );
 
@@ -109,7 +109,10 @@ function bp_links_setup_root_component() {
 }
 
 /**
- * Set up globals
+ * Set up globals.
+ *
+ * @global Buddypress $bp
+ * @global wpdb $wp
  */
 function bp_links_setup_globals() {
 	global $bp, $wpdb;
@@ -122,10 +125,10 @@ function bp_links_setup_globals() {
 	$bp->links->root_slug = isset( $bp->pages->links->slug ) ? $bp->pages->links->slug : BP_LINKS_SLUG;
 	$bp->links->name = __( 'Links', 'buddypress-links' );
 
-	$bp->links->table_name = $wpdb->base_prefix . 'bp_links';
-	$bp->links->table_name_categories = $wpdb->base_prefix . 'bp_links_categories';
-	$bp->links->table_name_votes = $wpdb->base_prefix . 'bp_links_votes';
-	$bp->links->table_name_linkmeta = $wpdb->base_prefix . 'bp_links_linkmeta';
+	$bp->links->table_name = $wpdb->prefix . 'bp_links';
+	$bp->links->table_name_categories = $wpdb->prefix . 'bp_links_categories';
+	$bp->links->table_name_votes = $wpdb->prefix . 'bp_links_votes';
+	$bp->links->table_name_linkmeta = $wpdb->prefix . 'bp_links_linkmeta';
 	$bp->links->format_notification_function = 'bp_links_format_notifications';
 
 	/* Register this in the active components array */
