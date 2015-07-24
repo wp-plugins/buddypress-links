@@ -6,7 +6,7 @@ Description: BuddyPress Links is a link sharing component for BuddyPress.
 Author: Marshall Sorenson (MrMaz)
 Author URI: http://marshallsorenson.com
 License: GNU GENERAL PUBLIC LICENSE 3.0 http://www.gnu.org/licenses/gpl.txt
-Version: 0.9.2
+Version: 0.9.4-dev
 Text Domain: buddypress-links
 */
 
@@ -32,26 +32,15 @@ if ( !defined( 'BP_LINKS_CAPABILITY' ) )
 if ( !defined( 'BP_LINKS_CUSTOM_THEME' ) )
 	define( 'BP_LINKS_CUSTOM_THEME', false );
 
-//
-// If you have a Fotoglif account you may want to change this so
-// you get credit for any revenue generated from embedded images.
-//
-// If you leave this like it is, I will get the credit, which is an
-// easy way for you to support the continued development of this plugin :)
-if ( !defined( 'BP_LINKS_EMBED_FOTOGLIF_PUBID' ) )
-	define( 'BP_LINKS_EMBED_FOTOGLIF_PUBID', 'ncnz5fx9z1h9' );
-
-
 ////////////////////////////////
 // Important Internal Constants
 // *** DO NOT MODIFY THESE ***
 
 // Configuration
-define( 'BP_LINKS_VERSION', '0.9.2' );
+define( 'BP_LINKS_VERSION', '0.9.4-dev' );
 define( 'BP_LINKS_DB_VERSION', '9' );
 define( 'BP_LINKS_PLUGIN_NAME', 'buddypress-links' );
 define( 'BP_LINKS_PLUGIN_TEXTDOMAIN', 'buddypress-links' );
-define( 'BP_LINKS_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 define( 'BP_LINKS_THEMES_PATH', 'themes' );
 define( 'BP_LINKS_DEFAULT_THEME', 'bp-links-default' );
 define( 'BP_LINKS_ADMIN_THEME', 'bp-links-admin' );
@@ -181,7 +170,9 @@ function bp_links_activate()
 	require_once( 'bp-links-upgrade.php' );
 	// make sure its initialized
 	bp_links_init();
+	// make sure component is set up
+	bp_links_setup_component();
 	// run upgrader
 	bp_links_upgrade();
 }
-add_action( 'activate_' . BP_LINKS_PLUGIN_BASENAME, 'bp_links_activate' );
+register_activation_hook( __FILE__, 'bp_links_activate' );

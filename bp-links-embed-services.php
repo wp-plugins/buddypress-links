@@ -21,8 +21,6 @@
  * Flickr = 75x75, 100xN, 240xN
  * PicasaWeb = tons of options
  *		http://picasaweb.google.com/data/feed/api/user/joe.geiger/photoid/5410429216279597890?thumbsize=150u&imgmax=512u
- * PicApp = 140xN
- * Fotoglif = 128x90
  */
 
 /**
@@ -328,568 +326,18 @@ final class BP_Links_Embed_Service_WebPage
 
 
 /**
- * PicApp photo embedding service
- *
- * @package BP_Links
- * @author Marshall Sorenson
- */
-final class BP_Links_Embed_Service_PicApp
-	extends BP_Links_Embed_Service
-		implements	BP_Links_Embed_From_Html,
-					BP_Links_Embed_Has_Html,
-					BP_Links_Embed_Avatar_Only
-{
-	//
-	// required concrete methods
-	//
-
-	final public function from_html( $html )
-	{
-		if ( $this->check( $html ) ) {
-			// clean it
-			$html = $this->deep_clean_string( $html );
-			// parse it
-			if ( $this->parse_tag_href( $html ) === true && $this->parse_tag_img( $html ) === true ) {
-				return true;
-			} else {
-				throw new BP_Links_Embed_User_Exception( $this->err_embed_code() );
-			}
-		} else {
-			return false;
-		}
-	}
-
-	final public function url()
-	{
-		return sprintf(
-			'http://view.picapp.com/default.aspx?term=%s&iid=%d',
-			$this->data()->href_term,
-			$this->data()->href_iid
-		);
-	}
-
-	final public function title()
-	{
-		return $this->data()->img_alt;
-	}
-
-	final public function description()
-	{
-		// no description available
-		return null;
-	}
-
-	final public function image_url()
-	{
-		return sprintf(
-			'http://cdn.picapp.com%s?adImageId=%d&imageId=%d',
-			$this->data()->img_path,
-			$this->data()->img_adImageId,
-			$this->data()->img_imageId
-		);
-	}
-
-	final public function image_thumb_url()
-	{
-		return sprintf(
-			'http://cdn.picapp.com%s',
-			preg_replace( '/\/ftp\/images\//i', '/ftp/thumbnails/', $this->data()->img_path )
-		);
-	}
-
-	final public function image_large_thumb_url()
-	{
-		return $this->image_thumb_url();
-	}
-
-	final public function html()
-	{
-		return $this->html_tag_href( $this->html_tag_img() ) . $this->html_tag_script();
-	}
-
-	public function service_name()
-	{
-		return __( 'PicApp', 'buddypress-links' );
-	}
-
-	//
-	// optional concrete methods
-	//
-
-	final public function image_width()
-	{
-		return $this->data()->img_width;
-	}
-
-	final public function image_height()
-	{
-		return $this->data()->img_width;
-	}
-
-	final public function avatar_class()
-	{
-		return 'avatar-embed-picapp';
-	}
-
-	final public function avatar_max_width()
-	{
-		return 140;
-	}
-
-	final public function avatar_max_height()
-	{
-		return 140;
-	}
-
-	/**
-	 * Handle deprecated PicApp data array
-	 *
-	 * @param string|array $embed_data deprecated PicApp data array or serialized string
-	 * @return boolean
-	 */
-	final public function from_deprecated_data( $embed_data )
-	{
-		if ( is_array( $embed_data ) ) {
-			// copy data from the array into the embed data object
-			$this->data()->href_term = $this->deep_clean_string( $embed_data['href']['term'] );
-			$this->data()->href_iid = $embed_data['href']['iid'];
-			$this->data()->img_path = $embed_data['img']['path'];
-			$this->data()->img_adImageId = $embed_data['img']['adImageId'];
-			$this->data()->img_imageId = $embed_data['img']['imageId'];
-			$this->data()->img_width = $embed_data['img']['width'];
-			$this->data()->img_height = $embed_data['img']['height'];
-			$this->data()->img_alt = $this->deep_clean_string( $embed_data['img']['alt'] );
-			return true;
-		} else {
-			throw new BP_Links_Embed_Fatal_Exception( 'Deprecated data must be an array' );
-		}
-	}
-
-	//
-	// private methods
-	//
-
-	private function check( $string )
-	{
-		return preg_match( '/picapp\.com/', $string );
-	}
-
-	private function parse_tag_href( $string )
-	{
-		if  ( preg_match( '/<a\shref="http:\/\/view\.picapp\.com\/default\.aspx\?(term=([^&]{1,50})&)?iid=(\d+)"[^>]*>/', $string, $matches ) ) {
-			$this->data()->href_term = $this->deep_clean_string( $matches[2] );
-			$this->data()->href_iid = $matches[3];
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	private function parse_tag_img( $string )
-	{
-		// match img tag and find path
-		if  ( preg_match( '/<img\ssrc="http:\/\/cdn\.picapp\.com([\/a-zA-z0-9]{1,50}\/[\w-]{1,100}\.jpg)\?[^"]+"[^>]+>/', $string, $matches ) ) {
-			$img_tag = $matches[0];
-			$this->data()->img_path = $matches[1];
-		} else {
-			return false;
-		}
-
-		// match adImageId
-		if  ( preg_match( '/adImageId=(\d{1,50})/', $img_tag, $matches ) ) {
-			$this->data()->img_adImageId = $matches[1];
-		} else {
-			return false;
-		}
-
-		// match adImageId
-		if  ( preg_match( '/imageId=(\d{1,50})/', $img_tag, $matches ) ) {
-			$this->data()->img_imageId = $matches[1];
-		} else {
-			return false;
-		}
-
-		// match width
-		if  ( preg_match( '/width="(\d{1,4})"/', $img_tag, $matches ) ) {
-			$this->data()->img_width = $matches[1];
-		} else {
-			return false;
-		}
-
-		// match height
-		if  ( preg_match( '/height="(\d{1,4})"/', $img_tag, $matches ) ) {
-			$this->data()->img_height = $matches[1];
-		} else {
-			return false;
-		}
-
-		// match alt text
-		if  ( preg_match( '/alt="([^"]{1,100})"/', $img_tag, $matches ) ) {
-			$this->data()->img_alt = $this->deep_clean_string( $matches[1] );
-		} else {
-			return false;
-		}
-
-		return true;
-	}
-
-	private function html_tag_href( $content )
-	{
-		return sprintf(
-			'<a href="%s" target="_blank">%s</a>',
-			esc_url( $this->url() ),
-			$content
-		);
-	}
-
-	private function html_tag_img()
-	{
-		return sprintf(
-			'<img src="%s" width="%d" height="%d"  border="0" alt="%s"/>',
-			esc_url( $this->image_url() ),
-			$this->data()->img_width,
-			$this->data()->img_height,
-			esc_attr( $this->data()->img_alt )
-		);
-	}
-
-	private function html_tag_script()
-	{
-		return '<script type="text/javascript" src="http://cdn.pis.picapp.com/IamProd/PicAppPIS/JavaScript/PisV4.js"></script>';
-	}
-}
-
-
-/**
- * Fotoglif photo embedding service
- *
- * @package BP_Links
- * @author Marshall Sorenson
- */
-final class BP_Links_Embed_Service_Fotoglif
-	extends BP_Links_Embed_Service
-		implements	BP_Links_Embed_From_Html,
-					BP_Links_Embed_From_Json,
-					BP_Links_Embed_Avatar_Only,
-					BP_Links_Embed_Has_Html
-{
-	//
-	// required concrete methods
-	//
-
-	final public function from_html( $html )
-	{
-		if ( $this->check( $html ) ) {
-
-			// clean it up
-			$html = $this->deep_clean_string( $html );
-
-			// try to get the basic image info first
-			if ( $this->check_publisher($html) ) {
-				$result = $this->parse_tag_img( $html );
-			} else {
-				$result = $this->parse_tag_div( $html );
-			}
-
-			// try to get the rest of the data
-			if ( $result === true && $this->parse_tag_script( $html ) === true ) {
-				return $this->from_json( $this->api_fetch_json() );
-			} else {
-				throw new BP_Links_Embed_User_Exception( $this->err_embed_code() );
-			}
-		} else {
-			return false;
-		}
-	}
-
-	final public function from_json( $json )
-	{
-		// decode json data
-		$api_data = json_decode( $json, true );
-
-		// if decoding successful, add details to embed data
-		if ( empty( $api_data ) === false && isset( $api_data['response'][0]['image_hash'] ) ) {
-			$this->data()->api_image_uid = $api_data['response'][0]['image_uid'];
-			$this->data()->api_image_hash = $api_data['response'][0]['image_hash'];
-			$this->data()->api_image_date = $api_data['response'][0]['image_date'];
-			$this->data()->api_height = $api_data['response'][0]['height'];
-			$this->data()->api_width = $api_data['response'][0]['width'];
-			$this->data()->api_description = $this->deep_clean_string( $api_data['response'][0]['description'] );
-			$this->data()->api_album_name = $this->deep_clean_string( $api_data['response'][0]['album_name'] );
-			$this->data()->api_album_uid = $api_data['response'][0]['album_uid'];
-			$this->data()->api_album_hash = $api_data['response'][0]['album_hash'];
-			// awesome, return true
-			return true;
-		} else {
-			throw new BP_Links_Embed_User_Exception( $this->err_api_fetch() );
-		}
-	}
-
-	final public function url()
-	{
-		return sprintf( 'http://www.fotoglif.com/f/%s/%s', $this->data()->api_album_hash, $this->data()->api_image_hash );
-	}
-
-	final public function title()
-	{
-		return ( isset( $this->data()->api_album_name ) ) ? $this->data()->api_album_name : null;
-	}
-
-	final public function description()
-	{
-		return ( isset( $this->data()->api_description ) ) ? $this->data()->api_description : null;
-	}
-
-	final public function image_url()
-	{
-		return sprintf( 'http://gallery.fotoglif.com/images/large/%s.jpg', $this->data()->api_image_hash );
-	}
-
-	final public function image_thumb_url()
-	{
-		return sprintf( 'http://gallery.fotoglif.com/thumbnails/thumbnail_%s.jpg', $this->data()->api_image_uid );
-	}
-
-	final public function image_large_thumb_url()
-	{
-		return $this->image_thumb_url();
-	}
-
-	final public function html()
-	{
-		return $this->html_div_tag() . $this->html_script_tag();
-	}
-
-	public function service_name()
-	{
-		return __( 'Fotoglif', 'buddypress-links' );
-	}
-
-	//
-	// optional concrete methods
-	//
-
-	final public function image_width()
-	{
-		return $this->data()->div_width;
-	}
-
-	final public function image_height()
-	{
-		return $this->data()->div_height;
-	}
-
-	/**
-	 * Handle deprecated Fotoglif data array
-	 *
-	 * @param string|array $embed_data deprecated PicApp data array or serialized string
-	 * @return boolean
-	 */
-	final public function from_deprecated_data( $embed_data )
-	{
-		if ( is_array( $embed_data ) ) {
-			// copy data from the array into the embed data object
-			$this->data()->div_width = $embed_data['div']['width'];
-			$this->data()->div_height = $embed_data['div']['height'];
-			$this->data()->script_album_hash = $embed_data['script']['album_hash'];
-			$this->data()->script_size = $embed_data['script']['size'];
-			$this->data()->script_imageuid = $embed_data['script']['imageuid'];
-			$this->data()->script_layout = $embed_data['script']['layout'];
-			$this->data()->script_jpgembed = $embed_data['script']['jpgembed'];
-			$this->data()->script_pubID = $embed_data['script']['pubID'];
-			$this->data()->script_pubid = $embed_data['script']['pubid'];
-			$this->data()->api_image_uid = $embed_data['script']['imageuid'];
-			$this->data()->api_image_hash = $embed_data['api']['hash'];
-			$this->data()->api_height = $embed_data['api']['height'];
-			$this->data()->api_width = $embed_data['api']['width'];
-			$this->data()->api_album_uid = $embed_data['api']['album_uid'];
-			return true;
-		} else {
-			throw new BP_Links_Embed_Fatal_Exception( 'Deprecated data must be an array' );
-		}
-	}
-
-	//
-	// private methods
-	//
-
-	private function check( $string )
-	{
-		return preg_match( '/fotoglif\.com/', $string );
-	}
-
-	private function check_publisher( $string )
-	{
-		return preg_match( '/embed_login\.js/', $string );
-	}
-
-	private function check_iframe( $string )
-	{
-		return preg_match( '/iframe/i', $string );
-	}
-
-	private function api_fetch_json()
-	{
-		// build the URL we will be querying for image data
-		$api_url = sprintf( 'http://api.fotoglif.com/image/get?image_uid=%s', $this->data()->script_imageuid );
-
-		// grab JSON data
-		return $this->api_fetch( $api_url );
-	}
-
-	private function parse_tag_div( $string )
-	{
-		// match img tag and find path
-		if  ( preg_match( '/<div\sid="fotoglif_place_holder_\d+"([^>]+)>/', $string, $matches ) ) {
-			$div_attributes = $matches[1];
-		} else {
-			return false;
-		}
-
-		// match width
-		if  ( preg_match( '/[^-]width:\s*(\d{1,4})px/', $div_attributes, $matches ) ) {
-			$this->data()->div_width = $matches[1];
-		} else {
-			return false;
-		}
-
-		// match height
-		if  ( preg_match( '/[^-]height:\s*(\d{1,4})px/', $div_attributes, $matches ) ) {
-			$this->data()->div_height = $matches[1];
-		} else {
-			return false;
-		}
-
-		return true;
-	}
-
-	private function parse_tag_img( $string )
-	{
-		// match img tag and find get src URL
-		if  ( preg_match( '/<img([^>]+)>/', $string, $matches ) ) {
-			$img_attributes = $matches[1];
-		} else {
-			return false;
-		}
-
-		// match width
-		if  ( preg_match( '/width:\s*(\d+)px/', $img_attributes, $matches ) ) {
-			$this->data()->div_width = $matches[1];
-		} else {
-			return false;
-		}
-
-		// no height given by this embed method
-		$this->data()->div_height = null;
-
-		return true;
-	}
-
-	private function parse_tag_script( $string )
-	{
-		// match img tag and find path
-		if  ( preg_match( '/<script\stype="[^"]+"\ssrc="http:\/\/www\.fotoglif\.com\/(embed\/)?embed(\.py|_login\.js)\?([^"]+)">\s*<\/script>/', $string, $matches ) ) {
-			$query_string = $matches[3];
-		} else {
-			return false;
-		}
-
-		// match hash
-		if  ( preg_match( '/hash=([a-z0-9]{1,20})/', $query_string, $matches ) ) {
-			$this->data()->script_album_hash = $matches[1];
-		} else {
-			return false;
-		}
-
-		// match size
-		if  ( preg_match( '/size=(small|medium|large)/', $query_string, $matches ) ) {
-			$this->data()->script_size = $matches[1];
-		} else {
-			$this->data()->script_size = 'medium';
-		}
-
-		// match imageuid
-		if  ( preg_match( '/imageuid=(\d{1,20})/', $query_string, $matches ) ) {
-			$this->data()->script_imageuid = $matches[1];
-		} else {
-			return false;
-		}
-
-		// match layout
-		if  ( preg_match( '/layout=([\w-])/', $query_string, $matches ) ) {
-			$this->data()->script_layout = $matches[1];
-		} else {
-			$this->data()->script_layout = null;
-		}
-
-		// match jpgembed
-		if  ( preg_match( '/jpgembed=(yes|no)/', $query_string, $matches ) ) {
-			$this->data()->script_jpgembed = $matches[1];
-		} else {
-			return false;
-		}
-
-		// match pubID
-		if  ( preg_match( '/pubID=([a-z0-9]{1,20})/', $query_string, $matches ) ) {
-			$this->data()->script_pubID = $matches[1];
-		} else {
-			$this->data()->script_pubID = null;
-		}
-
-		// match pubid
-		if  ( preg_match( '/pubid=([a-z0-9]{1,20})/', $query_string, $matches ) ) {
-			$this->data()->script_pubid = $matches[1];
-		} else {
-			$this->data()->script_pubid = null;
-		}
-
-		return true;
-	}
-
-	private function html_script_url()
-	{
-		return sprintf(
-			'http://www.fotoglif.com/embed/embed.py?hash=%1$s&size=%2$s&imageuid=%3$d&layout=%4$s&jpgembed=%5$s&pubID=&pubid=%6$s',
-			$this->data()->script_album_hash, // arg 1
-			$this->data()->script_size, // arg 2
-			$this->data()->script_imageuid, // arg 3
-			$this->data()->script_layout, // arg 4
-			$this->data()->script_jpgembed, // arg 5
-			BP_LINKS_EMBED_FOTOGLIF_PUBID // arg 6
-		);
-	}
-
-	private function html_div_tag()
-	{
-		$width_style = ( empty( $this->data()->div_width ) ) ? '' : sprintf( ' width: %1$dpx;', $this->data()->div_width );
-		$height_style = ( empty( $this->data()->div_height ) ) ? '' : sprintf( ' height: %1$dpx;', $this->data()->div_height );
-
-		return sprintf(
-			'<div id="fotoglif_place_holder_%1$d" style="border-style: double; border-width: 5px; border-color: #bbbbbb; background-color: rgb(122, 122, 122);"%2$s%3$s></div>',
-			$this->data()->script_imageuid, // arg 1
-			$width_style, // arg 2
-			$height_style // arg 3
-		);
-	}
-
-	private function html_script_tag()
-	{
-		return sprintf(
-			'<script type="text/javascript" src="%s"></script>',
-			esc_url( $this->html_script_url() )
-		);
-	}
-}
-
-/**
  * YouTube video embedding service
+ *
+ * Known URL formats:
+ *   1) https://www.youtube.com/watch?v=qjzLuddjIUI
+ *   2) https://youtu.be/qjzLuddjIUI
  *
  * @package BP_Links
  * @author Marshall Sorenson
  */
 final class BP_Links_Embed_Service_YouTube
 	extends BP_Links_Embed_Service
-		implements BP_Links_Embed_From_Url, BP_Links_Embed_From_Xml, BP_Links_Embed_Has_Html
+		implements BP_Links_Embed_From_Url, BP_Links_Embed_From_Json, BP_Links_Embed_Has_Html
 {
 	// thumb constants
 	const YT_TH_DEFAULT = 0;
@@ -905,7 +353,7 @@ final class BP_Links_Embed_Service_YouTube
 	{
 		if ( $this->check_url( $url ) ) {
 			if ( $this->parse_url( $url ) === true ) {
-				return $this->from_xml( $this->api_xml_fetch() );
+				return $this->from_json( $this->api_oembed_fetch() );
 			} else {
 				throw new BP_Links_Embed_User_Exception( $this->err_embed_url() );
 			}
@@ -914,35 +362,17 @@ final class BP_Links_Embed_Service_YouTube
 		}
 	}
 
-	final public function from_xml( $xml )
+	final public function from_json( $json )
 	{
-		// load xml string into a SimpleXML object
-		libxml_use_internal_errors(true);
-		$sxml = simplexml_load_string( $xml );
+		// decode the json string
+		$result = json_decode( $json );
 
-		if ( $sxml instanceof SimpleXMLElement ) {
+		if ( $result instanceof stdClass ) {
 
-			// set title and content
-			$this->data()->api_title = $this->deep_clean_string( (string) $sxml->title );
-			$this->data()->api_content = $this->deep_clean_string( (string) $sxml->content );
-
-			// find alternate link
-			foreach ( $sxml->link as $link ) {
-				if ( 'alternate' == (string) $link['rel'] ) {
-					$this->data()->api_link_alt = (string) $link['href'];
-					break;
-				}
-			}
-
-			// make sure we have an alternate link
-			if ( empty( $this->data()->api_link_alt ) === false ) {
-				// set video hash if missing
-				if ( empty( $this->data()->video_hash ) ) {
-					$this->parse_url( $this->data()->api_link_alt );
-				}
-			} else {
-				throw new BP_Links_Embed_User_Exception( $this->err_api_fetch() );
-			}
+			// set data items
+			$this->data()->oembed_title = $this->deep_clean_string( (string) $result->title );
+			$this->data()->oembed_thumbnail_url = $this->deep_clean_string( (string) $result->thumbnail_url );
+			$this->data()->oembed_html = $this->deep_clean_string( (string) $result->html );
 
 			return true;
 
@@ -954,17 +384,36 @@ final class BP_Links_Embed_Service_YouTube
 
 	final public function url()
 	{
-		return $this->data()->api_link_alt;
+		// have oembed url?
+		if ( true === isset( $this->data()->oembed_url ) ) {
+			// yep use it
+			return $this->data()->oembed_url;
+		// back compat
+		} else {
+			// return old YT link
+			return $this->data()->api_link_alt;
+		}
 	}
 
 	final public function title()
 	{
-		return $this->data()->api_title;
+		// have oembed title?
+		if ( true === isset( $this->data()->oembed_title ) ) {
+			// yep, use it
+			return $this->data()->oembed_title;
+		// back compat
+		} else {
+			// return old YT title
+			return $this->data()->api_title;
+		}
 	}
 
 	final public function description()
 	{
-		return $this->data()->api_content;
+		// only old YT api provided description
+		if ( true === isset( $this->data()->api_content ) ) {
+			return $this->data()->api_content;
+		}
 	}
 
 	final public function image_url()
@@ -984,17 +433,24 @@ final class BP_Links_Embed_Service_YouTube
 
 	final public function html()
 	{
-		return sprintf(
-			'<object width="640" height="385" style="height: 385px;">' .
-			'<param name="movie" value="%1$s"></param>' .
-			'<param name="allowFullScreen" value="true"></param>' .
-			'<param name="allowscriptaccess" value="always"></param>' .
-			'<embed src="%1$s" type="application/x-shockwave-flash" ' .
-				'allowscriptaccess="always" allowfullscreen="true" ' .
-				'width="640" height="385" style="height: 385px;"></embed>' .
-			'</object>',
-			esc_url( $this->yt_player_url() )
-		);
+		// have oembed html?
+		if ( true === isset( $this->data()->oembed_html ) ) {
+			// yep, use it
+			return $this->data()->oembed_html;
+		} else {
+			// try to launch old player
+			return sprintf(
+				'<object width="640" height="385" style="height: 385px;">' .
+				'<param name="movie" value="%1$s"></param>' .
+				'<param name="allowFullScreen" value="true"></param>' .
+				'<param name="allowscriptaccess" value="always"></param>' .
+				'<embed src="%1$s" type="application/x-shockwave-flash" ' .
+					'allowscriptaccess="always" allowfullscreen="true" ' .
+					'width="640" height="385" style="height: 385px;"></embed>' .
+				'</object>',
+				esc_url( $this->yt_player_url() )
+			);
+		}
 	}
 
 	public function service_name()
@@ -1004,7 +460,7 @@ final class BP_Links_Embed_Service_YouTube
 
 	public function from_url_pattern()
 	{
-		return '/^https?:\/\/(www\.)?youtube.com\/watch/';
+		return '#^https?:\/\/(www\.)?(youtube\.com\/watch|youtu\.be\/)#';
 	}
 
 	//
@@ -1022,52 +478,58 @@ final class BP_Links_Embed_Service_YouTube
 
 	private function check_url( $url )
 	{
-		return preg_match( '/^https?:\/\/(www\.)?youtube\.com\/watch.+$/', $url );
+		return preg_match( '#^https?:\/\/(www\.)?(youtube\.com\/watch|youtu\.be\/).+$#', $url );
 	}
 
 	private function parse_url( $url )
 	{
+		// store url
+		$this->data()->oembed_url = (string) $url;
+		
 		// parse the url
 		$url_parsed = parse_url( $url );
 
-		// make sure we got something
-		if ( !empty( $url_parsed['query'] ) ) {
+		// is it the vanity url?
+		if (
+			false === empty( $url_parsed['host'] ) &&
+			false === empty( $url_parsed['path'] ) &&
+			'youtu.be' === $url_parsed['host']
+		) {
+
+			// yep, split the path up
+			$path_elements = array_filter( explode( '/', $url_parsed['path'] ) );
+			// the first path element is the video hash
+			$this->data()->video_hash = current( $path_elements );
+			// success
+			return true;
+
+		} elseif ( false === empty( $url_parsed['query'] ) ) {
 
 			// parse the query string
 			parse_str( $url_parsed['query'], $qs_vars );
 
 			// get the video hash
-			if ( !empty( $qs_vars['v'] ) ) {
+			if ( false === empty( $qs_vars['v'] ) ) {
+				// found it!
 				$this->data()->video_hash = $qs_vars['v'];
+				// success
 				return true;
 			}
 		}
 
+		// failed to parse url
 		return false;
 	}
 
-	private function api_xml_url()
+	private function api_oembed_url()
 	{
-		return sprintf( 'http://gdata.youtube.com/feeds/api/videos/%s', $this->data()->video_hash );
+		return 'http://www.youtube.com/oembed?format=json&url=' . urlencode( $this->data()->oembed_url );
 	}
 
-	private function api_xml_fetch()
+	private function api_oembed_fetch()
 	{
-		// get ATOM feed data for this video
-		return $this->api_fetch( $this->api_xml_url() );
-	}
-
-	private function api_xml_thumbs( SimpleXMLElement $sxml )
-	{
-		// get nodes in media: namespace for media information
-		$media = $sxml->children('http://search.yahoo.com/mrss/');
-
-		// do we have thumbs to look at?
-		if ( $media instanceof SimpleXMLElement && $media->group->thumbnail instanceof SimpleXMLElement ) {
-			return $media->group->thumbnail;
-		} else {
-			return false;
-		}
+		// get oembed JSON data for this video
+		return $this->api_fetch( $this->api_oembed_url() );
 	}
 
 	private function yt_player_url()
@@ -1077,9 +539,20 @@ final class BP_Links_Embed_Service_YouTube
 
 	private function yt_thumb_url( $num = self::YT_TH_DEFAULT )
 	{
-		if ( is_numeric( $num ) && $num >= self::YT_TH_DEFAULT && $num <= self::YT_TH_SMALL_3 ) {
+		// oembed thumbnail set?
+		if ( true === isset( $this->data()->oembed_thumbnail_url ) ) {
+
+			// yes, use it
+			return $this->data()->oembed_thumbnail_url;
+
+		// back compat with old YT data?
+		} elseif ( is_numeric( $num ) && $num >= self::YT_TH_DEFAULT && $num <= self::YT_TH_SMALL_3 ) {
+
+			// return old style image url
 			return sprintf( 'http://img.youtube.com/vi/%s/%d.jpg', $this->data()->video_hash, $num );
+
 		} else {
+			// fatal
 			throw new BP_Links_Embed_Fatal_Exception( 'YouTube thumbnail number must 0, 1, 2, or 3.' );
 		}
 	}
@@ -1299,17 +772,17 @@ final class BP_Links_Embed_Service_Flickr
 	private function html_video()
 	{
 		return sprintf(
-			'<object type="application/x-shockwave-flash" width="400" height="300"
-				data="http://www.flickr.com/apps/video/stewart.swf?v=71377"
+			'<object type="application/x-shockwave-flash" width="500" height="281"
+				data="https://www.flickr.com/apps/video/stewart.swf?v=1535363810"
 				classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
-				<param name="flashvars" value="photo_secret=%2$s&photo_id=%1$s&flickr_show_info_box=true"></param>
-				<param name="movie" value="http://www.flickr.com/apps/video/stewart.swf?v=71377"></param>
-				<param name="bgcolor" value="#000000"></param>
-				<param name="allowFullScreen" value="true"></param>
-				<embed type="application/x-shockwave-flash" height="300" width="400"
-					src="http://www.flickr.com/apps/video/stewart.swf?v=71377"
+				<param name="flashvars" value="intl_lang=en-us&photo_secret=%2$s&photo_id=%1$s&flickr_show_info_box=true"></param>
+				<param name="movie" value="https://www.flickr.com/apps/video/stewart.swf?v=1535363810"></param>
+				<param name="bgcolor" value="#000000"></param> <param name="allowFullScreen" value="true"></param>
+				<embed type="application/x-shockwave-flash"
+					src="https://www.flickr.com/apps/video/stewart.swf?v=1535363810"
 					bgcolor="#000000" allowfullscreen="true"
-					flashvars="photo_secret=%2$s&photo_id=%1$s&flickr_show_info_box=true">
+					flashvars="intl_lang=en-us&photo_secret=%2$s&photo_id=%1$s&flickr_show_info_box=true"
+					height="281" width="500">
 				</embed>
 			</object>',
 			esc_attr( $this->data()->api_id ), // arg 1
@@ -1319,7 +792,7 @@ final class BP_Links_Embed_Service_Flickr
 
 	private function api_rest_url( $method, $format = 'rest' )
 	{
-		return sprintf( 'http://www.flickr.com/services/rest/?method=%1$s&photo_id=%2$s&format=%3$s&api_key=%4$s&nojsoncallback=1', $method, $this->data()->photo_id, $format, self::FLICKR_API_KEY );
+		return sprintf( 'https://api.flickr.com/services/rest/?method=%1$s&photo_id=%2$s&format=%3$s&api_key=%4$s&nojsoncallback=1', $method, $this->data()->photo_id, $format, self::FLICKR_API_KEY );
 	}
 
 	private function api_json_fetch( $method )
@@ -1331,6 +804,8 @@ final class BP_Links_Embed_Service_Flickr
 
 /**
  * MetaCafe video embedding service
+ *
+ * Fetching new content has been disabled as of 0.9.4 since the API is more or less defunct now.
  *
  * @link http://help.metacafe.com/?page_id=181
  * @package BP_Links
@@ -1347,15 +822,8 @@ final class BP_Links_Embed_Service_MetaCafe
 
 	final public function from_url( $url )
 	{
-		if ( $this->check_url( $url ) ) {
-			if ( $this->parse_url( $url ) === true ) {
-				return $this->from_xml( $this->api_xml_fetch() );
-			} else {
-				throw new BP_Links_Embed_User_Exception( $this->err_embed_url() );
-			}
-		} else {
-			return false;
-		}
+		// don't try to fetch content anymore
+		return false;
 	}
 
 	final public function from_xml( $xml )

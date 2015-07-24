@@ -269,7 +269,12 @@ function bp_links_setup_theme_compat() {
 	// links component and is directory?
 	if ( bp_is_current_component( 'links' ) ) {
 		// no action and no item?
-		if ( !bp_current_action() && !bp_current_item() ) {
+		if (
+			!bp_current_action() &&
+			!bp_current_item() ||
+			BP_LINKS_CAT_URL_SLUG === bp_current_action() &&
+			bp_action_variable()
+		) {
 			// set up dummy post
 			bp_theme_compat_reset_post( array(
 				'ID'             => 0,
@@ -285,7 +290,7 @@ function bp_links_setup_theme_compat() {
 			// hook up replace content filter
 			add_filter( 'bp_replace_the_content', 'bp_links_screen_directory_index' );
 
-		} elseif ( bp_is_current_action( 'create' ) ) {
+		} elseif ( bp_is_current_action( 'create' ) && !bp_is_user() ) {
 			// set up dummy post
 			bp_theme_compat_reset_post( array(
 				'ID'             => 0,
@@ -593,8 +598,6 @@ function bp_links_setup_nav() {
 
 		}
 	}
-
-	do_action( 'bp_links_setup_nav', $bp->is_item_admin );
 }
 add_action( 'bp_setup_nav', 'bp_links_setup_nav' );
 
@@ -605,15 +608,22 @@ function bp_links_setup_directory() {
 
 	// get action and item
 	$action = bp_current_action();
+	$action_var = bp_action_variable();
 	$item = bp_current_item();
 
 	// links must be current component
 	if ( bp_is_current_component( 'links' ) ) {
-		// category slug is action, or no action and item?
+		// check action and item
 		if (
-			BP_LINKS_CAT_URL_SLUG === $action ||
+			// both empty
 			true === empty( $action ) &&
-			true === empty( $item )
+			true === empty( $item ) ||
+			// create screen
+			'create' === $action &&
+			true === empty( $item ) ||
+			// category screen
+			BP_LINKS_CAT_URL_SLUG === $action &&
+			false === empty( $action_var )
 		) {
 			// toggle directory on
 			bp_update_is_directory( true, 'links' );
@@ -1181,8 +1191,6 @@ function bp_links_action_create_link() {
 	if ( !is_user_logged_in() )
 		return false;
 
-	$bp->is_directory = true;
-	
 	// If the save, upload or embed button is clicked, lets try to save
 	if ( isset( $_POST['save'] ) ) {
 
@@ -1796,9 +1804,6 @@ function bp_links_fetch_avatar( $args = '', $link = false ) {
 
 			if ( !empty( $image_thumb_url ) ) {
 				
-				// append class avatar-embed
-				$class .= ' avatar-embed';
-
 				// check for additional avatar class
 				if ( $link->embed()->avatar_class() ) {
 					$class .= ' ' . $link->embed()->avatar_class();
@@ -2128,23 +2133,6 @@ function bp_links_update_linkmeta( $link_id, $meta_key, $meta_value ) {
 }
 
 /*** Link Cleanup Functions ****************************************************/
-
-/**
- * Reset embed fields if avatar is deleted
- *
- * @param array $args
- * @return boolean
- */
-function bp_links_delete_existing_avatar( $args ) {
-	if ( 'link' == $args['object'] ) {
-		$link = new BP_Links_Link( $args['item_id'] );
-		if ( $link->embed_status_enabled() && $link->embed()->avatar_only() === true ) {
-			return $link->embed_remove(true);
-		}
-	}
-	return true;
-}
-add_action( 'bp_core_delete_existing_avatar', 'bp_links_delete_existing_avatar' );
 
 function bp_links_remove_data_for_user( $user_id ) {
 	// remove all links for deleted user
