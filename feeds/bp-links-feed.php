@@ -37,7 +37,7 @@ header('Status: 200 OK');
 				<link><?php bp_link_feed_item_link() ?></link>
 				<pubDate><?php bp_link_feed_item_date() ?></pubDate>
 
-				<description><?php bp_link_feed_item_description() ?></description>
+				<description><![CDATA[<?php bp_link_feed_item_description() ?>]]></description>
 			<?php do_action('bp_directory_links_feed_item'); ?>
 			</item>
 		<?php endwhile; ?>

@@ -12,7 +12,7 @@ $defaults = array();
 // global settings section
 $wpsf_settings[] = array(
     'section_id' => 'global',
-    'section_title' => __( 'Global Settings', 'buddypress-links' ),
+    'section_title' => '',
 //    'section_description' => '',
     'section_order' => 5,
     'fields' => array(
@@ -76,7 +76,7 @@ $wpsf_settings[] = array(
 // directory settings section
 $wpsf_settings[] = array(
     'section_id' => 'directory',
-    'section_title' => __( 'Directory Settings', 'buddypress-links' ),
+    'section_title' => '',
 //    'section_description' => '',
     'section_order' => 7,
     'fields' => array(
@@ -145,7 +145,7 @@ $wpsf_settings[] = array(
 // content settings section
 $wpsf_settings[] = array(
     'section_id' => 'content',
-    'section_title' => __( 'Content Settings', 'buddypress-links' ),
+    'section_title' => '',
 //    'section_description' => '',
     'section_order' => 10,
     'fields' => array(
@@ -254,7 +254,7 @@ $wpsf_settings[] = array(
 // voting settings section
 $wpsf_settings[] = array(
     'section_id' => 'voting',
-    'section_title' => __( 'Voting Settings', 'buddypress-links' ),
+    'section_title' => '',
 //    'section_description' => '',
     'section_order' => 15,
     'fields' => array(
@@ -308,7 +308,7 @@ $wpsf_settings[] = array(
 // profile settings section
 $wpsf_settings[] = array(
     'section_id' => 'profile',
-    'section_title' => __( 'Profile Settings', 'buddypress-links' ),
+    'section_title' => '',
 //    'section_description' => '',
     'section_order' => 20,
     'fields' => array(
@@ -339,7 +339,7 @@ $wpsf_settings[] = array(
 // groups settings section
 $wpsf_settings[] = array(
     'section_id' => 'groups',
-    'section_title' => __( 'Groups Settings', 'buddypress-links' ),
+    'section_title' => '',
 //    'section_description' => '',
     'section_order' => 25,
     'fields' => array(

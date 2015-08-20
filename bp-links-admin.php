@@ -103,12 +103,8 @@ function bp_links_admin_settings_tabs( $active_tab = null )
 	foreach ( $tabs as $tab_data ) {
 		// determine tab class
 		$tab_class = ( $tab_data['tab'] === $active_tab ) ? $active_class : $idle_class;
-		// determine tab args
-		$tab_args = array( 'page' => 'buddypress-links-admin-settings', 'buddypress_links_tab' => $tab_data['tab'] );
-		// format the href url
-		$tab_url = add_query_arg( $tab_args, 'admin.php' );
 		// render this tab ?>
-		<a href="<?php echo esc_url( $tab_url ); ?>" class="<?php esc_attr_e( $tab_class ); ?>"><?php esc_html_e( $tab_data['name'] ); ?></a><?php
+		<a href="#<?php echo esc_attr( $tab_data['tab'] ); ?>" class="<?php esc_attr_e( $tab_class ); ?>"><?php esc_html_e( $tab_data['name'] ); ?></a><?php
 	}
 }
 

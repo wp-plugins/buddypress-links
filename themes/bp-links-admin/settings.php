@@ -32,7 +32,36 @@
 </div>
 
 <script type="text/javascript">
-	jQuery(document).ready(function($){
+	jQuery(document).ready(function($)
+	{
+		var tabs = $('h2.nav-tab-wrapper > a'),
+			tab = tabs.filter('.nav-tab-active'),
+			form = $('div.buddypress-links-admin-content > form'),
+			sections = $( 'table.form-table', form ),
+			current = sections.get( tab.index() );
+
+		sections.hide();
+		$(current).show();
+		
+		$( tabs ).on('click', function( e )
+		{
+			var self = $(this),
+				section = sections.get( self.index() );
+			
+			tabs.removeClass('nav-tab-active');
+			self.addClass('nav-tab-active');
+			
+			sections.hide({
+				'duration': 0,
+				'complete':
+					function() {
+						$(section).show();
+					}
+			});
+			
+			e.preventDefault();
+		});
+		
 		$('div.buddypress-links-admin-settings input.disabled').attr('disabled', 'disabled');
 	});
 </script>

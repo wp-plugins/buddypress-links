@@ -62,10 +62,9 @@ class BP_Links_Settings extends WordPressSettingsFramework
 	 * Initialize the settings.
 	 * 
 	 * @param string $the_plugin_page The admin page the settings live on.
-	 * @param string $display_section Only show this section id.
 	 * @return BP_Links_Settings|false
 	 */
-	final public static function init( $the_plugin_page, $display_section = null )
+	final public static function init( $the_plugin_page )
 	{
 		global $plugin_page, $pagenow;
 
@@ -80,8 +79,6 @@ class BP_Links_Settings extends WordPressSettingsFramework
 		) {
 			// set up instance
 			$instance = self::instance();
-			// maybe set display section
-			$instance->set_display_section( $display_section );
 			// return instance
 			return $instance;
 		}
@@ -120,30 +117,6 @@ class BP_Links_Settings extends WordPressSettingsFramework
 			wpsf_get_settings( BP_PLUGIN_DIR . '/bp-links-settings.php', self::OPTION_GROUP ),
 			self::get_defaults()
 		);
-	}
-
-	final public function process_settings()
-	{
-		global $wpsf_settings;
-
-		if (
-			false === empty( $this->display_section ) &&
-			false === empty( $wpsf_settings ) &&
-			true === empty( $_POST['option_page'] )
-		) {
-			foreach ( $wpsf_settings as $section_key => $section_config ) {
-				if (
-					true === isset( $section_config['section_id'] ) &&
-					$this->display_section !== $section_config['section_id']
-				) {
-					// don't display it
-					unset( $wpsf_settings[ $section_key ] );
-				}
-			}
-		}
-
-		// as you were
-		parent::process_settings();
 	}
 
 	final public function validate_settings( $input )
