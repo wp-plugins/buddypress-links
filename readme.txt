@@ -3,8 +3,8 @@ Contributors: MrMaz
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8591311
 Tags: buddypress, social, networking, links, rich media, embed, youtube, flickr
 Requires at least: 4.0
-Tested up to: 4.2.3
-Stable tag: 0.9.4.1
+Tested up to: 4.3.1
+Stable tag: 0.9.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -141,6 +141,11 @@ No changes that affect data were made, however it is always a good idea to back 
 No changes that affect data were made, however it is always a good idea to back up your data just in case!
 
 == Changelog ==
+
+= 0.9.4.2 =
+
+* Bug
+  * [BPL-30] - Single link comments are broken
 
 = 0.9.4.1 =
 

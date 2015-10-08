@@ -401,17 +401,24 @@ add_filter( 'bp_dtheme_activity_feed_url', 'bp_links_dtheme_activity_feed_url', 
 /**
  * Handle creating a custom update to a Link
  *
- * @param string $object
- * @param integer $item_id
- * @param string $content
  * @return integer|false Activity id that was created
  */
-function bp_links_dtheme_activity_custom_update( $object, $item_id, $content ) {
+function bp_links_dtheme_activity_custom_update() {
+	
+	// variable number of args workaround
+	// see https://buddypress.trac.wordpress.org/ticket/6630
+	if ( func_num_args() === 4 ) {
+		list( $activity_id, $object, $item_id, $content ) = func_get_args();
+	} else {
+		$activity_id = false;
+		list( $object, $item_id, $content ) = func_get_args();
+	}
+	
 	// if object is links, try a custom update
 	if ( 'links' == $object ) {
 		return bp_links_post_update( array( 'type' => BP_LINKS_ACTIVITY_ACTION_COMMENT, 'link_id' => $item_id, 'content' => $content ) );
 	}
 }
-add_filter( 'bp_activity_custom_update', 'bp_links_dtheme_activity_custom_update', 10, 3 );
+add_filter( 'bp_activity_custom_update', 'bp_links_dtheme_activity_custom_update', 10, 4 );
 
 ?>

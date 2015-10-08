@@ -23,7 +23,7 @@
 <?php do_action( 'bp_before_link_activity_content' ) ?>
 
 <div class="activity single-link">
-	<?php locate_template( array( 'activity/activity-loop.php' ), true ) ?>
+	<?php bp_locate_template( array( 'activity/activity-loop.php' ), true ); ?>
 </div><!-- .activity -->
 
 <?php do_action( 'bp_after_link_activity_content' ) ?>
